@@ -1,8 +1,6 @@
 package com.sunrise.jdl.generator.entities;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Класс для хранения сущностей

@@ -1,25 +1,22 @@
 package com.sunrise.jdl.generator;
 
-import com.sunrise.jdl.generator.EntitiesReader;
 import com.sunrise.jdl.generator.entities.Entity;
 import com.sunrise.jdl.generator.entities.Field;
 import org.apache.commons.cli.*;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVRecord;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Main {
-    public static Map<String, Entity> entities = new LinkedHashMap<String, Entity>();
 
     public static void main(String[] args) {
 
         Options options = new Options();
-        options.addOption("sourceFolder", false, "set source folder with cvs files");
+        options.addOption("sourceFolder", true, "set source folder with cvs files");
         options.addOption("help", false, "show this help");
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd;
@@ -34,6 +31,7 @@ public class Main {
         if (cmd == null) {
             System.err.println("Parsing failed.  Reason: cmd is null");
         }
+
 
         if (cmd.hasOption("help")) {
             HelpFormatter formatter = new HelpFormatter();
