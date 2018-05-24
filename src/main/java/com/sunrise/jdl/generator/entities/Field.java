@@ -22,15 +22,24 @@ public class Field {
     private String fieldLength;
 
     /**
+     * Если поле является сущностью - отмечаем его true.
+     */
+    private boolean entity;
+
+    /**
      * Конструктор
-     * @param fieldType тип поля
-     * @param fieldName название поля
+     *
+     * @param fieldType   тип поля
+     * @param fieldName   название поля
      * @param fieldLength длинна поля
      */
     public Field(String fieldType, String fieldName, String fieldLength) {
         this.fieldType = fieldType;
         this.fieldName = fieldName;
         this.fieldLength = fieldLength;
+        if (fieldType.contains("Список")) {
+            this.entity = true;
+        }
     }
 
     public String getFieldName() {
@@ -57,13 +66,43 @@ public class Field {
         this.fieldLength = fieldLength;
     }
 
+    public boolean isEntity() {
+        return entity;
+    }
+
     /**
-     * TODO: реализовать метод.
      * Возвращает описание поля в формте jdl
+     *
      * @return
      */
     @Override
     public String toString() {
-        return super.toString();
+//        if (fieldLength.equals("")) {
+//            return fieldName + " " + fieldType + ",\n";
+//        } else {
+//            return fieldName + " " + fieldType + "(" + fieldLength + ")" + ",\n";
+//        }
+        return fieldName + " " + fieldType + ",\n";
     }
+
+    // Метод заменяет значение типа поля "Строка" на "String", "Дата/время" и "Дата" на "Date"
+    public boolean correctFieldsType() {
+        boolean change = false;
+        if (fieldType.contains("Строка")) {
+            fieldType = "String";
+            change = true;
+        }
+        if (fieldType.contains("Дата")) {
+            fieldType = "Instant";
+            change = true;
+        }
+        if (fieldType.contains("Число")) {
+            fieldType = "Long";
+            change = true;
+        }
+        return change;
+    }
+
+
+
 }

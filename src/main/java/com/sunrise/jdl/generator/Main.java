@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class Main {
 
     public static void main(String[] args) {
@@ -51,15 +52,14 @@ public class Main {
             EntitiesReader reader = new EntitiesReader(resources);
             List<Entity> entities = reader.readAll();
 
-            //TODO:  переделать на использование toString
             //TODO:  вывод должен быть в файл
             //TODO: название файла и путь до файла в который выводяться данные стоит указывать в аргументах
-            for (Entity entity : entities) {
-                System.out.println("class " + entity.getClassName() + "{");
-                for (Field field : entity.getFields()) {
-                    System.out.println("    " + field.getFieldType() + " " + field.getFieldName() + "(" + field.getFieldLength() + ");");
-                }
-                System.out.println("}");
+            int totalNumberOfCorrection = 0;
+            for (int i = 0; i<entities.size(); i++) {
+                totalNumberOfCorrection += entities.get(i).correctsFieldsType();
+                int strucutureNumbers = entities.get(i).createStructure();
+                System.out.println(entities.get(i).getClassName() + " записано структур " + strucutureNumbers);
+                System.out.println(entities.get(i).getStructure().toString().replace("[","").replace("]", ""));
             }
         }
     }

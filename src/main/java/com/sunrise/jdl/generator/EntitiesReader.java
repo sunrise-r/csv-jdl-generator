@@ -16,6 +16,10 @@ import java.util.Map;
  */
 public class EntitiesReader {
 
+    public static final int CLASSNAME = 1;
+    public static final int FIELDNAME = 2;
+    public static final int FIELDTYPE = 5;
+    public static final int FIELDSIZE = 6;
     private List<InputStream> resources;
 
     public EntitiesReader(List<InputStream> resources) {
@@ -37,10 +41,10 @@ public class EntitiesReader {
             Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
             String className = "";
             for (CSVRecord record : records) {
-                String s1 = record.get(1);
-                String fieldName = record.get(2);
-                String fieldType = record.get(5);
-                String fieldLength = record.get(6);
+                String s1 = record.get(CLASSNAME);
+                String fieldName = record.get(FIELDNAME);
+                String fieldType = record.get(FIELDTYPE);
+                String fieldLength = record.get(FIELDSIZE);
 
                 if (!s1.equals("") && !s1.contains("П")) {
                     className = s1;
@@ -62,4 +66,5 @@ public class EntitiesReader {
         }
         return toReturn.values();
     }
+
 }
