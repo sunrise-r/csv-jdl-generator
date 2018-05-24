@@ -16,7 +16,7 @@ public class Main {
     public static void main(String[] args) {
 
         Options options = new Options();
-        options.addOption("sourceFolder", true, "set source folder with cvs files");
+        options.addOption("sourceFolder", true, "set source folder with csv files");
         options.addOption("help", false, "show this help");
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd;
@@ -32,10 +32,9 @@ public class Main {
             System.err.println("Parsing failed.  Reason: cmd is null");
         }
 
-
         if (cmd.hasOption("help")) {
             HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("jtlGenerator", options);
+            formatter.printHelp("jdlGenerator", options);
         }
 
         if (cmd.hasOption("sourceFolder")) {
