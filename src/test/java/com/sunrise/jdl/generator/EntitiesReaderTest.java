@@ -24,4 +24,25 @@ public class EntitiesReaderTest {
         Assert.assertNotNull(result);
         Assert.assertTrue(result.size() > 0);
     }
+
+    @Test
+    public void testReadOneEntity() {
+        ArrayList<InputStream> streams = new ArrayList<>(1);
+        streams.add(this.getClass().getResourceAsStream("/oneEntity.csv"));
+        EntitiesReader reader = new EntitiesReader(streams);
+        List<Entity> result = reader.readAll();
+        Assert.assertNotNull(result);
+        Assert.assertEquals(1, result.size());
+    }
+
+    @Test
+    public void checkNumberOfFieldsForSingleEntity() {
+        ArrayList<InputStream> streams = new ArrayList<>(1);
+        streams.add(this.getClass().getResourceAsStream("/oneEntity.csv"));
+        EntitiesReader reader = new EntitiesReader(streams);
+        List<Entity> result = reader.readAll();
+        Assert.assertNotNull(result);
+        Entity entity = result.get(0);
+        Assert.assertEquals(8, entity.getFields().size());
+    }
 }
