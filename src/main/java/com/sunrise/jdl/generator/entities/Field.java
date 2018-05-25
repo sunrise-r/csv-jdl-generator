@@ -37,7 +37,7 @@ public class Field {
         this.fieldType = fieldType;
         this.fieldName = fieldName;
         this.fieldLength = fieldLength;
-        if (fieldType.contains("Список")) {
+        if (fieldType.contains("Список")) {         // TODO может быть это условие лучше вынести в метод коррекции полей?
             this.entity = true;
         }
     }
@@ -84,25 +84,4 @@ public class Field {
 //        }
         return fieldName + " " + fieldType + ",\n";
     }
-
-    // Метод заменяет значение типа поля "Строка" на "String", "Дата/время" и "Дата" на "Date"
-    public boolean correctFieldsType() {
-        boolean change = false;
-        if (fieldType.contains("Строка")) {
-            fieldType = "String";
-            change = true;
-        }
-        if (fieldType.contains("Дата")) {
-            fieldType = "Instant";
-            change = true;
-        }
-        if (fieldType.contains("Число")) {
-            fieldType = "Long";
-            change = true;
-        }
-        return change;
-    }
-
-
-
 }

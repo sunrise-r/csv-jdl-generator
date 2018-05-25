@@ -1,6 +1,5 @@
 package com.sunrise.jdl.generator.entities;
 
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 /**
@@ -23,7 +22,7 @@ public class Entity {
     /**
      * Список структур
      */
-    private ArrayList<String> structure;
+    private ArrayList<Relation> relations;
 
 
     /**
@@ -35,7 +34,7 @@ public class Entity {
     public Entity(String className, ArrayList<Field> fields) {
         this.className = className;
         this.fields = fields;
-        this.structure = new ArrayList<>();
+        this.relations = new ArrayList<Relation>();
     }
 
     public String getClassName() {
@@ -54,8 +53,12 @@ public class Entity {
         this.fields = fields;
     }
 
-    public ArrayList<String> getStructure() {
-        return structure;
+    public ArrayList<Relation> getRelations() {
+        return relations;
+    }
+
+    public void setRelations(ArrayList<Relation> relations) {
+        this.relations = relations;
     }
 
     /**
@@ -73,42 +76,9 @@ public class Entity {
         return String.format(s.toString(), fields.toArray());
     }
 
-    /**
-     * Метод корректирует тип полей в соотвествии с требованиями jdl.
-     *
-     * @return number of corrections
-     */
-    public int correctsFieldsType() {
-        int numberOfCorrection = 0;
-        for (Field field : fields) {
-            boolean wasCorrection = field.correctFieldsType();
-            if (wasCorrection) numberOfCorrection++;
-        }
-        return numberOfCorrection;
-    }
 
-    /**
-     * Если сущность содержит в полях Список, метод записывает структуру в поле structure.
-     * Метод возращает количество считанных структур.
-     * @return
-     */
-    public int createStructure() {
-        int count = 0;
-        StringBuilder builder = new StringBuilder();
-        for (Field field : fields) {
-            if (field.isEntity()) {
-                count++;
-                builder.append("relationship OneToMany {\n");
-                String fieldType = field.getFieldType();
-                int start = fieldType.indexOf("<");
-                int finish = fieldType.indexOf(">");
-                String type = fieldType.substring(start + 1, finish);
-                builder.append(this.getClassName()).append(" to ").append(type).append("\n}");
-                structure.add(builder.toString());
-            }
-        }
-        return count;
-    }
+
+
 
 
 }

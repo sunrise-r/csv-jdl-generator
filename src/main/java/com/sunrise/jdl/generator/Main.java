@@ -1,7 +1,6 @@
 package com.sunrise.jdl.generator;
 
 import com.sunrise.jdl.generator.entities.Entity;
-import com.sunrise.jdl.generator.entities.Field;
 import org.apache.commons.cli.*;
 
 import java.io.File;
@@ -49,17 +48,15 @@ public class Main {
                     System.err.println("Failed to read file .  Reason: " + e.getMessage());
                 }
             }
-            EntitiesReader reader = new EntitiesReader(resources);
-            List<Entity> entities = reader.readAll();
+            EntitiesHandler entitiesHandler = new EntitiesHandler(resources);
+            List<Entity> entities = entitiesHandler.readAll();
 
             //TODO:  вывод должен быть в файл
             //TODO: название файла и путь до файла в который выводяться данные стоит указывать в аргументах
-            int totalNumberOfCorrection = 0;
-            for (int i = 0; i<entities.size(); i++) {
-                totalNumberOfCorrection += entities.get(i).correctsFieldsType();
-                int strucutureNumbers = entities.get(i).createStructure();
-                System.out.println(entities.get(i).getClassName() + " записано структур " + strucutureNumbers);
-                System.out.println(entities.get(i).getStructure().toString().replace("[","").replace("]", ""));
+            for (int i = 0; i < entities.size(); i++) {
+//                int structureNumbers = entities.get(i).createStructure();
+//                System.out.println(entities.get(i).getClassName() + " записано структур " + structureNumbers);
+                System.out.println(entities.get(i).getRelations().toString().replace("[", "").replace("]", ""));
             }
         }
     }
