@@ -62,9 +62,7 @@ public class Entity {
     }
 
     /**
-     * Возвращает строку описывающею entity в формате jdl
-     *
-     * @return
+     * @return Возвращает строку описывающюю entity в формате jdl
      */
     @Override
     public String toString() {
@@ -75,10 +73,5 @@ public class Entity {
         s.append("}");
         return String.format(s.toString(), fields.toArray());
     }
-
-
-
-
-
 
 }

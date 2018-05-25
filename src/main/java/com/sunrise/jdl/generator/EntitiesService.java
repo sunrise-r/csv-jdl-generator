@@ -78,7 +78,7 @@ public class EntitiesHandler {
      * Перегруженный вариант correctsFieldsType(Entity entity).
      * Принимает List<Entity> и корректирует у всех entity поля.
      * @param entities
-     * @return summer number of correction for all entities
+     * @return total number of correction for all entities
      */
     public int correctsFieldsType(List<Entity> entities) {
         int sumOfCorrection = 0;
@@ -111,6 +111,19 @@ public class EntitiesHandler {
             }
         }
         return numberOfCorrection;
+    }
+
+    /**
+     * Перегруженный вариант createStructure(Entity entity)
+     * @param entities
+     * @return total
+     */
+    public int createStructure(ArrayList<Entity> entities) {
+        int totalCreatedStructure = 0;
+        for (Entity entity : entities) {
+          totalCreatedStructure +=  this.createStructure(entity);
+        }
+        return totalCreatedStructure;
     }
 
     /**
