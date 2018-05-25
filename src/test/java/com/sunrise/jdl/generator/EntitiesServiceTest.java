@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class EntitiesHandlerTest {
+public class EntitiesServiceTest {
 
     /**
      * TODO я думаю нужен тест на небольшом колличенстве данных, 1-2 сущности, что бы проверить, что все поля устонавливаются правильно.
@@ -20,7 +20,7 @@ public class EntitiesHandlerTest {
         ArrayList<InputStream> streams = new ArrayList<>(2);
         streams.add(this.getClass().getResourceAsStream("/dictionary.csv"));
         streams.add(this.getClass().getResourceAsStream("/data.csv"));
-        EntitiesHandler reader = new EntitiesHandler(streams);
+        EntitiesService reader = new EntitiesService(streams);
         List<Entity> result = reader.readAll();
         Assert.assertNotNull(result);
         Assert.assertTrue(result.size() > 0);
@@ -31,7 +31,7 @@ public class EntitiesHandlerTest {
     public void validationOfFieldsTypeReading() {
         ArrayList<InputStream> streams = new ArrayList<>(1);
         streams.add(this.getClass().getResourceAsStream("/twoEntities.csv"));
-        EntitiesHandler reader = new EntitiesHandler(streams);
+        EntitiesService reader = new EntitiesService(streams);
         List<Entity> result = reader.readAll();
         Entity contacts = result.get(0);
         ArrayList<Field> contactsFields = contacts.getFields();
@@ -66,11 +66,11 @@ public class EntitiesHandlerTest {
     public void testCorrectFieldsType() {
         ArrayList<InputStream> streams = new ArrayList<>(1);
         streams.add(this.getClass().getResourceAsStream("/twoEntities.csv"));
-        EntitiesHandler entitiesHandler = new EntitiesHandler(streams);
-        List<Entity> result = entitiesHandler.readAll();
+        EntitiesService entitiesService = new EntitiesService(streams);
+        List<Entity> result = entitiesService.readAll();
         Entity contacts = result.get(0);
         ArrayList<Field> contactsFields = contacts.getFields();
-        int numberOfCorreciton = entitiesHandler.correctsFieldsType(result);
+        int numberOfCorreciton = entitiesService.correctsFieldsType(result);
         
         Assert.assertNotNull(result);
         Assert.assertEquals("Address", contactsFields.get(0).getFieldType());

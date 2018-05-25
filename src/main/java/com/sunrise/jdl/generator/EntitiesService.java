@@ -16,7 +16,7 @@ import java.util.Map;
  * Считывает Entity, корректириреут их поля, создает их структуру,
  * записывает Entity и их структуру в файл
  */
-public class EntitiesHandler {
+public class EntitiesService {
 
     /**
      * Константые поля содержат номера ячеек в электронной таблице,
@@ -29,7 +29,7 @@ public class EntitiesHandler {
     private List<InputStream> resources;
 
 
-    public EntitiesHandler(List<InputStream> resources) {
+    public EntitiesService(List<InputStream> resources) {
         this.resources = resources;
     }
 
@@ -77,19 +77,21 @@ public class EntitiesHandler {
     /**
      * Перегруженный вариант correctsFieldsType(Entity entity).
      * Принимает List<Entity> и корректирует у всех entity поля.
+     *
      * @param entities
      * @return total number of correction for all entities
      */
     public int correctsFieldsType(List<Entity> entities) {
         int sumOfCorrection = 0;
         for (Entity entity : entities) {
-            sumOfCorrection += this.correctsFieldsType(entity);
+            sumOfCorrection += correctsFieldsType(entity);
         }
         return sumOfCorrection;
     }
 
     /**
      * Метод корректирует тип полей у отдельной сущности в соотвествии с требованиями jdl.
+     *
      * @param entity
      * @return number of corrections
      */
@@ -98,15 +100,15 @@ public class EntitiesHandler {
         for (Field field : entity.getFields()) {
             String fieldType = field.getFieldType();
             if (fieldType.contains("Строка")) {
-                fieldType = "String";
+                field.setFieldType("String");
                 numberOfCorrection++;
             }
             if (fieldType.contains("Дата")) {
-                fieldType = "Instant";
+                field.setFieldType("Instant");
                 numberOfCorrection++;
             }
             if (fieldType.contains("Число")) {
-                fieldType = "Long";
+                field.setFieldType("Long");
                 numberOfCorrection++;
             }
         }
@@ -114,14 +116,15 @@ public class EntitiesHandler {
     }
 
     /**
-     * Перегруженный вариант createStructure(Entity entity)
+     * Для каждой entity из entities вызывается метод createStructure(Entity entity)
+     *
      * @param entities
-     * @return total
+     * @return total number of created structure
      */
-    public int createStructure(ArrayList<Entity> entities) {
+    public int createStructure(List<Entity> entities) {
         int totalCreatedStructure = 0;
         for (Entity entity : entities) {
-          totalCreatedStructure +=  this.createStructure(entity);
+            totalCreatedStructure += this.createStructure(entity);
         }
         return totalCreatedStructure;
     }
@@ -130,13 +133,13 @@ public class EntitiesHandler {
      * Если сущность содержит в fields Список, метод создает объект Relation и
      * добавляет его в поле relations у Entity.
      * Метод возращает количество считанных структур.
+     *
      * @param entity
      * @return number of created structure
      */
     public int createStructure(Entity entity) {
         int count = 0;
         ArrayList<Field> fields = entity.getFields();
-        StringBuilder builder = new StringBuilder();
         for (Field field : fields) {
             if (field.isEntity()) {
                 count++;
@@ -144,10 +147,32 @@ public class EntitiesHandler {
                 int start = fieldType.indexOf("<");
                 int finish = fieldType.indexOf(">");
                 String entityType = fieldType.substring(start + 1, finish);
-                entity.getRelations().add(new Relation(entity.getClassName(), entityType, Relation.RelationType.OneToMany));
+                Relation relation = new Relation(entity.getClassName(), entityType, Relation.RelationType.OneToMany);
+                entity.getRelations().add(relation);
             }
         }
         return count;
+    }
+
+    /**
+     * @param entities
+     * @param writer
+     * @return
+     */
+    public void writeEntityToFile(ArrayList<Entity> entities, BufferedWriter writer) throws IOException {
+        for (Entity entity : entities) {
+            writeEntityToFile(entity, writer);
+        }
+    }
+
+    public void writeEntityToFile(Entity entity, BufferedWriter writer) throws IOException {
+        writer.write(entity.toString()+"\n");
+        ArrayList<Relation> relations = entity.getRelations();
+        if (relations.size() > 0) {
+            for (Relation relation : relations) {
+                writer.write(relation.toString()+"\n");
+            }
+        }
     }
 
 }

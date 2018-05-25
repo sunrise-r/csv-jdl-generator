@@ -1,12 +1,10 @@
 package com.sunrise.jdl.generator;
 
 import com.sunrise.jdl.generator.entities.Entity;
+import com.sunrise.jdl.generator.entities.Relation;
 import org.apache.commons.cli.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,16 +46,26 @@ public class Main {
                     System.err.println("Failed to read file .  Reason: " + e.getMessage());
                 }
             }
-            EntitiesHandler entitiesHandler = new EntitiesHandler(resources);
-            List<Entity> entities = entitiesHandler.readAll();
+            EntitiesService entitiesService = new EntitiesService(resources);
+            List<Entity> entities = entitiesService.readAll();
+            int numberOfCorrection = entitiesService.correctsFieldsType(entities);
+            int numberOfStructure = entitiesService.createStructure(entities);
 
             //TODO:  вывод должен быть в файл
-            //TODO: название файла и путь до файла в который выводяться данные стоит указывать в аргументах
-            for (int i = 0; i < entities.size(); i++) {
-//                int structureNumbers = entities.get(i).createStructure();
-//                System.out.println(entities.get(i).getClassName() + " записано структур " + structureNumbers);
-                System.out.println(entities.get(i).getRelations().toString().replace("[", "").replace("]", ""));
+            //TODO: название файла и путь до файла в который выводятся данные стоит указывать в аргументах
+            System.out.printf("Количество корректировок полей %d\n", numberOfCorrection);
+            System.out.println("Количество созданных структур " + numberOfStructure);
+
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter("result.txt", false))) {
+                for (int i = 0; i < entities.size(); i++) {
+                    entitiesService.writeEntityToFile(entities.get(i), writer);
+                    writer.write("\n");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
         }
     }
 }
