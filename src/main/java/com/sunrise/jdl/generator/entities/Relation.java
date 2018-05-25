@@ -37,6 +37,12 @@ public class Relation {
      */
     private RelationType relationType;
 
+    /**
+     * Constructor
+     * @param firstEntity
+     * @param secondEntity
+     * @param relationType
+     */
     public Relation(String firstEntity, String secondEntity, RelationType relationType) {
         this.firstEntityName = firstEntity;
         this.secondEntityName = secondEntity;

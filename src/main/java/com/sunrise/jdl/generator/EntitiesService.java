@@ -154,7 +154,7 @@ public class EntitiesService {
         return count;
     }
 
-    /**
+    /** Для каждой entity из enities вызывается метод writeEntityToFile(Entity entity, BufferedWriter writer)
      * @param entities
      * @param writer
      * @return
@@ -165,6 +165,12 @@ public class EntitiesService {
         }
     }
 
+    /**
+     * Метод пишет сущности с полями и структурами в файл
+     * @param entity
+     * @param writer
+     * @throws IOException
+     */
     public void writeEntityToFile(Entity entity, BufferedWriter writer) throws IOException {
         writer.write(entity.toString()+"\n");
         ArrayList<Relation> relations = entity.getRelations();
