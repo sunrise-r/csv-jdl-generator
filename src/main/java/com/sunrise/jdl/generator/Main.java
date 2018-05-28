@@ -61,11 +61,10 @@ public class Main {
             List<Entity> entities = entitiesService.readAll();
             int numberOfCorrection = entitiesService.correctsFieldsType(entities);
             entitiesService.checkIsFieldAnEntity(entities);
+            int numberOfCreatedStrucure = entitiesService.createStructure(entities);
 
-            //TODO:  вывод должен быть в файл
-            //TODO: название файла и путь до файла в который выводятся данные стоит указывать в аргументах
             System.out.printf("Количество корректировок полей %d\n", numberOfCorrection);
-//            System.out.println("Количество созданных структур " + numberOfStructure);
+            System.out.println("Количество созданных структур " + numberOfCreatedStrucure);
 
 
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(targetFile, false))) {

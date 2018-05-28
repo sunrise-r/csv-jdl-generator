@@ -141,7 +141,7 @@ public class EntitiesService {
         int count = 0;
         ArrayList<Field> fields = entity.getFields();
         for (Field field : fields) {
-            if (field.isNotEntity() && field.getFieldType().contains("Список")) {
+            if (!field.isNotEntity() && field.getFieldType().contains("Список")) {
                 count++;
                 String fieldType = field.getFieldType();
                 int start = fieldType.indexOf("<");
@@ -149,6 +149,10 @@ public class EntitiesService {
                 String entityType = fieldType.substring(start + 1, finish);
                 Relation relation = new Relation(entity.getClassName(), entityType, Relation.RelationType.OneToMany);
                 entity.getRelations().add(relation);
+            } else if (!field.isNotEntity()){
+                Relation relation = new Relation(entity.getClassName(), field.getFieldType(), Relation.RelationType.OneToOne);
+                entity.getRelations().add(relation);
+                count++;
             }
         }
         return count;

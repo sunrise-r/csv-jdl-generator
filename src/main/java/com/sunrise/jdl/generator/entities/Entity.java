@@ -70,11 +70,14 @@ public class Entity {
         StringBuilder s = new StringBuilder("entity " + this.className + " {\n");
         for (int i = 0; i < fields.size(); i++) {
             if (fields.get(i).isNotEntity()) {
-                s.append(fields.get(i).toString());
+                s.append(fields.get(i).toString()).append(",\n");
             }
         }
-        s.append("}");
-        return s.toString();
+        String s1 = s.toString();
+        if (s1.endsWith(",\n")) {
+            s1 = s1.substring(0, s1.length()-2);
+        }
+        return s1 + "\n}";
     }
 
 }

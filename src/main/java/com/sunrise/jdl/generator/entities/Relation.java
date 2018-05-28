@@ -61,7 +61,7 @@ public class Relation {
 
    public enum RelationType {
 
-        OneToMany("OneToMany");
+        OneToMany("OneToMany"), OneToOne("OneToOne");
 
         /**
          * поле хранит строковое представление перечисления

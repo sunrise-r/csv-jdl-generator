@@ -91,11 +91,6 @@ public class Field {
      */
     @Override
     public String toString() {
-//        if (fieldLength.equals("")) {
-//            return fieldName + " " + fieldType + ",\n";
-//        } else {
-//            return fieldName + " " + fieldType + "(" + fieldLength + ")" + ",\n";
-//        }
-        return fieldName + " " + fieldType + " " + notEntity + ",\n";
+        return fieldName + " " + fieldType;
     }
 }
