@@ -27,7 +27,6 @@ public class Entity {
 
     /**
      * Конструктор
-     *
      * @param className Название класса
      * @param fields    Поля класса
      */

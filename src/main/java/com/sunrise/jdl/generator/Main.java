@@ -69,6 +69,7 @@ public class Main {
 
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(targetFile, false))) {
                 for (int i = 0; i < entities.size(); i++) {
+                    System.out.println(entities.get(i).toString());
                     entitiesService.writeEntityToFile(entities.get(i), writer);
                     writer.write("\n");
                 }

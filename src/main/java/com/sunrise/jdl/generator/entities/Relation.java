@@ -56,7 +56,7 @@ public class Relation {
     }
 
     /**
-     * enum для типов связей (пока только один тип)
+     * Enum для типов связей (пока только один тип)
      */
 
    public enum RelationType {
