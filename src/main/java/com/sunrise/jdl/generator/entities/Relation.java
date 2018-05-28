@@ -25,12 +25,12 @@ public class Relation {
     /**
      * Первая сущность
      */
-    private String firstEntityName;
+    private Entity firstField;
 
     /**
      * Вторая сущность
      */
-    private String secondEntityName;
+    private Field secondfield;
 
     /**
      * Тип связи
@@ -38,22 +38,42 @@ public class Relation {
     private RelationType relationType;
 
     /**
-     * Constructor
-     * @param firstEntity
-     * @param secondEntity
+     *
+     * @param firstField
+     * @param secondfield
      * @param relationType
      */
-    public Relation(String firstEntity, String secondEntity, RelationType relationType) {
-        this.firstEntityName = firstEntity;
-        this.secondEntityName = secondEntity;
+    public Relation(Entity firstField, Field secondfield, RelationType relationType) {
+        this.firstField = firstField;
+        this.secondfield = secondfield;
         this.relationType = relationType;
     }
 
+
+
+
+    //TODO сделать красиво
     @Override
     public String toString() {
+        String fieldType = secondfield.getFieldType();
+        if (secondfield.getFieldType().contains("Список")) {
+           fieldType = parseFieldType();
+        }
         return "relationship "  + this.relationType + " {\n" +
-                firstEntityName + " to " + secondEntityName + "\n}";
+                firstField.getClassName() + "{" + secondfield.getFieldName() + "}"
+                + " to " + fieldType +
+                "{" + firstField.getClassName().toLowerCase() + "}"
+                + "\n}";
     }
+
+    private String parseFieldType() {
+        String fieldType = secondfield.getFieldType();
+        int start = fieldType.indexOf("<");
+        int finish = fieldType.indexOf(">");
+        return fieldType.substring(start + 1, finish);
+
+    }
+
 
     /**
      * Enum для типов связей (пока только один тип)

@@ -143,14 +143,10 @@ public class EntitiesService {
         for (Field field : fields) {
             if (!field.isNotEntity() && field.getFieldType().contains("Список")) {
                 count++;
-                String fieldType = field.getFieldType();
-                int start = fieldType.indexOf("<");
-                int finish = fieldType.indexOf(">");
-                String entityType = fieldType.substring(start + 1, finish);
-                Relation relation = new Relation(entity.getClassName(), entityType, Relation.RelationType.OneToMany);
+                Relation relation = new Relation(entity, field, Relation.RelationType.OneToMany);
                 entity.getRelations().add(relation);
             } else if (!field.isNotEntity()){
-                Relation relation = new Relation(entity.getClassName(), field.getFieldType(), Relation.RelationType.OneToOne);
+                Relation relation = new Relation(entity, field, Relation.RelationType.OneToOne);
                 entity.getRelations().add(relation);
                 count++;
             }
