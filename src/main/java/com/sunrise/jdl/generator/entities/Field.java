@@ -34,9 +34,9 @@ public class Field {
     private String fieldLength;
 
     /**
-     * Если поле является сущностью(оодержит слово "Список") - отмечаем его true.
+     * Если поле не является сущностью - отмечаем его true.
      */
-    private boolean entity;
+    private boolean notEntity;
 
     /**
      * Конструктор
@@ -49,9 +49,7 @@ public class Field {
         this.fieldType = fieldType;
         this.fieldName = fieldName;
         this.fieldLength = fieldLength;
-        if (fieldType.contains("Список")) {  // TODO может быть это условие лучше вынести в метод коррекции полей или в отдельный метод?
-            this.entity = true;
-        }
+        this.notEntity = false;
     }
 
     public String getFieldName() {
@@ -78,8 +76,12 @@ public class Field {
         this.fieldLength = fieldLength;
     }
 
-    public boolean isEntity() {
-        return entity;
+    public boolean isNotEntity() {
+        return notEntity;
+    }
+
+    public void setNotEntity(boolean notEntity) {
+        this.notEntity = notEntity;
     }
 
     /**
@@ -94,6 +96,6 @@ public class Field {
 //        } else {
 //            return fieldName + " " + fieldType + "(" + fieldLength + ")" + ",\n";
 //        }
-        return fieldName + " " + fieldType + ",\n";
+        return fieldName + " " + fieldType + " " + notEntity + ",\n";
     }
 }

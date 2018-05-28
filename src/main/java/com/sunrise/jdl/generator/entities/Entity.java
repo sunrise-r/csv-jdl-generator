@@ -27,6 +27,7 @@ public class Entity {
 
     /**
      * Конструктор
+     *
      * @param className Название класса
      * @param fields    Поля класса
      */
@@ -60,6 +61,7 @@ public class Entity {
         this.relations = relations;
     }
 
+
     /**
      * @return Возвращает строку описывающюю entity в формате jdl
      */
@@ -67,10 +69,12 @@ public class Entity {
     public String toString() {
         StringBuilder s = new StringBuilder("entity " + this.className + " {\n");
         for (int i = 0; i < fields.size(); i++) {
-            s.append("%s");
+            if (fields.get(i).isNotEntity()) {
+                s.append(fields.get(i).toString());
+            }
         }
         s.append("}");
-        return String.format(s.toString(), fields.toArray());
+        return s.toString();
     }
 
 }

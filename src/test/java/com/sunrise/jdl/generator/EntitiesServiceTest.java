@@ -34,6 +34,7 @@ public class EntitiesServiceTest {
         EntitiesService reader = new EntitiesService(streams);
         List<Entity> result = reader.readAll();
         Entity contacts = result.get(0);
+        reader.correctsFieldsType(contacts);
         ArrayList<Field> contactsFields = contacts.getFields();
 
         Assert.assertNotNull(result);
@@ -48,6 +49,7 @@ public class EntitiesServiceTest {
 
         Entity license = result.get(1);
         ArrayList<Field> licenseFields = license.getFields();
+        reader.correctsFieldsType(license);
 
         Assert.assertEquals("Дата/время", licenseFields.get(0).getFieldType());
         Assert.assertEquals("String", licenseFields.get(1).getFieldType());
@@ -84,6 +86,7 @@ public class EntitiesServiceTest {
 
         Entity license = result.get(1);
         ArrayList<Field> licenseFields = license.getFields();
+        entitiesService.correctsFieldsType(license);
 
         Assert.assertEquals("Instant", licenseFields.get(0).getFieldType());
         Assert.assertEquals("String", licenseFields.get(1).getFieldType());
@@ -98,4 +101,6 @@ public class EntitiesServiceTest {
         Assert.assertEquals("Список<Document>", licenseFields.get(10).getFieldType());
         Assert.assertEquals(9, numberOfCorreciton);
     }
+
+
 }

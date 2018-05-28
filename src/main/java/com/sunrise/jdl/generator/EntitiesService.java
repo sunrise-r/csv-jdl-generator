@@ -141,7 +141,7 @@ public class EntitiesService {
         int count = 0;
         ArrayList<Field> fields = entity.getFields();
         for (Field field : fields) {
-            if (field.isEntity()) {
+            if (field.isNotEntity() && field.getFieldType().contains("Список")) {
                 count++;
                 String fieldType = field.getFieldType();
                 int start = fieldType.indexOf("<");
@@ -154,12 +154,14 @@ public class EntitiesService {
         return count;
     }
 
-    /** Для каждой entity из enities вызывается метод writeEntityToFile(Entity entity, BufferedWriter writer)
+    /**
+     * Для каждой entity из enities вызывается метод writeEntityToFile(Entity entity, BufferedWriter writer)
+     *
      * @param entities
      * @param writer
      * @return
      */
-    public void writeEntityToFile(ArrayList<Entity> entities, BufferedWriter writer) throws IOException {
+    public void writeEntityToFile(List<Entity> entities, BufferedWriter writer) throws IOException {
         for (Entity entity : entities) {
             writeEntityToFile(entity, writer);
         }
@@ -167,18 +169,60 @@ public class EntitiesService {
 
     /**
      * Метод пишет сущности с полями и структурами в файл
+     *
      * @param entity
      * @param writer
      * @throws IOException
      */
     public void writeEntityToFile(Entity entity, BufferedWriter writer) throws IOException {
-        writer.write(entity.toString()+"\n");
+        writer.write(entity.toString() + "\n");
         ArrayList<Relation> relations = entity.getRelations();
         if (relations.size() > 0) {
             for (Relation relation : relations) {
-                writer.write(relation.toString()+"\n");
+                writer.write(relation.toString() + "\n");
             }
         }
     }
 
+    public int checkIsFieldAnEntity(List<Entity> entities) {
+        int totalNumberOfCorrecion = 0;
+        for (Entity entity : entities) {
+         totalNumberOfCorrecion += checkIsFieldAnEntity(entity);
+        }
+        return totalNumberOfCorrecion;
+    }
+
+
+    public int checkIsFieldAnEntity(Entity entity) {
+        int numberOfEntity = 0;
+        ArrayList<Field> fields = entity.getFields();
+        JDLFieldstype[] values = JDLFieldstype.values();
+        for (Field field:fields) {
+            for (JDLFieldstype value : values) {
+                if (field.getFieldType().equals(value.toString())) {
+                    field.setNotEntity(true);
+                    numberOfEntity++;
+                }
+            }
+        }
+        return numberOfEntity;
+    }
+
+    public enum JDLFieldstype {
+        String("String"), Integer("Integer"), Long("Long"), Float("Float"), Double("Double"),
+        BigDecimal("BigDecimal"), LocalDate("LocalDate"), Instant("Instant"),
+        ZonedDateTime("ZonedDateTime"), Boolean("Boolean"), Enumeration("Enumeration"),
+        Blob("Blob");
+
+        private String type;
+
+        JDLFieldstype(java.lang.String type) {
+            this.type = type;
+        }
+
+        @Override
+        public java.lang.String toString() {
+            return type;
+        }
+    }
 }

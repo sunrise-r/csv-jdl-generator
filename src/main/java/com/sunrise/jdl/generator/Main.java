@@ -5,6 +5,7 @@ import org.apache.commons.cli.*;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -59,20 +60,16 @@ public class Main {
             EntitiesService entitiesService = new EntitiesService(resources);
             List<Entity> entities = entitiesService.readAll();
             int numberOfCorrection = entitiesService.correctsFieldsType(entities);
-            int numberOfStructure = entitiesService.createStructure(entities);
+            entitiesService.checkIsFieldAnEntity(entities);
 
             //TODO:  вывод должен быть в файл
             //TODO: название файла и путь до файла в который выводятся данные стоит указывать в аргументах
             System.out.printf("Количество корректировок полей %d\n", numberOfCorrection);
-            System.out.println("Количество созданных структур " + numberOfStructure);
+//            System.out.println("Количество созданных структур " + numberOfStructure);
 
 
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(targetFile, false))) {
-                for (int i = 0; i < entities.size(); i++) {
-                    System.out.println(entities.get(i).toString());
-                    entitiesService.writeEntityToFile(entities.get(i), writer);
-                    writer.write("\n");
-                }
+               entitiesService.writeEntityToFile(entities, writer);
             } catch (IOException e) {
                 e.printStackTrace();
             }
