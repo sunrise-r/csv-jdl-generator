@@ -61,24 +61,22 @@ public class Entity {
         this.relations = relations;
     }
 
+
     /**
-     * Возвращает строку описывающею entity в формате jdl
-     *
-     * @return
+     * @return Возвращает строковое представление entity в формате jdl
      */
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder("entity " + this.className + " {\n");
         for (int i = 0; i < fields.size(); i++) {
-            s.append("%s");
+            if (fields.get(i).isJdlType()) {
+                s.append(fields.get(i).toString()).append(",\n");
+            }
         }
-        s.append("}");
-        return String.format(s.toString(), fields.toArray());
+        String s1 = s.toString();
+        if (s1.endsWith(",\n")) {
+            s1 = s1.substring(0, s1.length()-2);
+        }
+        return s1 + "\n}";
     }
-
-
-
-
-
-
 }

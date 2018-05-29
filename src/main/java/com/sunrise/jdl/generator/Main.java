@@ -3,10 +3,7 @@ package com.sunrise.jdl.generator;
 import com.sunrise.jdl.generator.entities.Entity;
 import org.apache.commons.cli.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +15,7 @@ public class Main {
         Options options = new Options();
         options.addOption("sourceFolder", true, "set source folder with csv files");
         options.addOption("help", false, "show this help");
+        options.addOption("targetFile", true, "file with results");
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd;
 
@@ -48,16 +46,32 @@ public class Main {
                     System.err.println("Failed to read file .  Reason: " + e.getMessage());
                 }
             }
-            EntitiesHandler entitiesHandler = new EntitiesHandler(resources);
-            List<Entity> entities = entitiesHandler.readAll();
 
-            //TODO:  вывод должен быть в файл
-            //TODO: название файла и путь до файла в который выводяться данные стоит указывать в аргументах
-            for (int i = 0; i < entities.size(); i++) {
-//                int structureNumbers = entities.get(i).createStructure();
-//                System.out.println(entities.get(i).getClassName() + " записано структур " + structureNumbers);
-                System.out.println(entities.get(i).getRelations().toString().replace("[", "").replace("]", ""));
+            File targetFile;
+            if (cmd.hasOption("targetFile")) {
+                targetFile = new File(cmd.getOptionValue("targetFile"));
+            } else {
+                targetFile = new File("result.txt");
             }
+
+
+
+            EntitiesService entitiesService = new EntitiesService(resources);
+            List<Entity> entities = entitiesService.readAll();
+            int numberOfCorrection = entitiesService.correctsFieldsType(entities);
+            entitiesService.checkIsFieldSupportedInJDL(entities);
+            int numberOfCreatedStrucure = entitiesService.createStructure(entities);
+
+            System.out.printf("Количество корректировок полей %d\n", numberOfCorrection);
+            System.out.println("Количество созданных структур " + numberOfCreatedStrucure);
+
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(targetFile, false))) {
+               entitiesService.writeEntityToFile(entities, writer);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 }

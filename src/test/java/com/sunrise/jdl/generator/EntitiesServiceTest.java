@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class EntitiesHandlerTest {
+public class EntitiesServiceTest {
 
     /**
      * TODO я думаю нужен тест на небольшом колличенстве данных, 1-2 сущности, что бы проверить, что все поля устонавливаются правильно.
@@ -20,7 +20,7 @@ public class EntitiesHandlerTest {
         ArrayList<InputStream> streams = new ArrayList<>(2);
         streams.add(this.getClass().getResourceAsStream("/dictionary.csv"));
         streams.add(this.getClass().getResourceAsStream("/data.csv"));
-        EntitiesHandler reader = new EntitiesHandler(streams);
+        EntitiesService reader = new EntitiesService(streams);
         List<Entity> result = reader.readAll();
         Assert.assertNotNull(result);
         Assert.assertTrue(result.size() > 0);
@@ -31,9 +31,10 @@ public class EntitiesHandlerTest {
     public void validationOfFieldsTypeReading() {
         ArrayList<InputStream> streams = new ArrayList<>(1);
         streams.add(this.getClass().getResourceAsStream("/twoEntities.csv"));
-        EntitiesHandler reader = new EntitiesHandler(streams);
+        EntitiesService reader = new EntitiesService(streams);
         List<Entity> result = reader.readAll();
         Entity contacts = result.get(0);
+        reader.correctsFieldsType(contacts);
         ArrayList<Field> contactsFields = contacts.getFields();
 
         Assert.assertNotNull(result);
@@ -48,6 +49,7 @@ public class EntitiesHandlerTest {
 
         Entity license = result.get(1);
         ArrayList<Field> licenseFields = license.getFields();
+        reader.correctsFieldsType(license);
 
         Assert.assertEquals("Дата/время", licenseFields.get(0).getFieldType());
         Assert.assertEquals("String", licenseFields.get(1).getFieldType());
@@ -66,11 +68,11 @@ public class EntitiesHandlerTest {
     public void testCorrectFieldsType() {
         ArrayList<InputStream> streams = new ArrayList<>(1);
         streams.add(this.getClass().getResourceAsStream("/twoEntities.csv"));
-        EntitiesHandler entitiesHandler = new EntitiesHandler(streams);
-        List<Entity> result = entitiesHandler.readAll();
+        EntitiesService entitiesService = new EntitiesService(streams);
+        List<Entity> result = entitiesService.readAll();
         Entity contacts = result.get(0);
         ArrayList<Field> contactsFields = contacts.getFields();
-        int numberOfCorreciton = entitiesHandler.correctsFieldsType(result);
+        int numberOfCorreciton = entitiesService.correctsFieldsType(result);
         
         Assert.assertNotNull(result);
         Assert.assertEquals("Address", contactsFields.get(0).getFieldType());
@@ -84,6 +86,7 @@ public class EntitiesHandlerTest {
 
         Entity license = result.get(1);
         ArrayList<Field> licenseFields = license.getFields();
+        entitiesService.correctsFieldsType(license);
 
         Assert.assertEquals("Instant", licenseFields.get(0).getFieldType());
         Assert.assertEquals("String", licenseFields.get(1).getFieldType());
@@ -97,5 +100,29 @@ public class EntitiesHandlerTest {
         Assert.assertEquals("Group", licenseFields.get(9).getFieldType());
         Assert.assertEquals("Список<Document>", licenseFields.get(10).getFieldType());
         Assert.assertEquals(9, numberOfCorreciton);
+    }
+
+    /**
+     * Проверка корректности записи сущности, ее полей и структуры в файл
+     */
+    @Test
+    public void testWriteToFile() {
+        ArrayList<InputStream> streams = new ArrayList<>(2);
+        streams.add(this.getClass().getResourceAsStream("/twoEntities.csv"));
+        EntitiesService entitiesService = new EntitiesService(streams);
+        List<Entity> result = entitiesService.readAll();
+
+        entitiesService.correctsFieldsType(result);
+        entitiesService.checkIsFieldSupportedInJDL(result);
+        int numberOfStructure = entitiesService.createStructure(result);
+        Assert.assertEquals(10, numberOfStructure);
+
+//        try (BufferedWriter writer = new BufferedWriter(new FileWriter("D:\\work\\jdlGenerator\\src\\main\\java\\com\\sunrise\\jdl\\generator\\result\\result2.txt"))) {
+//            entitiesService.writeEntityToFile(result, writer);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+
     }
 }
