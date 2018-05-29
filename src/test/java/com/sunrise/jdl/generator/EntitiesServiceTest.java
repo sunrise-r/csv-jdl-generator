@@ -102,5 +102,27 @@ public class EntitiesServiceTest {
         Assert.assertEquals(9, numberOfCorreciton);
     }
 
+    /**
+     * Проверка корректности записи сущности, ее полей и структуры в файл
+     */
+    @Test
+    public void testWriteToFile() {
+        ArrayList<InputStream> streams = new ArrayList<>(2);
+        streams.add(this.getClass().getResourceAsStream("/twoEntities.csv"));
+        EntitiesService entitiesService = new EntitiesService(streams);
+        List<Entity> result = entitiesService.readAll();
 
+        entitiesService.correctsFieldsType(result);
+        entitiesService.checkIsFieldSupportedInJDL(result);
+        int numberOfStructure = entitiesService.createStructure(result);
+        Assert.assertEquals(10, numberOfStructure);
+
+//        try (BufferedWriter writer = new BufferedWriter(new FileWriter("D:\\work\\jdlGenerator\\src\\main\\java\\com\\sunrise\\jdl\\generator\\result\\result2.txt"))) {
+//            entitiesService.writeEntityToFile(result, writer);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+
+    }
 }

@@ -34,9 +34,10 @@ public class Field {
     private String fieldLength;
 
     /**
-     * Если поле не является сущностью - отмечаем его true.
+     * Если тип поля поддерживается в JDL - отмечаем его true.
+     * При создании Field данное поле в конструкторе устанавливается false.
      */
-    private boolean notEntity;
+    private boolean JdlType;
 
     /**
      * Конструктор
@@ -49,7 +50,7 @@ public class Field {
         this.fieldType = fieldType;
         this.fieldName = fieldName;
         this.fieldLength = fieldLength;
-        this.notEntity = false;
+        this.JdlType = false;
     }
 
     public String getFieldName() {
@@ -76,18 +77,17 @@ public class Field {
         this.fieldLength = fieldLength;
     }
 
-    public boolean isNotEntity() {
-        return notEntity;
+    public boolean isJdlType() {
+        return JdlType;
     }
 
-    public void setNotEntity(boolean notEntity) {
-        this.notEntity = notEntity;
+    public void setJdlType(boolean jdlType) {
+        this.JdlType = jdlType;
     }
 
     /**
-     * Возвращает описание поля в формте jdl
-     *
-     * @return string for jdl
+     * Возвращает строковое представление в формте jdl.
+     * @return string in jdl-format
      */
     @Override
     public String toString() {

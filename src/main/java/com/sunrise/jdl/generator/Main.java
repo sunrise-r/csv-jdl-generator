@@ -5,7 +5,6 @@ import org.apache.commons.cli.*;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -60,7 +59,7 @@ public class Main {
             EntitiesService entitiesService = new EntitiesService(resources);
             List<Entity> entities = entitiesService.readAll();
             int numberOfCorrection = entitiesService.correctsFieldsType(entities);
-            entitiesService.checkIsFieldAnEntity(entities);
+            entitiesService.checkIsFieldSupportedInJDL(entities);
             int numberOfCreatedStrucure = entitiesService.createStructure(entities);
 
             System.out.printf("Количество корректировок полей %d\n", numberOfCorrection);

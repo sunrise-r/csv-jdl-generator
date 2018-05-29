@@ -63,13 +63,13 @@ public class Entity {
 
 
     /**
-     * @return Возвращает строку описывающюю entity в формате jdl
+     * @return Возвращает строковое представление entity в формате jdl
      */
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder("entity " + this.className + " {\n");
         for (int i = 0; i < fields.size(); i++) {
-            if (fields.get(i).isNotEntity()) {
+            if (fields.get(i).isJdlType()) {
                 s.append(fields.get(i).toString()).append(",\n");
             }
         }
@@ -79,5 +79,4 @@ public class Entity {
         }
         return s1 + "\n}";
     }
-
 }

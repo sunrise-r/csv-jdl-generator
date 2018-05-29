@@ -52,26 +52,37 @@ public class Relation {
 
 
 
-    //TODO сделать красиво
+
+    /**
+     * Возвращает строковое представление Relation
+     * @return
+     */
     @Override
     public String toString() {
-        String fieldType = secondfield.getFieldType();
-        if (secondfield.getFieldType().contains("Список")) {
-           fieldType = parseFieldType();
-        }
+//        String fieldType = secondfield.getFieldType();
+//        if (secondfield.getFieldType().contains("Список")) {
+//           fieldType = parseFieldType();
+//        }
         return "relationship "  + this.relationType + " {\n" +
                 firstField.getClassName() + "{" + secondfield.getFieldName() + "}"
-                + " to " + fieldType +
+                + " to " + parseFieldType() +
                 "{" + firstField.getClassName().toLowerCase() + "}"
                 + "\n}";
     }
 
+    /**
+     * Метод используется если поле secondfield является списком.
+     * Метод парсит тип поля и возвращает тип, содержащийся между угловыми скобками <>.
+     * @return fieldType
+     */
     private String parseFieldType() {
         String fieldType = secondfield.getFieldType();
-        int start = fieldType.indexOf("<");
-        int finish = fieldType.indexOf(">");
-        return fieldType.substring(start + 1, finish);
-
+        if (secondfield.getFieldType().contains("Список")){
+            int start = fieldType.indexOf("<");
+            int finish = fieldType.indexOf(">");
+            fieldType = fieldType.substring(start + 1, finish);
+        }
+        return fieldType;
     }
 
 
@@ -84,7 +95,7 @@ public class Relation {
         OneToMany("OneToMany"), OneToOne("OneToOne");
 
         /**
-         * поле хранит строковое представление перечисления
+         * Поле хранит строковое представление перечисления
          */
         private String type;
 
