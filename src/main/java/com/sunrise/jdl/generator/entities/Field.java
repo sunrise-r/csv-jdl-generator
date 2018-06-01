@@ -21,23 +21,23 @@ public class Field {
     /**
      * Тип поля
      */
-    private String fieldType;
+    private final String fieldType;
 
     /**
      * Название поля
      */
-    private String fieldName;
+    private final String fieldName;
 
     /**
      * Длинна поля.
      */
-    private String fieldLength;
+    private final String fieldLength;
 
     /**
      * Если тип поля поддерживается в JDL - отмечаем его true.
      * При создании Field данное поле в конструкторе устанавливается false.
      */
-    private boolean JdlType;
+    private final boolean JdlType;
 
     /**
      * Конструктор
@@ -45,48 +45,30 @@ public class Field {
      * @param fieldType   тип поля
      * @param fieldName   название поля
      * @param fieldLength длинна поля
+     * @param jdlType     является ли поле сопоставимым с типом JDL
      */
-    public Field(String fieldType, String fieldName, String fieldLength) {
+    public Field(String fieldType, String fieldName, String fieldLength, boolean jdlType) {
         this.fieldType = fieldType;
         this.fieldName = fieldName;
         this.fieldLength = fieldLength;
-        this.JdlType = false;
+        this.JdlType = jdlType;
     }
 
     public String getFieldName() {
         return fieldName;
     }
 
-    public void setFieldName(String fieldName) {
-        this.fieldName = fieldName;
-    }
-
     public String getFieldType() {
         return fieldType;
-    }
-
-    public void setFieldType(String fieldType) {
-        this.fieldType = fieldType;
-    }
-
-    public String getFieldLength() {
-        return fieldLength;
-    }
-
-    public void setFieldLength(String fieldLength) {
-        this.fieldLength = fieldLength;
     }
 
     public boolean isJdlType() {
         return JdlType;
     }
 
-    public void setJdlType(boolean jdlType) {
-        this.JdlType = jdlType;
-    }
-
     /**
      * Возвращает строковое представление в формте jdl.
+     *
      * @return string in jdl-format
      */
     @Override

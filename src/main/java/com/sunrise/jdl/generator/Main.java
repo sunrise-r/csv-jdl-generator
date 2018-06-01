@@ -10,6 +10,8 @@ import java.util.List;
 
 public class Main {
 
+    private static EntitiesService entitiesService = new EntitiesService();
+
     public static void main(String[] args) {
 
         Options options = new Options();
@@ -54,15 +56,11 @@ public class Main {
                 targetFile = new File("result.txt");
             }
 
+            List<Entity> entities = entitiesService.readAll(resources);
 
-
-            EntitiesService entitiesService = new EntitiesService(resources);
-            List<Entity> entities = entitiesService.readAll();
-            int numberOfCorrection = entitiesService.correctsFieldsType(entities);
-            entitiesService.checkIsFieldSupportedInJDL(entities);
+            //entitiesService.checkIsFieldSupportedInJDL(entities);
             int numberOfCreatedStrucure = entitiesService.createStructure(entities);
 
-            System.out.printf("Количество корректировок полей %d\n", numberOfCorrection);
             System.out.println("Количество созданных структур " + numberOfCreatedStrucure);
 
 
