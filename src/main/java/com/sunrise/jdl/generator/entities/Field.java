@@ -21,7 +21,7 @@ public class Field {
     /**
      * Тип поля
      */
-    private String fieldType;
+    private final String fieldType;
 
     /**
      * Название поля
@@ -60,10 +60,6 @@ public class Field {
 
     public String getFieldType() {
         return fieldType;
-    }
-
-    public void setFieldType(String fieldType) {
-        this.fieldType = fieldType;
     }
 
     public boolean isJdlType() {

@@ -28,6 +28,7 @@ public class EntitiesService {
     public static final int FIELDNAME = 2;
     public static final int FIELDTYPE = 5;
     public static final int FIELDSIZE = 6;
+    public static final String LIST_TYPE = "Список";
 
     private final Set<String> convertableToJdlTypes = new HashSet<>();
 
@@ -132,7 +133,7 @@ public class EntitiesService {
         int count = 0;
         ArrayList<Field> fields = entity.getFields();
         for (Field field : fields) {
-            if (!field.isJdlType() && field.getFieldType().contains("Список")) {
+            if (!field.isJdlType() && field.getFieldType().contains(LIST_TYPE)) {
                 count++;
                 Relation relation = new Relation(entity, field, Relation.RelationType.OneToMany);
                 entity.getRelations().add(relation);
