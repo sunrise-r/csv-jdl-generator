@@ -42,6 +42,9 @@ public class Main {
             File[] files = directory.listFiles();
             List<InputStream> resources = new ArrayList<InputStream>(files.length);
             for (File f : files) {
+                if(!f.getName().endsWith(".csv")){
+                    continue;
+                }
                 try {
                     resources.add(new FileInputStream(f));
                 } catch (FileNotFoundException e) {
