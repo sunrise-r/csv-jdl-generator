@@ -5,12 +5,15 @@ import org.apache.commons.cli.*;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class Main {
 
-    private static EntitiesService entitiesService = new EntitiesService();
+    private static EntitiesService entitiesService = null;
 
     public static void main(String[] args) {
 
@@ -18,8 +21,13 @@ public class Main {
         options.addOption("sourceFolder", true, "set source folder with csv files");
         options.addOption("help", false, "show this help");
         options.addOption("targetFile", true, "file with results");
+        options.addOption("ignoreEntities", true, "set entities that will be ignored while generating");
+        options.addOption("ignoreFields", true, "set entities that will be ignored while generating");
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd;
+        List<String> entitiesToIgnore = null;
+        List<String> fieldsToIgnore = null;
+
 
         try {
             cmd = parser.parse(options, args);
@@ -36,13 +44,21 @@ public class Main {
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("jdlGenerator", options);
         }
+        if (cmd.hasOption("ignoreEntities")) {
+            String ens = cmd.getOptionValue("ignoreEntities");
+            entitiesToIgnore = Arrays.stream(ens.split(",")).map((s) -> s.trim()).collect(Collectors.toList());
+        }
+        if (cmd.hasOption("ignoreFields")) {
+            fieldsToIgnore = Arrays.stream(cmd.getOptionValue("ignoreFields").split(",")).map((s) -> s.trim()).collect(Collectors.toList());
+        }
 
         if (cmd.hasOption("sourceFolder")) {
+            entitiesService = new EntitiesService(entitiesToIgnore, fieldsToIgnore);
             File directory = new File(cmd.getOptionValue("sourceFolder"));
             File[] files = directory.listFiles();
             List<InputStream> resources = new ArrayList<InputStream>(files.length);
             for (File f : files) {
-                if(!f.getName().endsWith(".csv")){
+                if (!f.getName().endsWith(".csv")) {
                     continue;
                 }
                 try {
@@ -68,7 +84,7 @@ public class Main {
 
 
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(targetFile, false))) {
-               entitiesService.writeEntityToFile(entities, writer);
+                entitiesService.writeEntityToFile(entities, writer);
             } catch (IOException e) {
                 e.printStackTrace();
             }

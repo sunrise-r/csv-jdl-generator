@@ -31,11 +31,25 @@ public class EntitiesService {
     public static final String LIST_TYPE = "Список";
 
     private final Set<String> convertableToJdlTypes = new HashSet<>();
+    private final Set<String> entitiesToIngore = new HashSet<>();
+    private final Set<String> fieldsToIngore = new HashSet<>();
 
-    public EntitiesService(){
+    /**
+     * Конструктор
+     *
+     * @param entitiesToIngore список сущностей которые будут игнорироваться генератором
+     * @param fieldsToIngore   список полей которые будут игнорироватьсягенератором
+     */
+    public EntitiesService(List<String> entitiesToIngore, List<String> fieldsToIngore) {
         convertableToJdlTypes.add("Строка");
         convertableToJdlTypes.add("Число");
         convertableToJdlTypes.add("Дата/время");
+        if (entitiesToIngore != null) {
+            this.entitiesToIngore.addAll(entitiesToIngore);
+        }
+        if (fieldsToIngore != null) {
+            this.fieldsToIngore.addAll(fieldsToIngore);
+        }
     }
 
     public List<Entity> readAll(List<InputStream> resources) {
@@ -50,7 +64,7 @@ public class EntitiesService {
      * Метод читает сущности из передаваемого .csv файла
      *
      * @param stream Поток с данными о сущностях
-     * @return entities Список сущностей сформированных на основе потока данных
+     * @return entitiesToIngore Список сущностей сформированных на основе потока данных
      */
     private java.util.Collection<Entity> readDataFromCSV(InputStream stream) {
         Map<String, Entity> toReturn = new LinkedHashMap<String, Entity>();
@@ -64,14 +78,14 @@ public class EntitiesService {
                 String fieldType = record.get(FIELDTYPE);
                 String fieldLength = record.get(FIELDSIZE);
 
-                if (!possibleClassName.equals("") && !possibleClassName.contains("П") && !possibleClassName.isEmpty()) {
+                if (!possibleClassName.equals("") && !possibleClassName.contains("П") && !possibleClassName.isEmpty() && !entitiesToIngore.contains(possibleClassName)) {
                     className = possibleClassName;
                     Field field = new Field(convertFieldType(fieldType), fieldName, fieldLength, isFieldOfJdlType(fieldType));
                     ArrayList<Field> arrayList = new ArrayList<Field>();
                     arrayList.add(field);
                     Entity entity = new Entity(className, arrayList);
                     toReturn.put(className, entity);
-                } else if (possibleClassName.equals("") && toReturn.size() > 0) {
+                } else if (possibleClassName.equals("") && toReturn.size() > 0 && !fieldsToIngore.contains(fieldName)) {
                     toReturn.get(className).getFields().add(new Field(convertFieldType(fieldType), fieldName, fieldLength, isFieldOfJdlType(fieldType)));
                 }
             }
@@ -87,11 +101,12 @@ public class EntitiesService {
 
     /**
      * Конвертировать тип из формата описания в JDL
+     *
      * @param source Исходные данные для конвертации
      * @return В случае если нелзья сконвертировать, возвращает исходыне данные.
      */
-    public String convertFieldType(String source){
-        if(!isFieldOfJdlType(source)){
+    public String convertFieldType(String source) {
+        if (!isFieldOfJdlType(source)) {
             return source;
         }
         if (source.contains("Строка")) {
@@ -108,7 +123,7 @@ public class EntitiesService {
     }
 
     /**
-     * Для каждой entity из entities вызывается метод createStructure(Entity entity)
+     * Для каждой entity из entitiesToIngore вызывается метод createStructure(Entity entity)
      *
      * @param entities
      * @return total number of created structure
@@ -122,7 +137,7 @@ public class EntitiesService {
     }
 
     /**
-     * Если сущность содержит в fields Список, метод создает объект Relation и
+     * Если сущность содержит в fieldsToIngore Список, метод создает объект Relation и
      * добавляет его в поле relations у Entity.
      * Метод возращает количество считанных структур.
      *

@@ -12,7 +12,7 @@ import java.util.List;
 
 public class EntitiesServiceTest {
 
-    private EntitiesService entitiesService = new EntitiesService();
+    private EntitiesService entitiesService = new EntitiesService(null,null);
 
     /**
      * TODO я думаю нужен тест на небольшом колличенстве данных, 1-2 сущности, что бы проверить, что все поля устонавливаются правильно.
@@ -22,8 +22,7 @@ public class EntitiesServiceTest {
         ArrayList<InputStream> streams = new ArrayList<>(2);
         streams.add(this.getClass().getResourceAsStream("/dictionary.csv"));
         streams.add(this.getClass().getResourceAsStream("/data.csv"));
-        EntitiesService reader = new EntitiesService();
-        List<Entity> result = reader.readAll(streams);
+        List<Entity> result = entitiesService.readAll(streams);
         Assert.assertNotNull(result);
         Assert.assertTrue(result.size() > 0);
     }
