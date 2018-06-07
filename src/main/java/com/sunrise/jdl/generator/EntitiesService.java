@@ -135,7 +135,7 @@ public class EntitiesService {
         for (Field field : fields) {
             if (!field.isJdlType() && field.getFieldType().contains(LIST_TYPE)) {
                 count++;
-                Relation relation = new Relation(entity, field, Relation.RelationType.ManyToOne);
+                Relation relation = new Relation(entity, field, Relation.RelationType.OneToMany);
                 entity.getRelations().add(relation);
             } else if (!field.isJdlType()) {
                 Relation relation = new Relation(entity, field, Relation.RelationType.OneToOne);

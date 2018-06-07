@@ -84,7 +84,7 @@ public class Relation {
 
     public enum RelationType {
 
-        ManyToOne("ManyToOne"),
+        OneToMany("OneToMany"),
         OneToOne("OneToOne");
 
         /**
