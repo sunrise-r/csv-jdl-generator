@@ -82,7 +82,9 @@ public class EntitiesService {
                     className = possibleClassName;
                     Field field = new Field(convertFieldType(fieldType), fieldName, fieldLength, isFieldOfJdlType(fieldType));
                     ArrayList<Field> arrayList = new ArrayList<Field>();
-                    arrayList.add(field);
+                    if(!fieldsToIngore.contains(fieldName)) {
+                        arrayList.add(field);
+                    }
                     Entity entity = new Entity(className, arrayList);
                     toReturn.put(className, entity);
                 } else if (possibleClassName.equals("") && toReturn.size() > 0 && !fieldsToIngore.contains(fieldName)) {
