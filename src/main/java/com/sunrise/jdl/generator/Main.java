@@ -1,6 +1,8 @@
 package com.sunrise.jdl.generator;
 
 import com.sunrise.jdl.generator.entities.Entity;
+import com.sunrise.jdl.generator.service.EntitiesService;
+import com.sunrise.jdl.generator.service.Settings;
 import org.apache.commons.cli.*;
 
 import java.io.*;
@@ -8,26 +10,30 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 public class Main {
 
+    public static final String PAGINATE_TYPE = "paginateType";
+    public static final String IGNORE_FIELDS = "ignoreFields";
+    public static final String IGNORE_ENTITIES = "ignoreEntities";
+    public static final String HELP = "help";
+    public static final String SOURCE_FOLDER = "sourceFolder";
+    public static final String TARGET_FILE = "targetFile";
     private static EntitiesService entitiesService = null;
 
     public static void main(String[] args) {
 
         Options options = new Options();
-        options.addOption("sourceFolder", true, "set source folder with csv files");
-        options.addOption("help", false, "show this help");
-        options.addOption("targetFile", true, "file with results");
-        options.addOption("ignoreEntities", true, "set entities that will be ignored while generating");
-        options.addOption("ignoreFields", true, "set entities that will be ignored while generating");
+        options.addOption(SOURCE_FOLDER, true, "set source folder with csv files");
+        options.addOption(HELP, false, "show this help");
+        options.addOption(TARGET_FILE, true, "file with results");
+        options.addOption(IGNORE_ENTITIES, true, "set entities that will be ignored while generating");
+        options.addOption(IGNORE_FIELDS, true, "set entities that will be ignored while generating");
+        options.addOption(PAGINATE_TYPE, true, "set type of pagination for entities, default is pagination. Possible values are: pager, pagination, infinite-scroll");
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd;
-        List<String> entitiesToIgnore = null;
-        List<String> fieldsToIgnore = null;
-
+        final Settings settings = new Settings();
 
         try {
             cmd = parser.parse(options, args);
@@ -40,21 +46,25 @@ public class Main {
             System.err.println("Parsing failed.  Reason: cmd is null");
         }
 
-        if (cmd.hasOption("help")) {
+        if (cmd.hasOption(HELP)) {
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("jdlGenerator", options);
         }
-        if (cmd.hasOption("ignoreEntities")) {
-            String ens = cmd.getOptionValue("ignoreEntities");
-            entitiesToIgnore = Arrays.stream(ens.split(",")).map((s) -> s.trim()).collect(Collectors.toList());
+        if (cmd.hasOption(IGNORE_ENTITIES)) {
+            String ens = cmd.getOptionValue(IGNORE_ENTITIES);
+            settings.getEntitiesToIngore().addAll(Arrays.stream(ens.split(",")).map((s) -> s.trim()).collect(Collectors.toList()));
         }
-        if (cmd.hasOption("ignoreFields")) {
-            fieldsToIgnore = Arrays.stream(cmd.getOptionValue("ignoreFields").split(",")).map((s) -> s.trim()).collect(Collectors.toList());
+        if (cmd.hasOption(IGNORE_FIELDS)) {
+            settings.getFieldsToIngore().addAll(Arrays.stream(cmd.getOptionValue(IGNORE_FIELDS).split(",")).map((s) -> s.trim()).collect(Collectors.toList()));
         }
 
-        if (cmd.hasOption("sourceFolder")) {
-            entitiesService = new EntitiesService(entitiesToIgnore, fieldsToIgnore);
-            File directory = new File(cmd.getOptionValue("sourceFolder"));
+        if (cmd.hasOption(PAGINATE_TYPE)) {
+            settings.setPaginationType(Settings.PaginationType.fromString(cmd.getOptionValue(PAGINATE_TYPE)));
+        }
+
+        if (cmd.hasOption(SOURCE_FOLDER)) {
+            entitiesService = new EntitiesService(settings);
+            File directory = new File(cmd.getOptionValue(SOURCE_FOLDER));
             File[] files = directory.listFiles();
             List<InputStream> resources = new ArrayList<InputStream>(files.length);
             for (File f : files) {
@@ -69,8 +79,8 @@ public class Main {
             }
 
             File targetFile;
-            if (cmd.hasOption("targetFile")) {
-                targetFile = new File(cmd.getOptionValue("targetFile"));
+            if (cmd.hasOption(TARGET_FILE)) {
+                targetFile = new File(cmd.getOptionValue(TARGET_FILE));
             } else {
                 targetFile = new File("result.txt");
             }
@@ -78,13 +88,13 @@ public class Main {
             List<Entity> entities = entitiesService.readAll(resources);
 
             //entitiesService.checkIsFieldSupportedInJDL(entities);
-            int numberOfCreatedStrucure = entitiesService.createStructure(entities);
+            int numberOfCreatedStrucure = entitiesService.createStructures(entities);
 
             System.out.println("Количество созданных структур " + numberOfCreatedStrucure);
 
 
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(targetFile, false))) {
-                entitiesService.writeEntityToFile(entities, writer);
+                entitiesService.writeEntities(entities, writer);
             } catch (IOException e) {
                 e.printStackTrace();
             }
