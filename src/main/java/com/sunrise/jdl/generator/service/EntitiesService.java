@@ -1,4 +1,4 @@
-package com.sunrise.jdl.generator;
+package com.sunrise.jdl.generator.service;
 
 import com.sunrise.jdl.generator.entities.Entity;
 import com.sunrise.jdl.generator.entities.Field;
@@ -30,25 +30,31 @@ public class EntitiesService {
     public static final int FIELDSIZE = 6;
     public static final String LIST_TYPE = "Список";
 
+    /**
+     * Шаблон вывода информации о пейджинации сущностей.
+     */
+    private static final String PAGINATE_TEMPLATE= "paginate %s with %s";
+
     private final Set<String> convertableToJdlTypes = new HashSet<>();
     private final Set<String> entitiesToIngore = new HashSet<>();
     private final Set<String> fieldsToIngore = new HashSet<>();
+    private final Settings settings;
 
     /**
      * Конструктор
      *
-     * @param entitiesToIngore список сущностей которые будут игнорироваться генератором
-     * @param fieldsToIngore   список полей которые будут игнорироватьсягенератором
+     * @param settings Настройки генерации файла описания данных.
      */
-    public EntitiesService(List<String> entitiesToIngore, List<String> fieldsToIngore) {
+    public EntitiesService(Settings settings) {
+        this.settings = settings;
         convertableToJdlTypes.add("Строка");
         convertableToJdlTypes.add("Число");
         convertableToJdlTypes.add("Дата/время");
         if (entitiesToIngore != null) {
-            this.entitiesToIngore.addAll(entitiesToIngore);
+            this.entitiesToIngore.addAll(settings.getEntitiesToIngore());
         }
         if (fieldsToIngore != null) {
-            this.fieldsToIngore.addAll(fieldsToIngore);
+            this.fieldsToIngore.addAll(settings.getFieldsToIngore());
         }
     }
 
@@ -125,12 +131,12 @@ public class EntitiesService {
     }
 
     /**
-     * Для каждой entity из entitiesToIngore вызывается метод createStructure(Entity entity)
+     * Для каждой entity из entitiesToIngore вызывается метод createStructures(Entity entity)
      *
      * @param entities
      * @return total number of created structure
      */
-    public int createStructure(List<Entity> entities) {
+    public int createStructures(List<Entity> entities) {
         int totalCreatedStructure = 0;
         for (Entity entity : entities) {
             totalCreatedStructure += this.createStructure(entity);
@@ -164,17 +170,18 @@ public class EntitiesService {
     }
 
     /**
-     * Перегруженный вариант writeEntityToFile(Entity entity, BufferedWriter writer).
-     * Для каждой entity из enities вызывается метод writeEntityToFile(Entity entity, BufferedWriter writer)
+     * Перегруженный вариант writeEntities(Entity entity, BufferedWriter writer).
+     * Для каждой entity из enities вызывается метод writeEntities(Entity entity, BufferedWriter writer)
      *
      * @param entities
      * @param writer
      * @return
      */
-    public void writeEntityToFile(List<Entity> entities, BufferedWriter writer) throws IOException {
+    public void writeEntities(List<Entity> entities, Writer writer) throws IOException {
         for (Entity entity : entities) {
-            writeEntityToFile(entity, writer);
+            writeEntity(entity, writer);
         }
+        writer.write(String.format(PAGINATE_TEMPLATE,"*", settings.getPaginationType()));
     }
 
     /**
@@ -184,7 +191,7 @@ public class EntitiesService {
      * @param writer
      * @throws IOException
      */
-    public void writeEntityToFile(Entity entity, BufferedWriter writer) throws IOException {
+    private void writeEntity(Entity entity, Writer writer) throws IOException {
         writer.write(entity.toString() + "\n");
         ArrayList<Relation> relations = entity.getRelations();
         if (relations.size() > 0) {
