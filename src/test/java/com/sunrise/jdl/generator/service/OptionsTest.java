@@ -31,9 +31,22 @@ public class OptionsTest {
     @Test
     public void mapstructOptionsTest() throws IOException {
         Settings settings = new Settings();
-        settings.setUserMapStruct(true);
+        settings.setUseMapStruct(true);
         String result = getResultString(settings);
         Assert.assertTrue(result.contains("dto * with mapstruct"));
+    }
+
+    @Test
+    public void generateServiciesTest() throws IOException {
+        Settings settings = new Settings();
+        settings.setGenerateServiciesFor("all");
+        String result = getResultString(settings);
+        Assert.assertTrue(result.contains("service all with serviceImpl"));
+
+        settings.setExceptServiceGenerationFor("me");
+        result = getResultString(settings);
+        Assert.assertTrue(result.contains("service all with serviceImpl except me"));
+
     }
 
     private String getResultOutput(Settings.PaginationType toUse) throws IOException {

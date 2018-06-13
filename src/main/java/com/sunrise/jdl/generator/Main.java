@@ -21,6 +21,8 @@ public class Main {
     public static final String SOURCE_FOLDER = "sourceFolder";
     public static final String TARGET_FILE = "targetFile";
     public static final String MAPSTRUCT = "mapstruct";
+    private static final String GENERATTE_SERVICE_FOR = "generateServiceFor";
+    private static final String EXECPT_SERVICE_GENERATION = "exceptServiceGeneration";
     private static EntitiesService entitiesService = null;
 
     public static void main(String[] args) {
@@ -33,6 +35,8 @@ public class Main {
         options.addOption(IGNORE_FIELDS, true, "set entities that will be ignored while generating");
         options.addOption(PAGINATE_TYPE, true, "set type of pagination for entities, default is pagination. Possible values are: pager, pagination, infinite-scroll");
         options.addOption(MAPSTRUCT, false, "enables using dto's with mapstruct");
+        options.addOption(GENERATTE_SERVICE_FOR, true, "for what entities service generation neeed. List of entities or 'all'");
+        options.addOption(EXECPT_SERVICE_GENERATION, true, "for what entities service generation is not needed. List of entities");
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd;
         final Settings settings = new Settings();
@@ -64,8 +68,14 @@ public class Main {
             settings.setPaginationType(Settings.PaginationType.fromString(cmd.getOptionValue(PAGINATE_TYPE)));
         }
 
-        if(cmd.hasOption(MAPSTRUCT)){
-            settings.setUserMapStruct(true);
+        if (cmd.hasOption(MAPSTRUCT)) {
+            settings.setUseMapStruct(true);
+        }
+        if(cmd.hasOption(GENERATTE_SERVICE_FOR)){
+            settings.setGenerateServiciesFor(cmd.getOptionValue(GENERATTE_SERVICE_FOR));
+        }
+        if(cmd.hasOption(EXECPT_SERVICE_GENERATION)){
+            settings.setExceptServiceGenerationFor(cmd.getOptionValue(EXECPT_SERVICE_GENERATION));
         }
 
         if (cmd.hasOption(SOURCE_FOLDER)) {

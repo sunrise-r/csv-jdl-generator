@@ -33,12 +33,23 @@ public class EntitiesService {
     /**
      * Шаблон вывода информации о пейджинации сущностей.
      */
-    private static final String PAGINATE_TEMPLATE= "paginate %s with %s";
+    private static final String PAGINATE_TEMPLATE = "paginate %s with %s";
 
     /**
      * Шаблон настройки генерации ДТО
      */
     private static final String MAPSTRUCT_TEMPLATE = "dto * with mapstruct";
+
+
+    /**
+     * Шаблон настройки генерации сервисов и исключений генерации
+     */
+    private static final String GENERATE_SERVICIES_WITH_EXCEPT_TEMPLATE ="service %s with serviceImpl except %s";
+
+    /**
+     * Шаблон настройки генерации серисов
+     */
+    private static final String GENERATE_SERVICIES_TEMPLATE ="service %s with serviceImpl";
 
     private final Set<String> convertableToJdlTypes = new HashSet<>();
     private final Set<String> entitiesToIngore = new HashSet<>();
@@ -93,7 +104,7 @@ public class EntitiesService {
                     className = possibleClassName;
                     Field field = new Field(convertFieldType(fieldType), fieldName, fieldLength, isFieldOfJdlType(fieldType));
                     ArrayList<Field> arrayList = new ArrayList<Field>();
-                    if(!fieldsToIngore.contains(fieldName)) {
+                    if (!fieldsToIngore.contains(fieldName)) {
                         arrayList.add(field);
                     }
                     Entity entity = new Entity(className, arrayList);
@@ -186,8 +197,19 @@ public class EntitiesService {
         for (Entity entity : entities) {
             writeEntity(entity, writer);
         }
-        writer.write(String.format(PAGINATE_TEMPLATE,"*", settings.getPaginationType()));
-        writer.write(String.format(MAPSTRUCT_TEMPLATE,"*"));
+        if (settings.getPaginationType() != null) {
+            writer.write(String.format(PAGINATE_TEMPLATE, "*", settings.getPaginationType()));
+        }
+        if (settings.isUseMapStruct()) {
+            writer.write(String.format(MAPSTRUCT_TEMPLATE, "*"));
+        }
+        if (settings.getGenerateServiciesFor() != null) {
+            if(settings.getExceptServiceGenerationFor()!=null){
+                writer.write(String.format(GENERATE_SERVICIES_WITH_EXCEPT_TEMPLATE,settings.getGenerateServiciesFor(),settings.getExceptServiceGenerationFor()));
+            }else{
+                writer.write(String.format(GENERATE_SERVICIES_TEMPLATE,settings.getGenerateServiciesFor()));
+            }
+        }
     }
 
     /**

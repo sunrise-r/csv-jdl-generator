@@ -24,7 +24,17 @@ public class Settings {
     /**
      * Нужно ли генерировать DTO объекты с ипользованием MapStruct
      */
-    private boolean userMapStruct = false;
+    private boolean useMapStruct = false;
+
+    /**
+     * Список сущностей для которых необходимо генерировать сервисы
+     */
+    private String generateServiciesFor;
+
+    /**
+     * Список сущностей для которых ненужно генерировать сервисы
+     */
+    private String exceptServiceGenerationFor;
 
     private PaginationType paginationType = PaginationType.PAGINATION;
 
@@ -44,12 +54,28 @@ public class Settings {
         this.paginationType = paginationType;
     }
 
-    public boolean isUserMapStruct() {
-        return userMapStruct;
+    public boolean isUseMapStruct() {
+        return useMapStruct;
     }
 
-    public void setUserMapStruct(boolean userMapStruct) {
-        this.userMapStruct = userMapStruct;
+    public void setUseMapStruct(boolean useMapStruct) {
+        this.useMapStruct = useMapStruct;
+    }
+
+    public String getGenerateServiciesFor() {
+        return generateServiciesFor;
+    }
+
+    public void setGenerateServiciesFor(String generateServiciesFor) {
+        this.generateServiciesFor = generateServiciesFor;
+    }
+
+    public String getExceptServiceGenerationFor() {
+        return exceptServiceGenerationFor;
+    }
+
+    public void setExceptServiceGenerationFor(String exceptServiceGenerationFor) {
+        this.exceptServiceGenerationFor = exceptServiceGenerationFor;
     }
 
     /**
