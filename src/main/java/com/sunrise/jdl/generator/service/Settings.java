@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Опции генерации jdl файла для EntitiesService.
  * Используется для того, что бы инкапсулировать возможные настройки генерации описания данных.
- *
+ * <p>
  * Created by igorch on 12.06.18.
  */
 public class Settings {
@@ -20,6 +20,11 @@ public class Settings {
      * Список названий полей которые генератор проигнорирует.
      */
     private final List<String> fieldsToIngore = new ArrayList<>();
+
+    /**
+     * Нужно ли генерировать DTO объекты с ипользованием MapStruct
+     */
+    private boolean userMapStruct = false;
 
     private PaginationType paginationType = PaginationType.PAGINATION;
 
@@ -39,10 +44,18 @@ public class Settings {
         this.paginationType = paginationType;
     }
 
+    public boolean isUserMapStruct() {
+        return userMapStruct;
+    }
+
+    public void setUserMapStruct(boolean userMapStruct) {
+        this.userMapStruct = userMapStruct;
+    }
+
     /**
      * Список с поддерживаемыми видами пейджинации.
      */
-    public enum PaginationType{
+    public enum PaginationType {
 
         /**
          * Обычная пейджинация через пейджер
@@ -55,13 +68,13 @@ public class Settings {
         INFINITE_SCROLL("infinite-scroll"),
 
         /**
-         *  Из документации не понятно, что будет если выбрать эту опцию
+         * Из документации не понятно, что будет если выбрать эту опцию
          */
         PAGER("pager");
 
         private final String jdlValue;
 
-        PaginationType(String jdlValue){
+        PaginationType(String jdlValue) {
 
             this.jdlValue = jdlValue;
         }
@@ -77,7 +90,7 @@ public class Settings {
                     return b;
                 }
             }
-            throw new RuntimeException(String.format("Failed to parse %s to available jdl paginate values",paginate));
+            throw new RuntimeException(String.format("Failed to parse %s to available jdl paginate values", paginate));
         }
     }
 

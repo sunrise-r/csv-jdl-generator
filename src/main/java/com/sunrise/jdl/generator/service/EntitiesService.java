@@ -35,6 +35,11 @@ public class EntitiesService {
      */
     private static final String PAGINATE_TEMPLATE= "paginate %s with %s";
 
+    /**
+     * Шаблон настройки генерации ДТО
+     */
+    private static final String MAPSTRUCT_TEMPLATE = "dto * with mapstruct";
+
     private final Set<String> convertableToJdlTypes = new HashSet<>();
     private final Set<String> entitiesToIngore = new HashSet<>();
     private final Set<String> fieldsToIngore = new HashSet<>();
@@ -182,6 +187,7 @@ public class EntitiesService {
             writeEntity(entity, writer);
         }
         writer.write(String.format(PAGINATE_TEMPLATE,"*", settings.getPaginationType()));
+        writer.write(String.format(MAPSTRUCT_TEMPLATE,"*"));
     }
 
     /**
