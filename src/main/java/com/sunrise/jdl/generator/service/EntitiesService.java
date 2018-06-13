@@ -33,24 +33,28 @@ public class EntitiesService {
     /**
      * Шаблон вывода информации о пейджинации сущностей.
      */
-    private static final String PAGINATE_TEMPLATE = "paginate %s with %s";
+    private static final String PAGINATE_TEMPLATE = "paginate %s with %s\n";
 
     /**
      * Шаблон настройки генерации ДТО
      */
-    private static final String MAPSTRUCT_TEMPLATE = "dto * with mapstruct";
+    private static final String MAPSTRUCT_TEMPLATE = "dto * with mapstruct\n";
 
 
     /**
      * Шаблон настройки генерации сервисов и исключений генерации
      */
-    private static final String GENERATE_SERVICIES_WITH_EXCEPT_TEMPLATE = "service %s with serviceImpl except %s";
+    private static final String GENERATE_SERVICIES_WITH_EXCEPT_TEMPLATE = "service %s with serviceImpl except %s\n";
 
     /**
      * Шаблон настройки генерации серисов
      */
-    private static final String GENERATE_SERVICIES_TEMPLATE = "service %s with serviceImpl";
-    public static final String MICROSERVICE_TEMPLATE = "microservice * with %s";
+    private static final String GENERATE_SERVICIES_TEMPLATE = "service %s with serviceImpl\n";
+
+    /**
+     * Шаблон настройки генерации микросервисов
+     */
+    public static final String MICROSERVICE_TEMPLATE = "microservice * with %s\n";
 
     private final Set<String> convertableToJdlTypes = new HashSet<>();
     private final Set<String> entitiesToIngore = new HashSet<>();
