@@ -28,11 +28,21 @@ public class OptionsTest {
         Assert.assertTrue(result.contains("paginate * with pager"));
     }
 
-
+    @Test
+    public void mapstructOptionsTest() throws IOException {
+        Settings settings = new Settings();
+        settings.setUserMapStruct(true);
+        String result = getResultString(settings);
+        Assert.assertTrue(result.contains("dto * with mapstruct"));
+    }
 
     private String getResultOutput(Settings.PaginationType toUse) throws IOException {
         Settings settings = new Settings();
         settings.setPaginationType(toUse);
+        return getResultString(settings);
+    }
+
+    private String getResultString(Settings settings) throws IOException {
         EntitiesService entitiesService = new EntitiesService(settings);
         StringWriter writer = new StringWriter();
         entitiesService.writeEntities(new ArrayList<>(0), writer);

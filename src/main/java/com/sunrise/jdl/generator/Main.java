@@ -20,6 +20,7 @@ public class Main {
     public static final String HELP = "help";
     public static final String SOURCE_FOLDER = "sourceFolder";
     public static final String TARGET_FILE = "targetFile";
+    public static final String MAPSTRUCT = "mapstruct";
     private static EntitiesService entitiesService = null;
 
     public static void main(String[] args) {
@@ -31,6 +32,7 @@ public class Main {
         options.addOption(IGNORE_ENTITIES, true, "set entities that will be ignored while generating");
         options.addOption(IGNORE_FIELDS, true, "set entities that will be ignored while generating");
         options.addOption(PAGINATE_TYPE, true, "set type of pagination for entities, default is pagination. Possible values are: pager, pagination, infinite-scroll");
+        options.addOption(MAPSTRUCT, false, "enables using dto's with mapstruct");
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd;
         final Settings settings = new Settings();
@@ -62,6 +64,10 @@ public class Main {
             settings.setPaginationType(Settings.PaginationType.fromString(cmd.getOptionValue(PAGINATE_TYPE)));
         }
 
+        if(cmd.hasOption(MAPSTRUCT)){
+            settings.setUserMapStruct(true);
+        }
+
         if (cmd.hasOption(SOURCE_FOLDER)) {
             entitiesService = new EntitiesService(settings);
             File directory = new File(cmd.getOptionValue(SOURCE_FOLDER));
@@ -82,7 +88,7 @@ public class Main {
             if (cmd.hasOption(TARGET_FILE)) {
                 targetFile = new File(cmd.getOptionValue(TARGET_FILE));
             } else {
-                targetFile = new File("result.txt");
+                targetFile = new File("result.jh");
             }
 
             List<Entity> entities = entitiesService.readAll(resources);
