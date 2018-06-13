@@ -44,12 +44,13 @@ public class EntitiesService {
     /**
      * Шаблон настройки генерации сервисов и исключений генерации
      */
-    private static final String GENERATE_SERVICIES_WITH_EXCEPT_TEMPLATE ="service %s with serviceImpl except %s";
+    private static final String GENERATE_SERVICIES_WITH_EXCEPT_TEMPLATE = "service %s with serviceImpl except %s";
 
     /**
      * Шаблон настройки генерации серисов
      */
-    private static final String GENERATE_SERVICIES_TEMPLATE ="service %s with serviceImpl";
+    private static final String GENERATE_SERVICIES_TEMPLATE = "service %s with serviceImpl";
+    public static final String MICROSERVICE_TEMPLATE = "microservice * with %s";
 
     private final Set<String> convertableToJdlTypes = new HashSet<>();
     private final Set<String> entitiesToIngore = new HashSet<>();
@@ -204,11 +205,14 @@ public class EntitiesService {
             writer.write(String.format(MAPSTRUCT_TEMPLATE, "*"));
         }
         if (settings.getGenerateServiciesFor() != null) {
-            if(settings.getExceptServiceGenerationFor()!=null){
-                writer.write(String.format(GENERATE_SERVICIES_WITH_EXCEPT_TEMPLATE,settings.getGenerateServiciesFor(),settings.getExceptServiceGenerationFor()));
-            }else{
-                writer.write(String.format(GENERATE_SERVICIES_TEMPLATE,settings.getGenerateServiciesFor()));
+            if (settings.getExceptServiceGenerationFor() != null) {
+                writer.write(String.format(GENERATE_SERVICIES_WITH_EXCEPT_TEMPLATE, settings.getGenerateServiciesFor(), settings.getExceptServiceGenerationFor()));
+            } else {
+                writer.write(String.format(GENERATE_SERVICIES_TEMPLATE, settings.getGenerateServiciesFor()));
             }
+        }
+        if (settings.getMicroserviceName() != null) {
+            writer.write(String.format(MICROSERVICE_TEMPLATE, settings.getMicroserviceName()));
         }
     }
 
