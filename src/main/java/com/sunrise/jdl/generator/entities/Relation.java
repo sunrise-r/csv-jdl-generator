@@ -2,7 +2,7 @@ package com.sunrise.jdl.generator.entities;
 
 /**
  * Класс создания связей.
- *
+ * <p>
  * Types of supported in JDL relationships:
  * 1. A bidirectional one-to-many relationship
  * 2. A unidirectional many-to-one relationship
@@ -11,26 +11,26 @@ package com.sunrise.jdl.generator.entities;
  * 5. A many-to-many relationship
  * 6. A one-to-one relationship
  * 7. A unidirectional one-to-one relationship
- *
+ * <p>
  * Example for relationship OneToOne:
  * relationship OneToOne {
- * 	FirstEntity to SecondEntity
+ * FirstEntity to SecondEntity
  * }
- *
+ * <p>
  * Тип связи устанавливается с помощью внутреннего перечисления RelationType
  */
 
 public class Relation {
 
     /**
-     * Первая сущность
+     * Сущность в которой объявлена связь
      */
-    private Entity firstField;
+    private Entity entity;
 
     /**
-     * Вторая сущность
+     *  Поле для которого создается отношение
      */
-    private Field secondfield;
+    private Field field;
 
     /**
      * Тип связи
@@ -38,46 +38,38 @@ public class Relation {
     private RelationType relationType;
 
     /**
-     *
-     * @param firstField
-     * @param secondfield
-     * @param relationType
+     * @param entity Сущность владелец отношения
+     * @param field Поле для которого создается отношение
+     * @param relationType Тип создоваемого отношения.
      */
-    public Relation(Entity firstField, Field secondfield, RelationType relationType) {
-        this.firstField = firstField;
-        this.secondfield = secondfield;
+    public Relation(Entity entity, Field field, RelationType relationType) {
+        this.entity = entity;
+        this.field = field;
         this.relationType = relationType;
     }
 
 
-
-
-
     /**
      * Возвращает строковое представление Relation
+     *
      * @return
      */
     @Override
     public String toString() {
-//        String fieldType = secondfield.getFieldType();
-//        if (secondfield.getFieldType().contains("Список")) {
-//           fieldType = parseFieldType();
-//        }
-        return "relationship "  + this.relationType + " {\n" +
-                firstField.getClassName() + "{" + secondfield.getFieldName() + "}"
-                + " to " + parseFieldType() +
-                "{" + firstField.getClassName().toLowerCase() + "}"
+        return "relationship " + this.relationType + " {\n" +
+                entity.getClassName() + "{" + field.getFieldName() + "}"
+                + " to " + getEntityType(field.getFieldType())
                 + "\n}";
     }
 
     /**
-     * Метод используется если поле secondfield является списком.
+     * Метод используется если поле field является списком.
      * Метод парсит тип поля и возвращает тип, содержащийся между угловыми скобками <>.
+     *
      * @return fieldType
      */
-    private String parseFieldType() {
-        String fieldType = secondfield.getFieldType();
-        if (secondfield.getFieldType().contains("Список")){
+    private String getEntityType(String fieldType) {
+        if (fieldType!=null && fieldType.contains("Список")) {
             int start = fieldType.indexOf("<");
             int finish = fieldType.indexOf(">");
             fieldType = fieldType.substring(start + 1, finish);
@@ -90,9 +82,10 @@ public class Relation {
      * Enum для типов связей (пока только один тип)
      */
 
-   public enum RelationType {
+    public enum RelationType {
 
-        OneToMany("OneToMany"), OneToOne("OneToOne");
+        OneToMany("OneToMany"),
+        OneToOne("OneToOne");
 
         /**
          * Поле хранит строковое представление перечисления
@@ -101,9 +94,10 @@ public class Relation {
 
         /**
          * Конструктор
+         *
          * @param type of relation
          */
-         RelationType(String type) {
+        RelationType(String type) {
             this.type = type;
         }
 
