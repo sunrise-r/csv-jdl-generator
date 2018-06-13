@@ -36,6 +36,11 @@ public class Settings {
      */
     private String exceptServiceGenerationFor;
 
+    /**
+     * Название микросервиса для которого будут генерироваться сущности
+     */
+    private String microserviceName;
+
     private PaginationType paginationType = PaginationType.PAGINATION;
 
     public List<String> getEntitiesToIngore() {
@@ -76,6 +81,14 @@ public class Settings {
 
     public void setExceptServiceGenerationFor(String exceptServiceGenerationFor) {
         this.exceptServiceGenerationFor = exceptServiceGenerationFor;
+    }
+
+    public String getMicroserviceName() {
+        return microserviceName;
+    }
+
+    public void setMicroserviceName(String microserviceName) {
+        this.microserviceName = microserviceName;
     }
 
     /**

@@ -23,6 +23,7 @@ public class Main {
     public static final String MAPSTRUCT = "mapstruct";
     private static final String GENERATTE_SERVICE_FOR = "generateServiceFor";
     private static final String EXECPT_SERVICE_GENERATION = "exceptServiceGeneration";
+    private static final String MICROSERVICE = "microservice";
     private static EntitiesService entitiesService = null;
 
     public static void main(String[] args) {
@@ -37,6 +38,7 @@ public class Main {
         options.addOption(MAPSTRUCT, false, "enables using dto's with mapstruct");
         options.addOption(GENERATTE_SERVICE_FOR, true, "for what entities service generation neeed. List of entities or 'all'");
         options.addOption(EXECPT_SERVICE_GENERATION, true, "for what entities service generation is not needed. List of entities");
+        options.addOption(MICROSERVICE,true,"set name of microservice that will hold the entities");
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd;
         final Settings settings = new Settings();
@@ -71,11 +73,17 @@ public class Main {
         if (cmd.hasOption(MAPSTRUCT)) {
             settings.setUseMapStruct(true);
         }
+
         if(cmd.hasOption(GENERATTE_SERVICE_FOR)){
             settings.setGenerateServiciesFor(cmd.getOptionValue(GENERATTE_SERVICE_FOR));
         }
+
         if(cmd.hasOption(EXECPT_SERVICE_GENERATION)){
             settings.setExceptServiceGenerationFor(cmd.getOptionValue(EXECPT_SERVICE_GENERATION));
+        }
+
+        if(cmd.hasOption(MICROSERVICE)){
+            settings.setMicroserviceName(cmd.getOptionValue(MICROSERVICE));
         }
 
         if (cmd.hasOption(SOURCE_FOLDER)) {
