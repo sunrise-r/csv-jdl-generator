@@ -1,4 +1,4 @@
-package com.sunrise.jdl.generator;
+package com.sunrise.jdl.generator.service;
 
 import com.sunrise.jdl.generator.entities.Entity;
 import com.sunrise.jdl.generator.entities.Field;
@@ -12,7 +12,7 @@ import java.util.List;
 
 public class EntitiesServiceTest {
 
-    private EntitiesService entitiesService = new EntitiesService();
+    private EntitiesService entitiesService = new EntitiesService(new Settings());
 
     /**
      * TODO я думаю нужен тест на небольшом колличенстве данных, 1-2 сущности, что бы проверить, что все поля устонавливаются правильно.
@@ -22,14 +22,13 @@ public class EntitiesServiceTest {
         ArrayList<InputStream> streams = new ArrayList<>(2);
         streams.add(this.getClass().getResourceAsStream("/dictionary.csv"));
         streams.add(this.getClass().getResourceAsStream("/data.csv"));
-        EntitiesService reader = new EntitiesService();
-        List<Entity> result = reader.readAll(streams);
+        List<Entity> result = entitiesService.readAll(streams);
         Assert.assertNotNull(result);
         Assert.assertTrue(result.size() > 0);
     }
 
     /**
-     * На прмере чтения сущности ContactDataCorrection и DriverLicense
+     * На примере чтения сущности ContactDataCorrection и DriverLicense
      */
     @Test
     public void validationOfFieldsTypeReading() {
@@ -108,7 +107,7 @@ public class EntitiesServiceTest {
         ArrayList<InputStream> streams = new ArrayList<>(2);
         streams.add(this.getClass().getResourceAsStream("/twoEntities.csv"));
         List<Entity> result = entitiesService.readAll(streams);
-        int numberOfStructure = entitiesService.createStructure(result);
+        int numberOfStructure = entitiesService.createStructures(result);
         Assert.assertEquals(10, numberOfStructure);
     }
 }
