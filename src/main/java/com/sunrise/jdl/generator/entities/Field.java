@@ -40,18 +40,25 @@ public class Field {
     private final boolean JdlType;
 
     /**
+     * Являтся ли поле обязательным
+     */
+    private final boolean required;
+
+    /**
      * Конструктор
      *
      * @param fieldType   тип поля
      * @param fieldName   название поля
      * @param fieldLength длинна поля
      * @param jdlType     является ли поле сопоставимым с типом JDL
+     * @param required    является ли поле обязательным
      */
-    public Field(String fieldType, String fieldName, String fieldLength, boolean jdlType) {
+    public Field(String fieldType, String fieldName, String fieldLength, boolean jdlType, boolean required) {
         this.fieldType = fieldType;
         this.fieldName = fieldName;
         this.fieldLength = fieldLength;
         this.JdlType = jdlType;
+        this.required = required;
     }
 
     public String getFieldName() {
@@ -73,6 +80,20 @@ public class Field {
      */
     @Override
     public String toString() {
-        return fieldName + " " + fieldType;
+        StringBuilder sb = new StringBuilder();
+        sb.append(fieldName);
+        sb.append(" ");
+        sb.append(fieldType);
+        if (required) {
+            sb.append(" ");
+            sb.append("required");
+        }
+        if (fieldLength != null && fieldLength.length() > 0 && fieldType.equals("String")) {
+            sb.append(" ");
+            sb.append("minlength(");
+            sb.append(fieldLength);
+            sb.append(")");
+        }
+        return sb.toString();
     }
 }

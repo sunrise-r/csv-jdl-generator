@@ -28,6 +28,7 @@ public class EntitiesService {
     public static final int FIELDNAME = 2;
     public static final int FIELDTYPE = 5;
     public static final int FIELDSIZE = 6;
+    public static final int FIELD_REQUIRED = 8;
     public static final String LIST_TYPE = "Список";
 
     /**
@@ -44,12 +45,12 @@ public class EntitiesService {
     /**
      * Шаблон настройки генерации сервисов и исключений генерации
      */
-    private static final String GENERATE_SERVICIES_WITH_EXCEPT_TEMPLATE = "service %s with serviceImpl except %s\n";
+    private static final String GENERATE_SERVICIES_WITH_EXCEPT_TEMPLATE = "service %s with serviceClass except %s\n";
 
     /**
      * Шаблон настройки генерации серисов
      */
-    private static final String GENERATE_SERVICIES_TEMPLATE = "service %s with serviceImpl\n";
+    private static final String GENERATE_SERVICIES_TEMPLATE = "service %s with serviceClass\n";
 
     /**
      * Шаблон настройки генерации микросервисов
@@ -104,10 +105,11 @@ public class EntitiesService {
                 String fieldName = record.get(FIELDNAME);
                 String fieldType = record.get(FIELDTYPE);
                 String fieldLength = record.get(FIELDSIZE);
+                String required = record.get(FIELD_REQUIRED);
 
                 if (!possibleClassName.equals("") && !possibleClassName.contains("П") && !possibleClassName.isEmpty() && !entitiesToIngore.contains(possibleClassName)) {
                     className = possibleClassName;
-                    Field field = new Field(convertFieldType(fieldType), fieldName, fieldLength, isFieldOfJdlType(fieldType));
+                    Field field = new Field(convertFieldType(fieldType), fieldName, fieldLength, isFieldOfJdlType(fieldType), isRequired(required));
                     ArrayList<Field> arrayList = new ArrayList<Field>();
                     if (!fieldsToIngore.contains(fieldName)) {
                         arrayList.add(field);
@@ -115,7 +117,7 @@ public class EntitiesService {
                     Entity entity = new Entity(className, arrayList);
                     toReturn.put(className, entity);
                 } else if (possibleClassName.equals("") && toReturn.size() > 0 && !fieldsToIngore.contains(fieldName)) {
-                    toReturn.get(className).getFields().add(new Field(convertFieldType(fieldType), fieldName, fieldLength, isFieldOfJdlType(fieldType)));
+                    toReturn.get(className).getFields().add(new Field(convertFieldType(fieldType), fieldName, fieldLength, isFieldOfJdlType(fieldType),isRequired(required)));
                 }
             }
         } catch (FileNotFoundException e) {
@@ -126,6 +128,15 @@ public class EntitiesService {
             e.printStackTrace();
         }
         return toReturn.values();
+    }
+
+    /**
+     * По значение колонки required опреелеяет является ли поле обязательным.
+     * @param required Значение поля required
+     * @return Истина если поле является обязательным, иначе ложь.
+     */
+    private boolean isRequired(String required) {
+        return required != null && (required.length() > 0);
     }
 
     /**
