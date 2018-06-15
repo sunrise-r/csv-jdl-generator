@@ -90,7 +90,7 @@ public class Field {
         }
         if (fieldLength != null && fieldLength.length() > 0 && fieldType.equals("String")) {
             sb.append(" ");
-            sb.append("minlength(");
+            sb.append("maxlength(");
             sb.append(fieldLength);
             sb.append(")");
         }
