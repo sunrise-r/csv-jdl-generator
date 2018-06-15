@@ -25,10 +25,12 @@ public class EntitiesService {
      * из которых берутся соотвествующие значения.
      */
     public static final int CLASSNAME = 1;
-    public static final int FIELDNAME = 2;
-    public static final int FIELDTYPE = 5;
-    public static final int FIELDSIZE = 6;
-    public static final int FIELD_REQUIRED = 8;
+    public static final int ENTITY_LABEL = 2;
+    public static final int FIELDNAME = 3;
+
+    public static final int FIELDTYPE = 6;
+    public static final int FIELDSIZE = 7;
+    public static final int FIELD_REQUIRED = 9;
     public static final String LIST_TYPE = "Список";
 
     /**
@@ -95,7 +97,7 @@ public class EntitiesService {
      * @return entitiesToIngore Список сущностей сформированных на основе потока данных
      */
     private java.util.Collection<Entity> readDataFromCSV(InputStream stream) {
-        Map<String, Entity> toReturn = new LinkedHashMap<String, Entity>();
+        Map<String, Entity> toReturn = new LinkedHashMap<>();
         try {
             Reader in = new InputStreamReader(stream);
             Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
@@ -105,19 +107,20 @@ public class EntitiesService {
                 String fieldName = record.get(FIELDNAME);
                 String fieldType = record.get(FIELDTYPE);
                 String fieldLength = record.get(FIELDSIZE);
+                String entityLabel = record.get(ENTITY_LABEL);
                 String required = record.get(FIELD_REQUIRED);
 
                 if (!possibleClassName.equals("") && !possibleClassName.contains("П") && !possibleClassName.isEmpty() && !entitiesToIngore.contains(possibleClassName)) {
                     className = possibleClassName;
-                    Field field = new Field(convertFieldType(fieldType), fieldName, fieldLength, isFieldOfJdlType(fieldType), isRequired(required));
+                    Field field = new Field(convertFieldType(fieldType), fieldName, fieldLength, isFieldOfJdlType(fieldType), isRequired(required), fieldLabel);
                     ArrayList<Field> arrayList = new ArrayList<Field>();
                     if (!fieldsToIngore.contains(fieldName)) {
                         arrayList.add(field);
                     }
-                    Entity entity = new Entity(className, arrayList);
+                    Entity entity = new Entity(className, arrayList, entityLabel);
                     toReturn.put(className, entity);
                 } else if (possibleClassName.equals("") && toReturn.size() > 0 && !fieldsToIngore.contains(fieldName)) {
-                    toReturn.get(className).getFields().add(new Field(convertFieldType(fieldType), fieldName, fieldLength, isFieldOfJdlType(fieldType),isRequired(required)));
+                    toReturn.get(className).getFields().add(new Field(convertFieldType(fieldType), fieldName, fieldLength, isFieldOfJdlType(fieldType), isRequired(required), fieldLabel));
                 }
             }
         } catch (FileNotFoundException e) {
@@ -132,6 +135,7 @@ public class EntitiesService {
 
     /**
      * По значение колонки required опреелеяет является ли поле обязательным.
+     *
      * @param required Значение поля required
      * @return Истина если поле является обязательным, иначе ложь.
      */

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 /**
  * Класс для хранения сущностей
- * TODO: не плохо бы добавить описания из документации, пускай и на английском
  */
 public class Entity {
 
@@ -12,53 +11,49 @@ public class Entity {
     /**
      * Название класса
      */
-    private String className;
+    private final String className;
 
     /**
      * Список полей класса
      */
-    private ArrayList<Field> fields;
+    private final ArrayList<Field> fields;
 
     /**
      * Список структур
      */
-    private ArrayList<Relation> relations;
+    private final ArrayList<Relation> relations;
 
+    /**
+     * Отображаемое имя сущности.
+     */
+    private final String label;
 
     /**
      * Конструктор
      *
-     * @param className Название класса
-     * @param fields    Поля класса
+     * @param className   Название класса
+     * @param fields      Поля класса
+     * @param entityLabel Метка(Отображаемое название) сущности
      */
-    public Entity(String className, ArrayList<Field> fields) {
+    public Entity(String className, ArrayList<Field> fields, String entityLabel) {
         this.className = className;
         this.fields = fields;
-        this.relations = new ArrayList<Relation>();
+        this.relations = new ArrayList<>();
+        this.label = entityLabel;
     }
 
     public String getClassName() {
         return className;
     }
 
-    public void setClassName(String className) {
-        this.className = className;
-    }
 
     public ArrayList<Field> getFields() {
         return fields;
     }
 
-    public void setFields(ArrayList<Field> fields) {
-        this.fields = fields;
-    }
 
     public ArrayList<Relation> getRelations() {
         return relations;
-    }
-
-    public void setRelations(ArrayList<Relation> relations) {
-        this.relations = relations;
     }
 
 
@@ -75,8 +70,13 @@ public class Entity {
         }
         String s1 = s.toString();
         if (s1.endsWith(",\n")) {
-            s1 = s1.substring(0, s1.length()-2);
+            s1 = s1.substring(0, s1.length() - 2);
         }
         return s1 + "\n}";
     }
+
+    public String getLabel() {
+        return label;
+    }
+
 }
