@@ -45,20 +45,26 @@ public class Field {
     private final boolean required;
 
     /**
+     * Метка поля. Название поля которео должно отображаться пользователю
+     */
+    private final String fieldLabel;
+
+    /**
      * Конструктор
-     *
-     * @param fieldType   тип поля
+     *  @param fieldType   тип поля
      * @param fieldName   название поля
      * @param fieldLength длинна поля
      * @param jdlType     является ли поле сопоставимым с типом JDL
      * @param required    является ли поле обязательным
+     * @param fieldLabel Метка поля
      */
-    public Field(String fieldType, String fieldName, String fieldLength, boolean jdlType, boolean required) {
+    public Field(String fieldType, String fieldName, String fieldLength, boolean jdlType, boolean required, String fieldLabel) {
         this.fieldType = fieldType;
         this.fieldName = fieldName;
         this.fieldLength = fieldLength;
         this.JdlType = jdlType;
         this.required = required;
+        this.fieldLabel = fieldLabel;
     }
 
     public String getFieldName() {
@@ -95,5 +101,9 @@ public class Field {
             sb.append(")");
         }
         return sb.toString();
+    }
+
+    public String getFieldLabel() {
+        return fieldLabel;
     }
 }

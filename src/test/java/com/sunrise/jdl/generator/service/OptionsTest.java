@@ -42,11 +42,11 @@ public class OptionsTest {
         Settings settings = new Settings();
         settings.setGenerateServiciesFor("all");
         String result = getResultString(settings);
-        Assert.assertTrue(result.contains("service all with serviceImpl"));
+        Assert.assertTrue(result.contains("service all with serviceClass"));
 
         settings.setExceptServiceGenerationFor("me");
         result = getResultString(settings);
-        Assert.assertTrue(result.contains("service all with serviceImpl except me"));
+        Assert.assertTrue(result.contains("service all with serviceClass except me"));
     }
 
     @Test

@@ -15,19 +15,6 @@ public class EntitiesServiceTest {
     private EntitiesService entitiesService = new EntitiesService(new Settings());
 
     /**
-     * TODO я думаю нужен тест на небольшом колличенстве данных, 1-2 сущности, что бы проверить, что все поля устонавливаются правильно.
-     */
-    @Test
-    public void testReadAll() {
-        ArrayList<InputStream> streams = new ArrayList<>(2);
-        streams.add(this.getClass().getResourceAsStream("/dictionary.csv"));
-        streams.add(this.getClass().getResourceAsStream("/data.csv"));
-        List<Entity> result = entitiesService.readAll(streams);
-        Assert.assertNotNull(result);
-        Assert.assertTrue(result.size() > 0);
-    }
-
-    /**
      * На примере чтения сущности ContactDataCorrection и DriverLicense
      */
     @Test
@@ -36,7 +23,7 @@ public class EntitiesServiceTest {
         streams.add(this.getClass().getResourceAsStream("/twoEntities.csv"));
         List<Entity> result = entitiesService.readAll(streams);
         Entity contacts = result.get(0);
-        ArrayList<Field> contactsFields = contacts.getFields();
+        List<Field> contactsFields = contacts.getFields();
 
         Assert.assertNotNull(result);
         Assert.assertEquals("Address", contactsFields.get(0).getFieldType());
@@ -49,7 +36,7 @@ public class EntitiesServiceTest {
         Assert.assertEquals("Список<Document>", contactsFields.get(7).getFieldType());
 
         Entity license = result.get(1);
-        ArrayList<Field> licenseFields = license.getFields();
+        List<Field> licenseFields = license.getFields();
 
         Assert.assertEquals("Instant", licenseFields.get(0).getFieldType());
         Assert.assertEquals("String", licenseFields.get(1).getFieldType());
@@ -70,7 +57,7 @@ public class EntitiesServiceTest {
         streams.add(this.getClass().getResourceAsStream("/twoEntities.csv"));
         List<Entity> result = entitiesService.readAll(streams);
         Entity contacts = result.get(0);
-        ArrayList<Field> contactsFields = contacts.getFields();
+        List<Field> contactsFields = contacts.getFields();
         
         Assert.assertNotNull(result);
         Assert.assertEquals("Address", contactsFields.get(0).getFieldType());
@@ -83,7 +70,7 @@ public class EntitiesServiceTest {
         Assert.assertEquals("Список<Document>", contactsFields.get(7).getFieldType());
 
         Entity license = result.get(1);
-        ArrayList<Field> licenseFields = license.getFields();
+        List<Field> licenseFields = license.getFields();
 
         Assert.assertEquals("Instant", licenseFields.get(0).getFieldType());
         Assert.assertEquals("String", licenseFields.get(1).getFieldType());
