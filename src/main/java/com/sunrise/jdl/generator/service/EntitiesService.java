@@ -26,11 +26,13 @@ public class EntitiesService {
      */
     public static final int CLASSNAME = 1;
     public static final int ENTITY_LABEL = 2;
-    public static final int FIELDNAME = 3;
+    public static final int ENTITY_TITLE =3;
+    public static final int FIELDNAME = 4;
+    public static final int FIELD_LABEL=5;
 
-    public static final int FIELDTYPE = 6;
-    public static final int FIELDSIZE = 7;
-    public static final int FIELD_REQUIRED = 9;
+    public static final int FIELDTYPE = 7;
+    public static final int FIELDSIZE = 8;
+    public static final int FIELD_REQUIRED = 10;
     public static final String LIST_TYPE = "Список";
 
     /**
@@ -109,6 +111,8 @@ public class EntitiesService {
                 String fieldLength = record.get(FIELDSIZE);
                 String entityLabel = record.get(ENTITY_LABEL);
                 String required = record.get(FIELD_REQUIRED);
+                String fieldLabel=record.get(FIELD_LABEL);
+                String entityTitle = record.get(ENTITY_TITLE);
 
                 if (!possibleClassName.equals("") && !possibleClassName.contains("П") && !possibleClassName.isEmpty() && !entitiesToIngore.contains(possibleClassName)) {
                     className = possibleClassName;
@@ -117,7 +121,7 @@ public class EntitiesService {
                     if (!fieldsToIngore.contains(fieldName)) {
                         arrayList.add(field);
                     }
-                    Entity entity = new Entity(className, arrayList, entityLabel);
+                    Entity entity = new Entity(className, arrayList, entityLabel, entityTitle);
                     toReturn.put(className, entity);
                 } else if (possibleClassName.equals("") && toReturn.size() > 0 && !fieldsToIngore.contains(fieldName)) {
                     toReturn.get(className).getFields().add(new Field(convertFieldType(fieldType), fieldName, fieldLength, isFieldOfJdlType(fieldType), isRequired(required), fieldLabel));
@@ -190,7 +194,7 @@ public class EntitiesService {
      */
     public int createStructure(Entity entity) {
         int count = 0;
-        ArrayList<Field> fields = entity.getFields();
+        List<Field> fields = entity.getFields();
         for (Field field : fields) {
             if (!field.isJdlType() && field.getFieldType().contains(LIST_TYPE)) {
                 count++;
@@ -244,7 +248,7 @@ public class EntitiesService {
      */
     private void writeEntity(Entity entity, Writer writer) throws IOException {
         writer.write(entity.toString() + "\n");
-        ArrayList<Relation> relations = entity.getRelations();
+        List<Relation> relations = entity.getRelations();
         if (relations.size() > 0) {
             for (Relation relation : relations) {
                 writer.write(relation.toString() + "\n");

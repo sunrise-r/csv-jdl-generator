@@ -1,6 +1,7 @@
 package com.sunrise.jdl.generator.entities;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Класс для хранения сущностей
@@ -16,28 +17,31 @@ public class Entity {
     /**
      * Список полей класса
      */
-    private final ArrayList<Field> fields;
+    private final List<Field> fields;
 
     /**
      * Список структур
      */
-    private final ArrayList<Relation> relations;
+    private final List<Relation> relations;
 
     /**
      * Отображаемое имя сущности.
      */
     private final String label;
 
+    private final String title;
+
     /**
      * Конструктор
-     *
-     * @param className   Название класса
+     *  @param className   Название класса
      * @param fields      Поля класса
      * @param entityLabel Метка(Отображаемое название) сущности
+     * @param title Заголовк сущности.
      */
-    public Entity(String className, ArrayList<Field> fields, String entityLabel) {
+    public Entity(String className, List<Field> fields, String entityLabel, String title) {
         this.className = className;
         this.fields = fields;
+        this.title = title;
         this.relations = new ArrayList<>();
         this.label = entityLabel;
     }
@@ -47,12 +51,12 @@ public class Entity {
     }
 
 
-    public ArrayList<Field> getFields() {
+    public List<Field> getFields() {
         return fields;
     }
 
 
-    public ArrayList<Relation> getRelations() {
+    public List<Relation> getRelations() {
         return relations;
     }
 
@@ -79,4 +83,7 @@ public class Entity {
         return label;
     }
 
+    public String getTitle() {
+        return title;
+    }
 }
