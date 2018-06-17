@@ -33,7 +33,7 @@ public class DescriptionService {
      * @return Ключ - название файла. Значение - описание сущности
      */
     public Map<String, String> getEntitiesDescription(Collection<Entity> enitites) {
-        return enitites.stream().collect(Collectors.toMap(en->settings.getMicroserviceAppName() + en.getClassName(), en -> parseEn(en)));
+        return enitites.stream().collect(Collectors.toMap(en->settings.getMicroserviceAppName() + en.getClassName()+".json", en -> parseEn(en)));
     }
 
     private String parseEn(Entity en) {
