@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sunrise.jdl.generator.entities.Entity;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,7 @@ public class DescriptionService {
      * @param enitites Список сущностей для которых нужно сгенерировать описание
      * @return Ключ - название файла. Значение - описание сущности
      */
-    public Map<String, String> getEntitiesDescription(List<Entity> enitites) {
+    public Map<String, String> getEntitiesDescription(Collection<Entity> enitites) {
         return enitites.stream().collect(Collectors.toMap(en->settings.getMicroserviceAppName() + en.getClassName(), en -> parseEn(en)));
     }
 
@@ -49,7 +50,7 @@ public class DescriptionService {
     private Map<String, Object> generateGatewayPart(Entity en) {
         final String title = String.format("%s", en.getTitle());
         final String label = String.format("%s", en.getLabel());
-        final String createLabel = String.format("Создать новый '%s'", en.getLabel());
+        final String createLabel = String.format("Создать новую запись '%s'", en.getLabel());
         final String createOrEditLabel = String.format("Создать или отредактировать '%s'", en.getLabel());
         final String question = String.format("Вы уверены что хотите удалить '%s' {{ id }}?", en.getLabel());
         final String fullName = getEntityFullPath(en);

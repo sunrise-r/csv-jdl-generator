@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -21,8 +22,8 @@ public class EntitiesServiceTest {
     public void validationOfFieldsTypeReading() {
         ArrayList<InputStream> streams = new ArrayList<>(1);
         streams.add(this.getClass().getResourceAsStream("/twoEntities.csv"));
-        List<Entity> result = entitiesService.readAll(streams);
-        Entity contacts = result.get(0);
+        Collection<Entity> result = entitiesService.readAll(streams);
+        Entity contacts = result.stream().findFirst().get();
         List<Field> contactsFields = contacts.getFields();
 
         Assert.assertNotNull(result);
@@ -35,7 +36,7 @@ public class EntitiesServiceTest {
         Assert.assertEquals("SocialNetwork", contactsFields.get(6).getFieldType());
         Assert.assertEquals("Список<Document>", contactsFields.get(7).getFieldType());
 
-        Entity license = result.get(1);
+        Entity license = result.stream().skip(1).findFirst().get();
         List<Field> licenseFields = license.getFields();
 
         Assert.assertEquals("Instant", licenseFields.get(0).getFieldType());
@@ -55,8 +56,8 @@ public class EntitiesServiceTest {
     public void testCorrectFieldsType() {
         ArrayList<InputStream> streams = new ArrayList<>(1);
         streams.add(this.getClass().getResourceAsStream("/twoEntities.csv"));
-        List<Entity> result = entitiesService.readAll(streams);
-        Entity contacts = result.get(0);
+        Collection<Entity> result = entitiesService.readAll(streams);
+        Entity contacts = result.stream().findAny().get();
         List<Field> contactsFields = contacts.getFields();
         
         Assert.assertNotNull(result);
@@ -69,7 +70,7 @@ public class EntitiesServiceTest {
         Assert.assertEquals("SocialNetwork", contactsFields.get(6).getFieldType());
         Assert.assertEquals("Список<Document>", contactsFields.get(7).getFieldType());
 
-        Entity license = result.get(1);
+        Entity license = result.stream().skip(1).findFirst().get();
         List<Field> licenseFields = license.getFields();
 
         Assert.assertEquals("Instant", licenseFields.get(0).getFieldType());
@@ -93,7 +94,7 @@ public class EntitiesServiceTest {
     public void testWriteToFile() {
         ArrayList<InputStream> streams = new ArrayList<>(2);
         streams.add(this.getClass().getResourceAsStream("/twoEntities.csv"));
-        List<Entity> result = entitiesService.readAll(streams);
+        Collection<Entity> result = entitiesService.readAll(streams);
         int numberOfStructure = entitiesService.createStructures(result);
         Assert.assertEquals(10, numberOfStructure);
     }
