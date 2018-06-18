@@ -60,6 +60,14 @@ public class Entity {
         return relations;
     }
 
+    public String getLabel() {
+        return label;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
 
     /**
      * @return Возвращает строковое представление entity в формате jdl
@@ -79,11 +87,19 @@ public class Entity {
         return s1 + "\n}";
     }
 
-    public String getLabel() {
-        return label;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Entity entity = (Entity) o;
+
+        return className.equals(entity.className);
+
     }
 
-    public String getTitle() {
-        return title;
+    @Override
+    public int hashCode() {
+        return className.hashCode();
     }
 }

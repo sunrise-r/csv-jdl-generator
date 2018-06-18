@@ -7,12 +7,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Считывает Entity, корректириреут их поля, создает их структуру,
@@ -84,9 +79,15 @@ public class EntitiesService {
         }
     }
 
-    public List<Entity> readAll(List<InputStream> resources) {
-        ArrayList<Entity> entities = new ArrayList<Entity>();
+    public Set<Entity> readAll(List<InputStream> resources) {
+        Set<Entity> entities = new LinkedHashSet<>();
         for (InputStream st : resources) {
+            for(Entity en : readDataFromCSV(st)){
+                if(entities.contains(en)){
+                    throw new RuntimeException("Dublicated entity, exist="+en.toString());
+                }
+                entities.add(en);
+            }
             entities.addAll(readDataFromCSV(st));
         }
         return entities;
@@ -176,7 +177,7 @@ public class EntitiesService {
      * @param entities
      * @return total number of created structure
      */
-    public int createStructures(List<Entity> entities) {
+    public int createStructures(Collection<Entity> entities) {
         int totalCreatedStructure = 0;
         for (Entity entity : entities) {
             totalCreatedStructure += this.createStructure(entity);
@@ -217,7 +218,7 @@ public class EntitiesService {
      * @param writer
      * @return
      */
-    public void writeEntities(List<Entity> entities, Writer writer) throws IOException {
+    public void writeEntities(Collection<Entity> entities, Writer writer) throws IOException {
         for (Entity entity : entities) {
             writeEntity(entity, writer);
         }

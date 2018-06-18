@@ -1,13 +1,18 @@
 package com.sunrise.jdl.generator;
 
 import com.sunrise.jdl.generator.entities.Entity;
+import com.sunrise.jdl.generator.service.DescriptionService;
+import com.sunrise.jdl.generator.service.DescriptionServiceSettings;
 import com.sunrise.jdl.generator.service.EntitiesService;
 import com.sunrise.jdl.generator.service.Settings;
 import org.apache.commons.cli.*;
+import org.apache.commons.io.FileUtils;
 
 import java.io.*;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +29,8 @@ public class Main {
     private static final String GENERATTE_SERVICE_FOR = "generateServiceFor";
     private static final String EXECPT_SERVICE_GENERATION = "exceptServiceGeneration";
     private static final String MICROSERVICE = "microservice";
+    private static final String GATEWAY_NAME = "gateway";
+    private static final String TARGET_RESOURCE_FOLDER = "targetResourceFolder";
     private static EntitiesService entitiesService = null;
 
     public static void main(String[] args) {
@@ -38,7 +45,10 @@ public class Main {
         options.addOption(MAPSTRUCT, false, "enables using dto's with mapstruct");
         options.addOption(GENERATTE_SERVICE_FOR, true, "for what entities service generation neeed. List of entities or 'all'");
         options.addOption(EXECPT_SERVICE_GENERATION, true, "for what entities service generation is not needed. List of entities");
-        options.addOption(MICROSERVICE,true,"set name of microservice that will hold the entities");
+        options.addOption(MICROSERVICE, true, "set name of microservice that will hold the entities");
+        options.addOption(TARGET_RESOURCE_FOLDER, true, "set path where resource files will be generated");
+        options.addOption(GATEWAY_NAME, true, "set name of gateway");
+
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd;
         final Settings settings = new Settings();
@@ -74,15 +84,15 @@ public class Main {
             settings.setUseMapStruct(true);
         }
 
-        if(cmd.hasOption(GENERATTE_SERVICE_FOR)){
+        if (cmd.hasOption(GENERATTE_SERVICE_FOR)) {
             settings.setGenerateServiciesFor(cmd.getOptionValue(GENERATTE_SERVICE_FOR));
         }
 
-        if(cmd.hasOption(EXECPT_SERVICE_GENERATION)){
+        if (cmd.hasOption(EXECPT_SERVICE_GENERATION)) {
             settings.setExceptServiceGenerationFor(cmd.getOptionValue(EXECPT_SERVICE_GENERATION));
         }
 
-        if(cmd.hasOption(MICROSERVICE)){
+        if (cmd.hasOption(MICROSERVICE)) {
             settings.setMicroserviceName(cmd.getOptionValue(MICROSERVICE));
         }
 
@@ -92,13 +102,12 @@ public class Main {
             File[] files = directory.listFiles();
             List<InputStream> resources = new ArrayList<InputStream>(files.length);
             for (File f : files) {
-                if (!f.getName().endsWith(".csv")) {
-                    continue;
-                }
-                try {
-                    resources.add(new FileInputStream(f));
-                } catch (FileNotFoundException e) {
-                    System.err.println("Failed to read file .  Reason: " + e.getMessage());
+                if (f.getName().endsWith(".csv")) {
+                    try {
+                        resources.add(new FileInputStream(f));
+                    } catch (FileNotFoundException e) {
+                        System.err.println("Failed to read file .  Reason: " + e.getMessage());
+                    }
                 }
             }
 
@@ -109,7 +118,7 @@ public class Main {
                 targetFile = new File("result.jh");
             }
 
-            List<Entity> entities = entitiesService.readAll(resources);
+            Collection<Entity> entities = entitiesService.readAll(resources);
 
             //entitiesService.checkIsFieldSupportedInJDL(entities);
             int numberOfCreatedStrucure = entitiesService.createStructures(entities);
@@ -123,6 +132,20 @@ public class Main {
                 e.printStackTrace();
             }
 
+            if (cmd.hasOption(TARGET_RESOURCE_FOLDER) && cmd.hasOption(GATEWAY_NAME)) {
+                final String path = cmd.getOptionValue(TARGET_RESOURCE_FOLDER);
+                DescriptionServiceSettings descriptionSettings = new DescriptionServiceSettings(cmd.getOptionValue(GATEWAY_NAME), cmd.getOptionValue(MICROSERVICE));
+                DescriptionService descriptionService = new DescriptionService(descriptionSettings);
+                descriptionService.getEntitiesDescription(entities).entrySet().stream().forEach(key -> saveFile(path, key.getKey(), key.getValue()));
+            }
+        }
+    }
+
+    private static void saveFile(String path, String fileName, String content) {
+        try {
+            FileUtils.writeStringToFile(new File(path, fileName), content);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
