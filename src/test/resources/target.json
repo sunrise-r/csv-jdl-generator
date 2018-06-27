@@ -3,7 +3,7 @@
     "partnerDocumentsClassName" : {
       "home" : {
         "title" : "testTitle",
-        "createLabel" : "Создать новый 'testLabel'",
+        "createLabel" : "Создать новую запись 'testLabel'",
         "createOrEditLabel" : "Создать или отредактировать 'testLabel'"
       },
       "delete" : {
