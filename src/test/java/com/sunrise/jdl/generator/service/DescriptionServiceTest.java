@@ -24,8 +24,8 @@ public class DescriptionServiceTest extends TestCase {
         DescriptionService descriptionService = new DescriptionService(settings);
         Entity en = new Entity("ClassName", generateFields(), "testLabel", "testTitle");
         Map<String, String> result = descriptionService.getEntitiesDescription(Arrays.asList(en));
-        assertTrue(result.containsKey(ms + en.getClassName()));
-        assertEquals(IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream("target.json")),result.get(ms + en.getClassName()));
+        assertTrue(result.containsKey(ms + en.getClassName()+".json"));
+        assertEquals(IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream("target.json")),result.get(ms + en.getClassName()+".json"));
     }
 
     private List<Field> generateFields() {

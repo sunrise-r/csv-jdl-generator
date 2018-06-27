@@ -37,6 +37,9 @@ public class Relation {
      */
     private RelationType relationType;
 
+
+    private String entityTo;
+
     /**
      * @param entity Сущность владелец отношения
      * @param field Поле для которого создается отношение
@@ -46,6 +49,7 @@ public class Relation {
         this.entity = entity;
         this.field = field;
         this.relationType = relationType;
+        entityTo = getEntityType(field.getFieldType());
     }
 
 
@@ -58,7 +62,7 @@ public class Relation {
     public String toString() {
         return "relationship " + this.relationType + " {\n" +
                 entity.getClassName() + "{" + field.getFieldName() + "}"
-                + " to " + getEntityType(field.getFieldType())
+                + " to " + entityTo
                 + "\n}";
     }
 
@@ -69,7 +73,7 @@ public class Relation {
      * @return fieldType
      */
     private String getEntityType(String fieldType) {
-        if (fieldType!=null && fieldType.contains("Список")) {
+        if (fieldType!=null && fieldType.matches("[сС]писок.*")) {
             int start = fieldType.indexOf("<");
             int finish = fieldType.indexOf(">");
             fieldType = fieldType.substring(start + 1, finish);
@@ -77,6 +81,37 @@ public class Relation {
         return fieldType;
     }
 
+    public Entity getEntity() {
+        return entity;
+    }
+
+    public void setEntity(Entity entity) {
+        this.entity = entity;
+    }
+
+    public Field getField() {
+        return field;
+    }
+
+    public void setField(Field field) {
+        this.field = field;
+    }
+
+    public RelationType getRelationType() {
+        return relationType;
+    }
+
+    public void setRelationType(RelationType relationType) {
+        this.relationType = relationType;
+    }
+
+    public String getEntityTo() {
+        return entityTo;
+    }
+
+    public void setEntityTo(String entityTo) {
+        this.entityTo = entityTo;
+    }
 
     /**
      * Enum для типов связей (пока только один тип)

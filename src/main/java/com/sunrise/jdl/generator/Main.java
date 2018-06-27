@@ -1,6 +1,7 @@
 package com.sunrise.jdl.generator;
 
 import com.sunrise.jdl.generator.entities.Entity;
+import com.sunrise.jdl.generator.entities.Relation;
 import com.sunrise.jdl.generator.service.DescriptionService;
 import com.sunrise.jdl.generator.service.DescriptionServiceSettings;
 import com.sunrise.jdl.generator.service.EntitiesService;
@@ -10,11 +11,10 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
 
 
 public class Main {
@@ -119,10 +119,12 @@ public class Main {
             }
 
             Collection<Entity> entities = entitiesService.readAll(resources);
-
-            //entitiesService.checkIsFieldSupportedInJDL(entities);
             int numberOfCreatedStrucure = entitiesService.createStructures(entities);
 
+            Set<String> names = entities.stream().map(e -> e.getClassName()).collect(Collectors.toSet());
+            List<Relation> relations = entities.stream().map(e -> e.getRelations()).flatMap(Collection::stream).collect(Collectors.toList());
+            relations.stream()
+                    .filter(r -> !names.contains(r.getEntityTo())).forEach(r -> System.out.println("Unable to find entity for relation=" + r.getEntityTo()));
             System.out.println("Количество созданных структур " + numberOfCreatedStrucure);
 
 

@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static junit.framework.TestCase.assertTrue;
+
 
 public class EntitiesServiceTest {
 
@@ -39,13 +41,13 @@ public class EntitiesServiceTest {
         Entity license = result.stream().skip(1).findFirst().get();
         List<Field> licenseFields = license.getFields();
 
-        Assert.assertEquals("Instant", licenseFields.get(0).getFieldType());
+        Assert.assertEquals("ZonedDateTime", licenseFields.get(0).getFieldType());
         Assert.assertEquals("String", licenseFields.get(1).getFieldType());
         Assert.assertEquals("String", licenseFields.get(2).getFieldType());
         Assert.assertEquals("String", licenseFields.get(3).getFieldType());
         Assert.assertEquals("String", licenseFields.get(4).getFieldType());
-        Assert.assertEquals("Instant", licenseFields.get(5).getFieldType());
-        Assert.assertEquals("Instant", licenseFields.get(6).getFieldType());
+        Assert.assertEquals("ZonedDateTime", licenseFields.get(5).getFieldType());
+        Assert.assertEquals("ZonedDateTime", licenseFields.get(6).getFieldType());
         Assert.assertEquals("String", licenseFields.get(7).getFieldType());
         Assert.assertEquals("Employee", licenseFields.get(8).getFieldType());
         Assert.assertEquals("Group", licenseFields.get(9).getFieldType());
@@ -59,7 +61,7 @@ public class EntitiesServiceTest {
         Collection<Entity> result = entitiesService.readAll(streams);
         Entity contacts = result.stream().findAny().get();
         List<Field> contactsFields = contacts.getFields();
-        
+
         Assert.assertNotNull(result);
         Assert.assertEquals("Address", contactsFields.get(0).getFieldType());
         Assert.assertEquals("Address", contactsFields.get(1).getFieldType());
@@ -73,13 +75,13 @@ public class EntitiesServiceTest {
         Entity license = result.stream().skip(1).findFirst().get();
         List<Field> licenseFields = license.getFields();
 
-        Assert.assertEquals("Instant", licenseFields.get(0).getFieldType());
+        Assert.assertEquals("ZonedDateTime", licenseFields.get(0).getFieldType());
         Assert.assertEquals("String", licenseFields.get(1).getFieldType());
         Assert.assertEquals("String", licenseFields.get(2).getFieldType());
         Assert.assertEquals("String", licenseFields.get(3).getFieldType());
         Assert.assertEquals("String", licenseFields.get(4).getFieldType());
-        Assert.assertEquals("Instant", licenseFields.get(5).getFieldType());
-        Assert.assertEquals("Instant", licenseFields.get(6).getFieldType());
+        Assert.assertEquals("ZonedDateTime", licenseFields.get(5).getFieldType());
+        Assert.assertEquals("ZonedDateTime", licenseFields.get(6).getFieldType());
         Assert.assertEquals("String", licenseFields.get(7).getFieldType());
         Assert.assertEquals("Employee", licenseFields.get(8).getFieldType());
         Assert.assertEquals("Group", licenseFields.get(9).getFieldType());

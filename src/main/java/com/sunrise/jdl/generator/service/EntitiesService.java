@@ -21,14 +21,14 @@ public class EntitiesService {
      */
     public static final int CLASSNAME = 1;
     public static final int ENTITY_LABEL = 2;
-    public static final int ENTITY_TITLE =3;
+    public static final int ENTITY_TITLE = 3;
     public static final int FIELDNAME = 4;
-    public static final int FIELD_LABEL=5;
+    public static final int FIELD_LABEL = 5;
 
     public static final int FIELDTYPE = 7;
     public static final int FIELDSIZE = 8;
     public static final int FIELD_REQUIRED = 10;
-    public static final String LIST_TYPE = "Список";
+    public static final String LIST_TYPE = "список";
 
     /**
      * Шаблон вывода информации о пейджинации сущностей.
@@ -68,9 +68,10 @@ public class EntitiesService {
      */
     public EntitiesService(Settings settings) {
         this.settings = settings;
-        convertableToJdlTypes.add("Строка");
-        convertableToJdlTypes.add("Число");
-        convertableToJdlTypes.add("Дата/время");
+        convertableToJdlTypes.add("строка");
+        convertableToJdlTypes.add("число");
+        convertableToJdlTypes.add("дата/время");
+        convertableToJdlTypes.add("дробное");
         if (entitiesToIngore != null) {
             this.entitiesToIngore.addAll(settings.getEntitiesToIngore());
         }
@@ -82,9 +83,9 @@ public class EntitiesService {
     public Set<Entity> readAll(List<InputStream> resources) {
         Set<Entity> entities = new LinkedHashSet<>();
         for (InputStream st : resources) {
-            for(Entity en : readDataFromCSV(st)){
-                if(entities.contains(en)){
-                    throw new RuntimeException("Dublicated entity, exist="+en.toString());
+            for (Entity en : readDataFromCSV(st)) {
+                if (entities.contains(en)) {
+                    throw new RuntimeException("Dublicated entity, exist=" + en.toString());
                 }
                 entities.add(en);
             }
@@ -106,19 +107,19 @@ public class EntitiesService {
             Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
             String className = "";
             for (CSVRecord record : records) {
-                String possibleClassName = record.get(CLASSNAME);
-                String fieldName = record.get(FIELDNAME);
-                String fieldType = record.get(FIELDTYPE);
-                String fieldLength = record.get(FIELDSIZE);
-                String entityLabel = record.get(ENTITY_LABEL);
-                String required = record.get(FIELD_REQUIRED);
-                String fieldLabel=record.get(FIELD_LABEL);
-                String entityTitle = record.get(ENTITY_TITLE);
+                String possibleClassName = record.get(CLASSNAME).trim();
+                String fieldName = record.get(FIELDNAME).trim();
+                String fieldType = record.get(FIELDTYPE).trim();
+                String fieldLength = record.get(FIELDSIZE).trim();
+                String entityLabel = record.get(ENTITY_LABEL).trim();
+                String required = record.get(FIELD_REQUIRED).trim();
+                String fieldLabel = record.get(FIELD_LABEL).trim();
+                String entityTitle = record.get(ENTITY_TITLE).trim();
 
                 if (!possibleClassName.equals("") && !possibleClassName.contains("П") && !possibleClassName.isEmpty() && !entitiesToIngore.contains(possibleClassName)) {
                     className = possibleClassName;
                     Field field = new Field(convertFieldType(fieldType), fieldName, fieldLength, isFieldOfJdlType(fieldType), isRequired(required), fieldLabel);
-                    ArrayList<Field> arrayList = new ArrayList<Field>();
+                    ArrayList<Field> arrayList = new ArrayList<>();
                     if (!fieldsToIngore.contains(fieldName)) {
                         arrayList.add(field);
                     }
@@ -155,20 +156,26 @@ public class EntitiesService {
      * @return В случае если нелзья сконвертировать, возвращает исходыне данные.
      */
     public String convertFieldType(String source) {
-        if (!isFieldOfJdlType(source)) {
+        String check = source.toLowerCase();
+        if (!isFieldOfJdlType(check)) {
             return source;
         }
-        if (source.contains("Строка")) {
+        if ("строка".equals(check)) {
             return JDLFieldsType.String.toString();
         }
-        if (source.contains("Дата")) {
-            return JDLFieldsType.Instant.toString();
+        if ("дата/время".equals(check)) {
+            return JDLFieldsType.ZonedDateTime.toString();
 
         }
-        if (source.contains("Число")) {
-            return JDLFieldsType.Long.toString();
+        if ("число".equals(check)) {
+            return JDLFieldsType.Integer.toString();
         }
-        throw new RuntimeException("Неудалось распарсить исходыне данные в JDL тип");
+        if ("дробное".equals(check)) {
+            return JDLFieldsType.BigDecimal.toString();
+        }
+
+
+        throw new RuntimeException("Неудалось распарсить исходыне данные в JDL тип=" + check);
     }
 
     /**
@@ -197,7 +204,7 @@ public class EntitiesService {
         int count = 0;
         List<Field> fields = entity.getFields();
         for (Field field : fields) {
-            if (!field.isJdlType() && field.getFieldType().contains(LIST_TYPE)) {
+            if (!field.isJdlType() && field.getFieldType().matches(".*[Сс]писок.*")) {
                 count++;
                 Relation relation = new Relation(entity, field, Relation.RelationType.OneToMany);
                 entity.getRelations().add(relation);
@@ -264,7 +271,7 @@ public class EntitiesService {
      * @return Истина если можно привести к формату jdl иначе ложь
      */
     private boolean isFieldOfJdlType(String fieldType) {
-        return convertableToJdlTypes.contains(fieldType);
+        return convertableToJdlTypes.contains(fieldType.toLowerCase());
     }
 
 
