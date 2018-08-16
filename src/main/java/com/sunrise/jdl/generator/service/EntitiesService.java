@@ -72,6 +72,7 @@ public class EntitiesService {
         convertableToJdlTypes.add("число");
         convertableToJdlTypes.add("дата/время");
         convertableToJdlTypes.add("дробное");
+        convertableToJdlTypes.add("булев");
         if (entitiesToIngore != null) {
             this.entitiesToIngore.addAll(settings.getEntitiesToIngore());
         }
@@ -172,6 +173,9 @@ public class EntitiesService {
         }
         if ("дробное".equals(check)) {
             return JDLFieldsType.BigDecimal.toString();
+        }
+        if ("булев".equals(check)) {
+            return JDLFieldsType.Boolean.toString();
         }
 
 
