@@ -125,8 +125,14 @@ public class Main {
             List<Relation> relations = entities.stream().map(e -> e.getRelations()).flatMap(Collection::stream).collect(Collectors.toList());
             relations.stream()
                     .filter(r -> !names.contains(r.getEntityTo())).forEach(r -> System.out.println("Unable to find entity for relation=" + r.getEntityTo()));
-            System.out.println("Количество созданных структур " + numberOfCreatedStrucure);
+            System.out.println("Количество созданных структур " + entities.size());
 
+            entitiesService.checkRelations(entities).entrySet().stream().forEach(e->{
+                System.out.println(String.format("Для сущности %s в списке отношений присуствуют несуществующие сущности",e.getKey().getClassName()));
+                e.getValue().stream().forEach(r->{
+                    System.out.println(String.format("Несуществует сущности: %s", r.getEntityTo()));
+                });
+            });
 
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(targetFile, false))) {
                 entitiesService.writeEntities(entities, writer);

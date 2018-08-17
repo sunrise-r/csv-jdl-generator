@@ -8,6 +8,7 @@ import org.apache.commons.csv.CSVRecord;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Считывает Entity, корректириреут их поля, создает их структуру,
@@ -219,6 +220,26 @@ public class EntitiesService {
             }
         }
         return count;
+    }
+
+    /**
+     * Анализирует список отношений в сущностях и находит те отношения для которых несуществует сущностей.
+     * @param entities Список дотупных сущностей
+     * @return
+     */
+    public Map<Entity,List<Relation>> checkRelations(Collection<Entity> entities){
+        Map<Entity,List<Relation>> relationMap = new HashMap<>();
+        Set<String> availableEntities = entities.stream().map(x->x.getClassName()).collect(Collectors.toSet());
+        entities.stream().filter(entity -> entity.getRelations() != null).forEach(entity -> {
+            for (Relation relation : entity.getRelations()) {
+                if (availableEntities.contains(relation.getEntityTo())) return;
+                if (!relationMap.containsKey(entity)) {
+                    relationMap.put(entity, new ArrayList<>());
+                }
+                relationMap.get(entity).add(relation);
+            }
+        });
+        return relationMap;
     }
 
     /**
