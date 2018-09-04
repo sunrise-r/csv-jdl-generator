@@ -88,7 +88,7 @@ public class DescriptionService {
     }
 
     private String getEntityFullPath(Entity en) {
-        return String.format("%s%s", settings.getMicroserviceAppName(), en.getClassName());
+        return String.format("%s", settings.getMicroserviceAppName(), en.getClassName());
     }
 
     private String getAppName(String app) {
