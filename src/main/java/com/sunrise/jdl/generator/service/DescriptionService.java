@@ -33,7 +33,7 @@ public class DescriptionService {
      * @return Ключ - название файла. Значение - описание сущности
      */
     public Map<String, String> getEntitiesDescription(Collection<Entity> enitites) {
-        return enitites.stream().collect(Collectors.toMap(en->settings.getMicroserviceAppName() + en.getClassName()+".json", en -> parseEn(en)));
+        return enitites.stream().collect(Collectors.toMap(en -> settings.getMicroserviceAppName() + en.getClassName() + ".json", en -> parseEn(en)));
     }
 
     private String parseEn(Entity en) {
@@ -82,13 +82,19 @@ public class DescriptionService {
         labels.put("created", createLabel);
         labels.put("updated", updateLabel);
         labels.put("deleted", deleteLabel);
-        msProps.put(getEntityFullPath(en), labels);
+        msProps.put(getEntityPath(en), labels);
         return msProps;
 
     }
 
     private String getEntityFullPath(Entity en) {
-        return String.format("%s", settings.getMicroserviceAppName(), en.getClassName());
+        return String.format("%s%s", settings.getMicroserviceAppName(), en.getClassName());
+    }
+
+    private String getEntityPath(Entity en) {
+        String name = en.getClassName();
+        char lower = Character.toLowerCase(name.charAt(0));
+        return lower + name.substring(1);
     }
 
     private String getAppName(String app) {
