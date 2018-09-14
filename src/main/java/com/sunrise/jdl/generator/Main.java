@@ -130,7 +130,7 @@ public class Main {
             entitiesService.checkRelations(entities).entrySet().stream().forEach(e->{
                 System.out.println(String.format("Для сущности %s в списке отношений присуствуют несуществующие сущности",e.getKey().getClassName()));
                 e.getValue().stream().forEach(r->{
-                    System.out.println(String.format("Несуществует сущности: %s", r.getEntityTo()));
+                    System.out.println(String.format("Не существует сущности: %s", r.getEntityTo()));
                 });
             });
 
