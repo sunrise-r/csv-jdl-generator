@@ -6,6 +6,7 @@ import org.apache.commons.csv.CSVRecord;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class EntityTypeService {
 
@@ -21,9 +22,9 @@ public class EntityTypeService {
             for (CSVRecord record : records) {
                 String fieldType = record.get(TYPE_NAME).trim();
                 String fieldSubtype = record.get(SUBTYPE_NAME).trim();
-                if(!fieldSubtype.isEmpty()) {
+                if (!fieldSubtype.isEmpty()) {
                     if (fieldType.equals("")) {
-                        if(lastType.equals(""))
+                        if (lastType.equals(""))
                             throw new IOException();
                         result.get(lastType).add(fieldSubtype);
                     } else {
@@ -44,38 +45,21 @@ public class EntityTypeService {
         return result;
     }
 
-    public Map<String, List<Entity>> mergeTypesWithThemSubtypes(Collection<Entity> entities, Map<String,List<String>> typesMap) throws Exception{
-        Map<String, List<Entity>> result = new HashMap<>();
-        LinkedList<String> childNames = new LinkedList<>();
-        LinkedList<Entity> childes = new LinkedList<>();
-        LinkedList<String> parents = new LinkedList<>();
-
-
-        for (Map.Entry<String, List<String>> pair : typesMap.entrySet()) {
-            childNames.addAll(pair.getValue());
-            for (String child : pair.getValue()) {
-                parents.add(pair.getKey());
-            }
-            result.put(pair.getKey(),new ArrayList<>());
-        }
-        for (String childName : childNames) {
-            boolean broken = false;
-            for (Entity entity : entities) {
-                if(entity.getClassName().equals(childName)){
-                    childes.add(entity);
-                    broken = true;
-                    break;
-                }
-            }
-            if(!broken) {
-                throw new Exception("Child entity " + childName + " has no pair to merge!");
+    /**
+     * Сгруппировать сущности относительно родителькой группы.
+     *
+     * @param entities Список доступных сущностей
+     * @param typesMap Словарь где ключ - название группы сущности, а значение название сущностей которые входят в эту группу
+     * @return Список сущностей сгруппированный по ггруппам из @typesMap
+     */
+    public Map<String, List<Entity>> mergeTypesWithThemSubtypes(Collection<Entity> entities, Map<String, List<String>> typesMap) {
+        Map<String, List<Entity>> result = typesMap.keySet().stream().collect(Collectors.toMap(x -> x, x -> new LinkedList<>()));
+        Map<String, Entity> entityMap = entities.stream().collect(Collectors.toMap(x -> x.getClassName(), x -> x));
+        for (String group : typesMap.keySet()) {
+            for (String entityName : typesMap.get(group)) {
+                result.get(group).add(entityMap.get(entityName));
             }
         }
-
-        for(int i = 0; i < parents.size(); i++) {
-            result.get(parents.get(i)).add(childes.get(i));
-        }
-
         return result;
     }
 
