@@ -52,36 +52,29 @@ public class EntityTypeService {
         return result;
     }
 
-    public void countFieldsFrequency(Map<String, List<Entity>> parentWithChild) {
-        for (Map.Entry<String, List<Entity>> relation : parentWithChild.entrySet()) {
-            Map<String, Integer> fieldsFrequency = new HashMap<>();
-            int entityNumber = 0;
-            for (Entity entity : relation.getValue()) {
-                entityNumber = entity.getFields().size();
-                for (Field field : entity.getFields()) {
-                    if (fieldsFrequency.containsKey(field.getFieldName())) {
-                        fieldsFrequency.put(field.getFieldName() + " " + field.getFieldType(), fieldsFrequency.get(field.getFieldName()) + 1);
-                    } else {
-                        fieldsFrequency.put(field.getFieldName() + " " + field.getFieldType(), 1);
-                    }
+    public Map<String, Set<Field>> prepareDataForParentEntity(Map<String, List<Entity>> parentNameAndChildrenEntities) {
+        Map<String, Set<Field>> finalParents = new HashMap<>();
+        for (Map.Entry<String, List<Entity>> relation : parentNameAndChildrenEntities.entrySet()) {
+            Map<String, Set<Field>> singleParent = prepareDataForParentEntity(relation.getKey(), relation.getValue());
+            finalParents.putAll(singleParent);
+        }
+        return finalParents;
+    }
+
+    public Map<String, Set<Field>> prepareDataForParentEntity(String parentName, List<Entity> childrenEntities) {
+        Map<Field, Byte> fieldsWithFrequency = new HashMap<>();
+        for (Entity entity : childrenEntities) {
+            for (Field field : entity.getFields()) {
+                if (fieldsWithFrequency.containsKey(field)) {
+                    fieldsWithFrequency.put(field, (byte) (fieldsWithFrequency.get(field) + 1));
+                } else {
+                    fieldsWithFrequency.put(field, (byte) 1);
                 }
             }
-            checkFieldFrequency(fieldsFrequency, entityNumber);
         }
+        fieldsWithFrequency.entrySet().removeIf(pair -> pair.getValue() < childrenEntities.size());
+        Map<String, Set<Field>> result = new HashMap<>();
+        result.put(parentName, fieldsWithFrequency.keySet());
+        return result;
     }
-
-    private int checkFieldFrequency(Map<String, Integer> fieldsFrequency, int entityNumber) {
-        Iterator<Map.Entry<String, Integer>> iterator = fieldsFrequency.entrySet().iterator();
-        int numberRemovedFields = 0;
-        while (iterator.hasNext()) {
-            int fieldFrequency = iterator.next().getValue();
-            if (fieldFrequency < entityNumber) {
-                iterator.remove();
-                numberRemovedFields++;
-            }
-        }
-        return numberRemovedFields;
-    }
-
-
 }
