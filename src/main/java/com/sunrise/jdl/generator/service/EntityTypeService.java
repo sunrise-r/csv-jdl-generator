@@ -53,12 +53,12 @@ public class EntityTypeService {
     }
 
     public Map<String, Set<Field>> prepareDataForParentEntity(Map<String, List<Entity>> parentNameAndChildrenEntities) {
-        Map<String, Set<Field>> finalParents = new HashMap<>();
+        Map<String, Set<Field>> allParents = new HashMap<>();
         for (Map.Entry<String, List<Entity>> relation : parentNameAndChildrenEntities.entrySet()) {
             Map<String, Set<Field>> singleParent = prepareDataForParentEntity(relation.getKey(), relation.getValue());
-            finalParents.putAll(singleParent);
+            allParents.putAll(singleParent);
         }
-        return finalParents;
+        return allParents;
     }
 
     public Map<String, Set<Field>> prepareDataForParentEntity(String parentName, List<Entity> childrenEntities) {
