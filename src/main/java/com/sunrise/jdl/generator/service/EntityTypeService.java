@@ -13,6 +13,12 @@ public class EntityTypeService {
     public static final int TYPE_NAME = 1;
     public static final int SUBTYPE_NAME = 3;
 
+
+    /**
+     * Гененирует карту со связями НазваниеРодителя - Список<Названия потомков> из CSV
+     * @param resource CSV-файл, в котором описаны отношения между сущностями
+     * @return Карта с описанием связей, но самих сущностей нет
+     */
     public Map<String, List<String>> readCsv(InputStream resource) {
         Map<String, List<String>> result = new HashMap<>();
         try {
