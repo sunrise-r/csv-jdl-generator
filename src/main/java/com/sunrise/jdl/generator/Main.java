@@ -10,7 +10,6 @@ import org.apache.commons.cli.*;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -48,7 +47,7 @@ public class Main {
         options.addOption(IGNORE_FIELDS, true, "set entities that will be ignored while generating");
         options.addOption(PAGINATE_TYPE, true, "set type of pagination for entities, default is pagination. Possible values are: pager, pagination, infinite-scroll");
         options.addOption(MAPSTRUCT, false, "enables using dto's with mapstruct");
-        options.addOption(GENERATTE_SERVICE_FOR, true, "for what entities service generation neeed. List of entities or 'all'");
+        options.addOption(GENERATTE_SERVICE_FOR, true, "for what entities service generation needed. List of entities or 'all'");
         options.addOption(EXECPT_SERVICE_GENERATION, true, "for what entities service generation is not needed. List of entities");
         options.addOption(MICROSERVICE, true, "set name of microservice that will hold the entities");
         options.addOption(TARGET_RESOURCE_FOLDER, true, "set path where resource files will be generated");
@@ -62,7 +61,6 @@ public class Main {
 
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd;
-        final Settings settings = new Settings();
 
         try {
             cmd = parser.parse(options, args);
