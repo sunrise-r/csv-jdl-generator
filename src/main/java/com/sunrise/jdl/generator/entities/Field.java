@@ -1,5 +1,7 @@
 package com.sunrise.jdl.generator.entities;
 
+import java.util.Objects;
+
 /**
  * Класс с описанием полей сущности.
  * Types of supported in JDL fields:
@@ -101,6 +103,20 @@ public class Field {
             sb.append(")");
         }
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Field field = (Field) o;
+        return Objects.equals(fieldType, field.fieldType) &&
+                Objects.equals(fieldName, field.fieldName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fieldType, fieldName);
     }
 
     public String getFieldLabel() {
