@@ -55,12 +55,12 @@ public class EntityTypeService {
     }
 
     /**
-
      * Перегруженный вариант метода prepareDataForParentEntity(String parentName, List<Entity> childrenEntities).
      * В цикле проходится по Map<String, List<Entity>> parentNameAndChildrenEntities и для каждого Map.Entry<String, List<Entity>>
      * вызывается метод prepareDataForParentEntity.
+     *
      * @param parentNameAndChildrenEntities - Map<String, List<Entity>> карта в качестве ключа содержит имя родителя, в качестве значений -
-     * список дочерних сущностей
+     *                                      список дочерних сущностей
      * @return
      */
     public Map<String, Set<Field>> prepareDataForParentEntity(Map<String, List<Entity>> parentNameAndChildrenEntities) {
@@ -75,9 +75,10 @@ public class EntityTypeService {
     /**
      * Метод подсчитывает частоту полей у дочерних сущностей List<Entity> childrenEntities и оставляет поля, которые
      * есть у всех сущностей. Возвращает имя родителя и список общих полей
-     * @param parentName - имя родительской сущности
+     *
+     * @param parentName       - имя родительской сущности
      * @param childrenEntities - список дочерних сущностей
-     * @return Map<String, Set<Field>> result - имя родителя и список его полей
+     * @return Map<String   ,       Set   <   Field>> result - имя родителя и список его полей
      */
     public Map<String, Set<Field>> prepareDataForParentEntity(String parentName, List<Entity> childrenEntities) {
         Map<Field, Byte> fieldsWithFrequency = new HashMap<>();
@@ -96,6 +97,7 @@ public class EntityTypeService {
         return result;
     }
 
+    /**
      * Сгруппировать сущности относительно родителькой группы.
      *
      * @param entities Список доступных сущностей
