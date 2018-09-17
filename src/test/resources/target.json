@@ -17,7 +17,7 @@
     }
   },
   "partnerDocumentsApp" : {
-    "partnerDocumentsClassName" : {
+    "className" : {
       "created" : "Новая запись 'testLabel' создана с идентификатором {{ param }}",
       "updated" : "Запись 'testLabel' с идентификатором {{ param }} обновлена",
       "deleted" : "Запись 'testLabel' с идентификатором {{ param }} удалена"

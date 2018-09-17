@@ -7,6 +7,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Collection;
 
 public class ActionServiceTest {
@@ -16,10 +17,11 @@ public class ActionServiceTest {
         /**
          * Файл с тестовыми данными
          */
-        File source = new File("/home/gena/Work/EDOPartner/actionCsv/action.csv");
+        InputStream stream= this.getClass().getResourceAsStream("/action.csv");
+//        File source = new File("\\action.csv");
 
-        Collection<Action> actions = new ActionService().readDataFromCSV(new FileInputStream(source));
+        Collection<Action> actions = new ActionService().readDataFromCSV(stream);
         Assert.assertEquals(actions.size(), 12);
-        Assert.assertEquals(actions.iterator().next().getStyle(), "operationBtn");
+        Assert.assertEquals(actions.iterator().next().getStyle(), "newBtn");
     }
 }
