@@ -87,7 +87,7 @@ public class EntitiesService {
         for (InputStream st : resources) {
             for (Entity en : readDataFromCSV(st)) {
                 if (entities.contains(en)) {
-                    throw new RuntimeException("Dublicated entity, exist=" + en.toString());
+                    throw new RuntimeException("Duplicated entity, exist=" + en.toString());
                 }
                 entities.add(en);
             }
@@ -102,7 +102,7 @@ public class EntitiesService {
      * @param stream Поток с данными о сущностях
      * @return entitiesToIngore Список сущностей сформированных на основе потока данных
      */
-    private java.util.Collection<Entity> readDataFromCSV(InputStream stream) {
+    public java.util.Collection<Entity> readDataFromCSV(InputStream stream) {
         Map<String, Entity> toReturn = new LinkedHashMap<>();
         try {
             Reader in = new InputStreamReader(stream);
