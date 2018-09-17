@@ -2,10 +2,8 @@ package com.sunrise.jdl.generator;
 
 import com.sunrise.jdl.generator.entities.Entity;
 import com.sunrise.jdl.generator.entities.Relation;
-import com.sunrise.jdl.generator.service.DescriptionService;
-import com.sunrise.jdl.generator.service.DescriptionServiceSettings;
-import com.sunrise.jdl.generator.service.EntitiesService;
-import com.sunrise.jdl.generator.service.Settings;
+import com.sunrise.jdl.generator.entities.ResultWithWarnings;
+import com.sunrise.jdl.generator.service.*;
 import org.apache.commons.cli.*;
 import org.apache.commons.io.FileUtils;
 
@@ -202,11 +200,4 @@ public class Main {
         }
     }
 
-    private static void saveFile(String path, String fileName, String content) {
-        try {
-            FileUtils.writeStringToFile(new File(path, fileName), content);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

@@ -6,7 +6,7 @@ package com.sunrise.jdl.generator.service;
  */
 public class MenuEntryGenerationService {
 
-    private static final String INSERT_TEMPLATE = "(`%s`,`%s`,`%s`,`%s`,`%s`) VALUES(%s, %s, %s, %s, %s);";
+    private static final String INSERT_TEMPLATE = "(`%s`,`%s`,`%s`,`%s`,`%s`) VALUES (%s, %s, %s, %s, %s);";
 
     private final TableData data;
     private final String currentTemplate;
@@ -16,9 +16,21 @@ public class MenuEntryGenerationService {
         currentTemplate = generateTemplate(INSERT_TEMPLATE, data);
     }
 
-    private String generateTemplate(String insertTemplate, TableData data) {
+//    private String nullString(String s){
+//        if(s == null) return "NULL";
+//        return s;
+//    }
+//
+//    public String generateQuery(String code, String url, String parent, String label, String role){
+//        return String.format(currentTemplate,nullString(code),nullString(url),nullString(parent),nullString(label),(role));
+//    }
 
-        return String.format(INSERT_TEMPLATE, data.parentColumnName, data.urlColumnName, data.codeColumnName, data.labelColumnName, data.roleColumnName, "%s", "%s", "%s", "%s", "%s");
+    public String generateQuery(String code, String url, String parent, String label, String role){
+        return String.format(currentTemplate,code,url,parent,label,role);
+    }
+
+    private String generateTemplate(String insertTemplate, TableData data) {
+        return String.format(insertTemplate, data.parentColumnName, data.urlColumnName, data.codeColumnName, data.labelColumnName, data.roleColumnName, "%s", "%s", "%s", "%s", "%s");
     }
 
     public class TableData {
@@ -47,13 +59,11 @@ public class MenuEntryGenerationService {
          * Название колонки в которой храниться название меню
          */
         private final String labelColumnName;
-        ;
 
         /**
          * Название колонки в которой храниться роль пользователя, которому доступно данное меню.
          */
         private final String roleColumnName;
-        ;
 
         public TableData(String tableName, String codeColumnName, String urlColumnName, String parentColumnName, String labelColumnName, String roleColumnName) {
             this.tableName = tableName;
