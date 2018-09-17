@@ -1,6 +1,7 @@
 package com.sunrise.jdl.generator.service;
 
 import com.sunrise.jdl.generator.entities.Entity;
+import com.sunrise.jdl.generator.entities.ResultWithWarnings;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
@@ -58,15 +59,20 @@ public class EntityTypeService {
      * @param typesMap Словарь где ключ - название группы сущности, а значение название сущностей которые входят в эту группу
      * @return Список сущностей сгруппированный по ггруппам из @typesMap
      */
-    public Map<String, List<Entity>> mergeTypesWithThemSubtypes(Collection<Entity> entities, Map<String, List<String>> typesMap) {
+    public ResultWithWarnings<Map<String, List<Entity>>> mergeTypesWithThemSubtypes(Collection<Entity> entities, Map<String, List<String>> typesMap){
+        List<String> warnings = new ArrayList<>();
         Map<String, List<Entity>> result = typesMap.keySet().stream().collect(Collectors.toMap(x -> x, x -> new LinkedList<>()));
         Map<String, Entity> entityMap = entities.stream().collect(Collectors.toMap(x -> x.getClassName(), x -> x));
         for (String group : typesMap.keySet()) {
             for (String entityName : typesMap.get(group)) {
-                result.get(group).add(entityMap.get(entityName));
+                Entity entity = entityMap.get(entityName);
+                if(entity == null)
+                    warnings.add("Failed to find a pair to the entity " + entityName);
+                result.get(group).add(entity);
             }
         }
-        return result;
+        return new ResultWithWarnings<>(warnings, result);
     }
 
 }
+
