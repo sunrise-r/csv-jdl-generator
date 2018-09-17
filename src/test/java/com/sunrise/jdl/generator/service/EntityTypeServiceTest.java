@@ -2,7 +2,6 @@ package com.sunrise.jdl.generator.service;
 
 import com.sunrise.jdl.generator.entities.Entity;
 import com.sunrise.jdl.generator.entities.Field;
-=======
 import com.sunrise.jdl.generator.entities.ResultWithWarnings;
 import org.junit.Assert;
 import org.junit.Test;
@@ -89,7 +88,9 @@ public class EntityTypeServiceTest {
         Assert.assertFalse(parents.get("parent2").contains(field2));
         Assert.assertFalse(parents.get("parent2").contains(field3));
         Assert.assertFalse(parents.get("parent2").contains(field4));
+    }
 
+    @Test
     public void mergeWarningsTest(){
         InputStream stream= this.getClass().getResourceAsStream("/entityTypes.csv");
         Map<String,List<String>> types = entityTypeService.readCsv(stream);
