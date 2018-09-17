@@ -2,15 +2,12 @@ package com.sunrise.jdl.generator;
 
 import com.sunrise.jdl.generator.entities.Entity;
 import com.sunrise.jdl.generator.entities.Relation;
-import com.sunrise.jdl.generator.service.DescriptionService;
-import com.sunrise.jdl.generator.service.DescriptionServiceSettings;
-import com.sunrise.jdl.generator.service.EntitiesService;
-import com.sunrise.jdl.generator.service.Settings;
+import com.sunrise.jdl.generator.entities.ResultWithWarnings;
+import com.sunrise.jdl.generator.service.*;
 import org.apache.commons.cli.*;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,7 +28,12 @@ public class Main {
     private static final String MICROSERVICE = "microservice";
     private static final String GATEWAY_NAME = "gateway";
     private static final String TARGET_RESOURCE_FOLDER = "targetResourceFolder";
+    private static final String JDL_GENERATION = "jdlGeneration";
+    private static final String GID_GENERATION = "jsonGeneration";
+    private static final String GID_ENTITIES = "entities";
+    private static final String GID_RELATIONS = "relations";
     private static EntitiesService entitiesService = null;
+    private static EntityTypeService entityTypeService = new EntityTypeService();
 
     public static void main(String[] args) {
 
@@ -43,15 +45,20 @@ public class Main {
         options.addOption(IGNORE_FIELDS, true, "set entities that will be ignored while generating");
         options.addOption(PAGINATE_TYPE, true, "set type of pagination for entities, default is pagination. Possible values are: pager, pagination, infinite-scroll");
         options.addOption(MAPSTRUCT, false, "enables using dto's with mapstruct");
-        options.addOption(GENERATTE_SERVICE_FOR, true, "for what entities service generation neeed. List of entities or 'all'");
+        options.addOption(GENERATTE_SERVICE_FOR, true, "for what entities service generation needed. List of entities or 'all'");
         options.addOption(EXECPT_SERVICE_GENERATION, true, "for what entities service generation is not needed. List of entities");
         options.addOption(MICROSERVICE, true, "set name of microservice that will hold the entities");
         options.addOption(TARGET_RESOURCE_FOLDER, true, "set path where resource files will be generated");
         options.addOption(GATEWAY_NAME, true, "set name of gateway");
 
+        options.addOption(JDL_GENERATION, false, "set the \"JDL-Generation\" operation type");
+        options.addOption(GID_GENERATION, false, "set the \"Generate Interface Description\" operation type");
+        options.addOption(GID_ENTITIES,true,"path to the 'entities' csv file");
+        options.addOption(GID_RELATIONS,true,"path to the 'relations' csv file");
+
+
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd;
-        final Settings settings = new Settings();
 
         try {
             cmd = parser.parse(options, args);
@@ -68,6 +75,51 @@ public class Main {
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("jdlGenerator", options);
         }
+
+        if (cmd.hasOption(GID_GENERATION)) {
+            try {
+                gidGenerator(cmd);
+            } catch (FileNotFoundException e){
+                System.err.println("File not found!");
+            }
+
+        } else if (cmd.hasOption(JDL_GENERATION)) {
+            jdlGenerator(cmd);
+        } else {
+            System.err.println("No operation selected!");
+        }
+
+    }
+
+    private static void saveFile(String path, String fileName, String content) {
+        try {
+            FileUtils.writeStringToFile(new File(path, fileName), content);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void gidGenerator(CommandLine cmd) throws FileNotFoundException{
+        if(!(cmd.hasOption(GID_ENTITIES) && cmd.hasOption(GID_RELATIONS))){
+            System.err.println("No args for the '" + GID_ENTITIES + "' or "+ GID_RELATIONS +" param");
+        }
+        File entitiesFile = new File(cmd.getOptionValue(GID_ENTITIES));
+        File relationsFile = new File(cmd.getOptionValue(GID_RELATIONS));
+        if(!entitiesFile.isFile() || !relationsFile.isFile())
+            throw new FileNotFoundException();
+
+
+        CSVEntityReader csvEntityReader = new CSVEntityReader();
+        Collection<Entity> entities = csvEntityReader.readDataFromCSV(new FileInputStream(entitiesFile)); // Добавить опцию пути
+        Map<String, List<String>> relations = entityTypeService.readCsv(new FileInputStream(relationsFile)); // Добавить опцию пути
+        ResultWithWarnings<Map<String, List<Entity>>> entitiesHierarchy = entityTypeService.mergeTypesWithThemSubtypes(entities, relations);
+        entitiesHierarchy.warnings.forEach(x -> System.out.println("WARNING: " + x));
+        // Тут должно быть продолжение 168-й задачей!
+    }
+
+    private static void jdlGenerator(CommandLine cmd) {
+        final Settings settings = new Settings();
+
         if (cmd.hasOption(IGNORE_ENTITIES)) {
             String ens = cmd.getOptionValue(IGNORE_ENTITIES);
             settings.getEntitiesToIngore().addAll(Arrays.stream(ens.split(",")).map((s) -> s.trim()).collect(Collectors.toList()));
@@ -124,12 +176,12 @@ public class Main {
             Set<String> names = entities.stream().map(e -> e.getClassName()).collect(Collectors.toSet());
             List<Relation> relations = entities.stream().map(e -> e.getRelations()).flatMap(Collection::stream).collect(Collectors.toList());
             relations.stream()
-                    .filter(r -> !names.contains(r.getEntityTo())).forEach(r -> System.out.println("Unable to find entity for relation=" + r.getEntityTo()));
+                    .filter(r -> !names.contains(r.getEntityTo())).forEach(r -> System.out.println("Unable to find entity for the relation=" + r.getEntityTo()));
             System.out.println("Количество созданных структур " + entities.size());
 
-            entitiesService.checkRelations(entities).entrySet().stream().forEach(e->{
-                System.out.println(String.format("Для сущности %s в списке отношений присуствуют несуществующие сущности",e.getKey().getClassName()));
-                e.getValue().stream().forEach(r->{
+            entitiesService.checkRelations(entities).entrySet().stream().forEach(e -> {
+                System.out.println(String.format("Для сущности %s в списке отношений присуствуют несуществующие сущности", e.getKey().getClassName()));
+                e.getValue().stream().forEach(r -> {
                     System.out.println(String.format("Не существует сущности: %s", r.getEntityTo()));
                 });
             });
@@ -149,11 +201,4 @@ public class Main {
         }
     }
 
-    private static void saveFile(String path, String fileName, String content) {
-        try {
-            FileUtils.writeStringToFile(new File(path, fileName), content);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
