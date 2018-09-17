@@ -1,12 +1,20 @@
 package com.sunrise.jdl.generator.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sunrise.jdl.generator.actions.Action;
 import com.sunrise.jdl.generator.entities.Entity;
 import com.sunrise.jdl.generator.entities.Field;
 import com.sunrise.jdl.generator.entities.ResultWithWarnings;
+import com.sunrise.jdl.generator.forJson.BaseData;
+import com.sunrise.jdl.generator.forJson.BaseField;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
 import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -78,7 +86,7 @@ public class EntityTypeService {
      *
      * @param parentName       - имя родительской сущности
      * @param childrenEntities - список дочерних сущностей
-     * @return Map<String   ,       Set   <   Field>> result - имя родителя и список его полей
+     * @return Map<String                                                                                                                                                                                                                                                               ,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               Set                                                                                                                                                                                                                                                               <                                                                                                                                                                                                                                                               Field>> result - имя родителя и список его полей
      */
     public Map<String, Set<Field>> prepareDataForParentEntity(String parentName, List<Entity> childrenEntities) {
         Map<Field, Byte> fieldsWithFrequency = new HashMap<>();
@@ -122,4 +130,58 @@ public class EntityTypeService {
     }
 
 
+    public void writeToJsonFile(String fileWithActions, String destinationFolder, Map<String, Set<Field>> parentWithFields) throws IOException, URISyntaxException {
+        ActionService actionService = new ActionService();
+        InputStream stream = this.getClass().getResourceAsStream(fileWithActions);
+        Collection<Action> actions = actionService.readDataFromCSV(stream);
+
+        List<BaseData> baseDataList = convertToBaseDataAndBaseField(parentWithFields, (List) actions);
+        ObjectMapper mapper = new ObjectMapper();
+
+        URL resource = this.getClass().getResource(destinationFolder);
+        System.out.println(resource.toURI());
+        System.out.println(resource.toString());
+        Path targetFolder = Paths.get(String.valueOf(new File(resource.toURI())));
+
+        Files.walkFileTree(targetFolder, new SimpleFileVisitor<Path>(){
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                Files.delete(dir);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+
+        for (BaseData baseData : baseDataList) {
+            Path baseDataPath = Files.createDirectories(Paths.get(destinationFolder + "/" + baseData.getName() ));
+            mapper.writeValue(new File(baseDataPath + "/" + baseData.getName() + ".json"), baseData);
+        }
+
+    }
+
+
+
+
+    /**
+     * Конвертация в BaseData
+     * @param parentWithFields
+     * @return
+     */
+    private List<BaseData> convertToBaseDataAndBaseField(Map<String, Set<Field>> parentWithFields, List actions) {
+        List<BaseData> listBaseData = new ArrayList<>();
+        for (Map.Entry<String, Set<Field>> entry : parentWithFields.entrySet()) {
+            BaseData baseData = new BaseData(entry.getKey());
+            for (Field field : entry.getValue()) {
+                baseData.getListFields().add(new BaseField(field));
+                baseData.setActions(actions);
+            }
+            listBaseData.add(baseData);
+        }
+        return listBaseData;
+    }
 }
