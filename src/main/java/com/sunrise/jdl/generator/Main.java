@@ -68,9 +68,9 @@ public class Main {
             formatter.printHelp("jdlGenerator", options);
         }
 
-        if(cmd.hasOption(GID_GENERATION)){
+        if (cmd.hasOption(GID_GENERATION)) {
             gidGenerator(cmd);
-        } else if (cmd.hasOption(JDL_GENERATION)){
+        } else if (cmd.hasOption(JDL_GENERATION)) {
             jdlGenerator(cmd);
         } else {
             System.err.println("No operation selected!");
@@ -86,17 +86,18 @@ public class Main {
         }
     }
 
-    private static void gidGenerator(CommandLine cmd){
+    private static void gidGenerator(CommandLine cmd) {
         Settings entitySettings = new Settings();
-        entitiesService = new EntitiesService();
-        Map<String,List<String>> relations = entityTypeService.readCsv(null); // Добавить опцию пути
+        entitiesService = new EntitiesService(entitySettings);
+
+        Map<String, List<String>> relations = entityTypeService.readCsv(null); // Добавить опцию пути
         Collection<Entity> entities = entitiesService.readDataFromCSV();
         ResultWithWarnings<Map<String, List<Entity>>> a = entityTypeService.mergeTypesWithThemSubtypes(null, relations); // later
         a.warnings.forEach(x -> System.out.println("WARNING: " + x));
         // Тут должно быть продолжение 168-й задачей!
     }
 
-    private static void jdlGenerator(CommandLine cmd){
+    private static void jdlGenerator(CommandLine cmd) {
         final Settings settings = new Settings();
 
         if (cmd.hasOption(IGNORE_ENTITIES)) {
