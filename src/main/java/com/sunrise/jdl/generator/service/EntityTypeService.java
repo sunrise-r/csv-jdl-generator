@@ -60,7 +60,7 @@ public class EntityTypeService {
      * вызывается метод prepareDataForParentEntity.
      *
      * @param parentNameAndChildrenEntities - Map<String, List<Entity>> карта в качестве ключа содержит имя родителя, в качестве значений -
-     *                                      список дочерних сущностей
+     *                                      список дочерних полей
      * @return
      */
     public Map<String, Set<Field>> prepareDataForParentEntity(Map<String, List<Entity>> parentNameAndChildrenEntities) {
