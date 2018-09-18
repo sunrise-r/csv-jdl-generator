@@ -22,7 +22,8 @@ public class MenuEntryGenerationService {
     public List<String> generateQueries(InputStream resource) {
         List<String> result = new ArrayList<>();
         Map<ModuleInfo, List<String>> modules = csvEntityTypeReader.readWithModules(resource);
-        long id = 0l;
+        long itemid = 0l;
+        long moduleid = 0l;
         for (Map.Entry<ModuleInfo, List<String>> pair : modules.entrySet()) {
             result.add(String.format(
                     currentTemplate,
@@ -32,11 +33,12 @@ public class MenuEntryGenerationService {
                     "'"+pair.getKey().getClassName()+"'",
                     "'ROLE_" + pair.getKey().getModuleName().toUpperCase() + "'"
                     ));
-            ++id;
+            moduleid = ++itemid;
             for (String typeName : pair.getValue()) {
+                itemid++;
                 result.add(String.format(
                         currentTemplate,
-                        "" + id,
+                        "" + moduleid,
                         "'" + typeName + "'",
                         "'/documents/" + pair.getKey().getModuleName().replaceAll("(?=[A-Z])", "-").replaceFirst("-", "").toLowerCase() + "/" + typeName.replaceAll("(?=[A-Z])", "-").replaceFirst("-", "").toLowerCase() + "'",
                         "'" + pair.getKey().getClassName() + "'",

@@ -16,7 +16,8 @@ public class MenuEntryGenerationServiceTest {
         InputStream stream = this.getClass().getResourceAsStream("/queryBuilder.csv");
 
         List<String> l = a.generateQueries(stream);
-        l.forEach(x -> System.out.println("INSERT INTO table_name " + x));
+
+        l.forEach(x -> System.out.println("<sql endDelimiter=\"\\nGO\" splitStatements=\"true\" stripComments=\"true\">\nINSERT INTO table_name " + x + "\n</sql>"));
 
 
     }
