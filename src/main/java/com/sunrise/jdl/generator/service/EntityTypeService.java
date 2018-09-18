@@ -113,9 +113,15 @@ public class EntityTypeService {
      * @throws IOException
      * @throws URISyntaxException
      */
-    public void writeToJsonFile(String fileWithActions, String destinationFolder, Map<String, Set<Field>> parentWithFields) throws IOException, URISyntaxException {
+    public void writeToJsonFile(String fileWithActions, String destinationFolder, Map<String, Set<Field>> parentWithFields)  {
         ActionService actionService = new ActionService();
-        InputStream stream = this.getClass().getResourceAsStream(fileWithActions);
+//        InputStream stream = this.getClass().getResourceAsStream(fileWithActions);
+        InputStream stream = null;
+        try {
+            stream = new FileInputStream(new File(fileWithActions));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         Collection<Action> actions = actionService.readDataFromCSV(stream);
 
         List<BaseData> baseDataList = convertToBaseDataAndBaseField(parentWithFields, (List) actions);
@@ -124,15 +130,24 @@ public class EntityTypeService {
         Path targetFolder = Paths.get(destinationFolder);
 
         if (Files.exists(targetFolder)) {
-            Files.walk(targetFolder)
-                    .sorted(Comparator.reverseOrder())
-                    .map(Path::toFile)
-                    .forEach(File::delete);
+            try {
+                Files.walk(targetFolder)
+                        .sorted(Comparator.reverseOrder())
+                        .map(Path::toFile)
+                        .forEach(File::delete);
+            } catch (IOException e) {
+                System.err.println("Ошибка при обновлении файла: " + Arrays.toString(e.getStackTrace()));
+            }
         }
 
         for (BaseData baseData : baseDataList) {
-            Path baseDataPath = Files.createDirectories(Paths.get(destinationFolder + "/" + baseData.getName()));
-            mapper.writeValue(new File(baseDataPath + "/" + baseData.getName() + ".json"), baseData);
+            Path baseDataPath = null;
+            try {
+                baseDataPath = Files.createDirectories(Paths.get(destinationFolder + "/" + baseData.getName()));
+                mapper.writeValue(new File(baseDataPath + "/" + baseData.getName() + ".json"), baseData);
+            } catch (IOException e) {
+                System.err.println("Ошибка создания директории назначения: " + Arrays.toString(e.getStackTrace()));
+            }
         }
 
     }
