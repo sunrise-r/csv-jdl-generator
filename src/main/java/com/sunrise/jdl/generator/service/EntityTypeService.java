@@ -11,6 +11,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
 import java.io.*;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.*;
@@ -86,7 +87,7 @@ public class EntityTypeService {
      *
      * @param parentName       - имя родительской сущности
      * @param childrenEntities - список дочерних сущностей
-     * @return Map<String                                                                                                                                                                                                                                                               ,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               Set                                                                                                                                                                                                                                                               <                                                                                                                                                                                                                                                               Field>> result - имя родителя и список его полей
+     * @return Map<String                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               Set                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               <                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               Field>> result - имя родителя и список его полей
      */
     public Map<String, Set<Field>> prepareDataForParentEntity(String parentName, List<Entity> childrenEntities) {
         Map<Field, Byte> fieldsWithFrequency = new HashMap<>();
@@ -129,7 +130,18 @@ public class EntityTypeService {
         return new ResultWithWarnings<>(warnings, result);
     }
 
-
+    /**
+     * Метод конвертирует данные из параметра parentWithFields в объекты BaseData и записывает их
+     * в json-файл в директории destinationFolder. Внутри директории destinationFolder для каждого объекта BaseData
+     * создается собственная директория, в которую записывается json-файл. Если директория destinationFolder уже существует -
+     * она будет пересоздана.
+     * @param fileWithActions - путь к csv-файлу c Action (объекты Action создаются при парсинге файла),
+     *                        которые добавляются к каждому объекту BaseData
+     * @param destinationFolder - директория, в которой создадутся директории с файлами для объектов BaseData.
+     * @param parentWithFields - исходные данные для конвертации в объекты BaseData
+     * @throws IOException
+     * @throws URISyntaxException
+     */
     public void writeToJsonFile(String fileWithActions, String destinationFolder, Map<String, Set<Field>> parentWithFields) throws IOException, URISyntaxException {
         ActionService actionService = new ActionService();
         InputStream stream = this.getClass().getResourceAsStream(fileWithActions);
@@ -138,39 +150,33 @@ public class EntityTypeService {
         List<BaseData> baseDataList = convertToBaseDataAndBaseField(parentWithFields, (List) actions);
         ObjectMapper mapper = new ObjectMapper();
 
-        URL resource = this.getClass().getResource(destinationFolder);
-        System.out.println(resource.toURI());
-        System.out.println(resource.toString());
-        Path targetFolder = Paths.get(String.valueOf(new File(resource.toURI())));
+        Path targetFolder = Paths.get(destinationFolder);
 
-        Files.walkFileTree(targetFolder, new SimpleFileVisitor<Path>(){
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                Files.delete(file);
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                Files.delete(dir);
-                return FileVisitResult.CONTINUE;
-            }
-        });
+        if (Files.exists(targetFolder)) {
+            Files.walk(targetFolder)
+                    .sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+        }
 
         for (BaseData baseData : baseDataList) {
-            Path baseDataPath = Files.createDirectories(Paths.get(destinationFolder + "/" + baseData.getName() ));
+            Path baseDataPath = Files.createDirectories(Paths.get(destinationFolder + "/" + baseData.getName()));
             mapper.writeValue(new File(baseDataPath + "/" + baseData.getName() + ".json"), baseData);
         }
 
     }
 
 
-
-
     /**
-     * Конвертация в BaseData
+     * Конвертация входных данных в объекты BaseData (используется для корректной записи в json-формате в файл).
+     * Объект BaseData создаяется для каждой пары ключ-значение.
+     * Ключ карты используется как name для BaseData. Объекты Field в значении карты Set<Field> конвертируются в объекты
+     * BaseField (также используются для корректной записи в json-формате в файл) и сохряняются в поле listFields
+     * у соответствующего объекта BaseData.
+     * У всех созданных объектов BaseData полю actions присваиваится значение List actions.
      * @param parentWithFields
-     * @return
+     * @param actions - список возможных действий. Получается при парсинге файла в формате csv.
+     * @return listBaseData - список созданных BaseData
      */
     private List<BaseData> convertToBaseDataAndBaseField(Map<String, Set<Field>> parentWithFields, List actions) {
         List<BaseData> listBaseData = new ArrayList<>();

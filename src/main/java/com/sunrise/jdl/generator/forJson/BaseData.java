@@ -5,14 +5,45 @@ import com.sunrise.jdl.generator.actions.Action;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Класс используется для записи данных в json-фррмате в файл
+ */
 public class BaseData {
 
+    /**
+     * Имя
+     */
     private String name;
+
+    /**
+     * Код
+     */
     private String code;
+
+    /**
+     * Код родителя
+     */
     private String parentCode;
+
+    /**
+     * Список полей
+     */
     private List<BaseField> listFields;
+
+    /**
+     * Список действий которые можно производить с объектом
+     */
     private List<Action> actions;
 
+    /**
+     * Пустой конструкто используется для десериализации (используется в тесте)
+     */
+    public BaseData() {
+    }
+
+    /**
+     * @param name
+     */
     public BaseData(String name) {
         this.name = name;
         this.listFields = new ArrayList<>();
@@ -57,5 +88,16 @@ public class BaseData {
 
     public void setListFields(List<BaseField> listFields) {
         this.listFields = listFields;
+    }
+
+    @Override
+    public String toString() {
+        return "BaseData{" +
+                "name='" + name + '\'' +
+                ", code='" + code + '\'' +
+                ", parentCode='" + parentCode + '\'' +
+                ", listFields=" + listFields +
+                ", actions=" + actions +
+                '}';
     }
 }
