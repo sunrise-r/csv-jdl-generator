@@ -17,7 +17,7 @@ public class MenuEntryGenerationServiceTest {
 
         List<String> l = a.generateQueries(stream);
 
-        l.forEach(x -> System.out.println("<sql endDelimiter=\"\\nGO\" splitStatements=\"true\" stripComments=\"true\">\nINSERT INTO table_name " + x + "\n</sql>"));
+        l.forEach(x -> System.out.println("<sql endDelimiter=\"\\nGO\" splitStatements=\"true\" stripComments=\"true\">\nINSERT INTO menu_item " + x + "\n</sql>"));
 
 
     }
