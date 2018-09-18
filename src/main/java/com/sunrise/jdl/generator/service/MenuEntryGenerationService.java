@@ -1,6 +1,13 @@
 package com.sunrise.jdl.generator.service;
 
 
+import com.sunrise.jdl.generator.entities.ModuleInfo;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Сервис генерации SQL запроса для заполнения данных для двухуровнего меню.
  */
@@ -10,6 +17,25 @@ public class MenuEntryGenerationService {
 
     private final TableData data;
     private final String currentTemplate;
+    private CSVEntityTypeReader csvEntityTypeReader = new CSVEntityTypeReader();
+
+    public List<String> generateQueries(InputStream resource) {
+        List<String> result = new ArrayList<>();
+        Map<ModuleInfo, List<String>> modules = csvEntityTypeReader.readWithModules(resource);
+        for (Map.Entry<ModuleInfo, List<String>> pair : modules.entrySet()) {
+            for (String typeName : pair.getValue()){
+                result.add(String.format(
+                        currentTemplate,
+                        pair.getKey().getModuleName(),
+                        "/documents/" + pair.getKey().getModuleName().replaceAll("(?=[A-Z])","-").replaceFirst("-","").toLowerCase() + "/" + typeName.replaceAll("(?=[A-Z])","-").replaceFirst("-","").toLowerCase(),
+                        typeName,
+                        pair.getKey().getClassName(),
+                        "ROLE_" + pair.getKey().getModuleName().toUpperCase() + "_" + typeName.toUpperCase()
+                ));
+            }
+        }
+        return result;
+    }
 
     public MenuEntryGenerationService() {
         this.data = new TableData("menu_item", "code", "url", "parent", "label", "role");
@@ -31,6 +57,10 @@ public class MenuEntryGenerationService {
 
     private String generateTemplate(String insertTemplate, TableData data) {
         return String.format(insertTemplate, data.parentColumnName, data.urlColumnName, data.codeColumnName, data.labelColumnName, data.roleColumnName, "%s", "%s", "%s", "%s", "%s");
+    }
+
+    public String getCurrentTemplate() {
+        return currentTemplate;
     }
 
     public class TableData {
