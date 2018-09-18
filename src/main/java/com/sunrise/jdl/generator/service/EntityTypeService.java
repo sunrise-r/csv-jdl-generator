@@ -21,8 +21,7 @@ import java.util.stream.Collectors;
 
 public class EntityTypeService {
 
-    public static final int TYPE_NAME = 1;
-    public static final int SUBTYPE_NAME = 3;
+    private CSVEntityTypeReader csvEntityTypeReader = new CSVEntityTypeReader();
 
 
     /**
@@ -32,35 +31,7 @@ public class EntityTypeService {
      * @return Карта с описанием связей, но самих сущностей нет
      */
     public Map<String, List<String>> readCsv(InputStream resource) {
-        Map<String, List<String>> result = new HashMap<>();
-        try {
-            Reader in = new InputStreamReader(resource);
-            Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
-            String lastType = "";
-            for (CSVRecord record : records) {
-                String fieldType = record.get(TYPE_NAME).trim();
-                String fieldSubtype = record.get(SUBTYPE_NAME).trim();
-                if (!fieldSubtype.isEmpty()) {
-                    if (fieldType.equals("")) {
-                        if (lastType.equals(""))
-                            throw new IOException();
-                        result.get(lastType).add(fieldSubtype);
-                    } else {
-                        lastType = fieldType;
-                        result.put(fieldType, new ArrayList<>());
-                        result.get(fieldType).add(fieldSubtype);
-                    }
-                }
-            }
-
-        } catch (FileNotFoundException e) {
-            System.out.println("Can't find file");
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.out.println("IO exception");
-            e.printStackTrace();
-        }
-        return result;
+        return csvEntityTypeReader.readDataFromCSV(resource);
     }
 
     /**
