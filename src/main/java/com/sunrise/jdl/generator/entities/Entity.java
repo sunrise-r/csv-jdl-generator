@@ -6,13 +6,9 @@ import java.util.List;
 /**
  * Класс для хранения сущностей
  */
-public class Entity {
+public class Entity extends BasicEntity{
 
 
-    /**
-     * Название класса
-     */
-    private final String className;
 
     /**
      * Список полей класса
@@ -23,13 +19,6 @@ public class Entity {
      * Список структур
      */
     private final List<Relation> relations;
-
-    /**
-     * Отображаемое имя сущности.
-     */
-    private final String label;
-
-    private final String title;
 
     /**
      * Конструктор
