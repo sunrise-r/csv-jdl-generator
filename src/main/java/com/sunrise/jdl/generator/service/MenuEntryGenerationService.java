@@ -22,15 +22,25 @@ public class MenuEntryGenerationService {
     public List<String> generateQueries(InputStream resource) {
         List<String> result = new ArrayList<>();
         Map<ModuleInfo, List<String>> modules = csvEntityTypeReader.readWithModules(resource);
+        long id = 0l;
         for (Map.Entry<ModuleInfo, List<String>> pair : modules.entrySet()) {
-            for (String typeName : pair.getValue()){
+            result.add(String.format(
+                    currentTemplate,
+                    "NULL",
+                    "'" + pair.getKey().getModuleName() + "'",
+                    "'/documents/" + pair.getKey().getModuleName().replaceAll("(?=[A-Z])", "-").replaceFirst("-", "").toLowerCase() + "'",
+                    "'"+pair.getKey().getClassName()+"'",
+                    "'ROLE_" + pair.getKey().getModuleName().toUpperCase() + "'"
+                    ));
+            ++id;
+            for (String typeName : pair.getValue()) {
                 result.add(String.format(
                         currentTemplate,
-                        pair.getKey().getModuleName(),
-                        "/documents/" + pair.getKey().getModuleName().replaceAll("(?=[A-Z])","-").replaceFirst("-","").toLowerCase() + "/" + typeName.replaceAll("(?=[A-Z])","-").replaceFirst("-","").toLowerCase(),
-                        typeName,
-                        pair.getKey().getClassName(),
-                        "ROLE_" + pair.getKey().getModuleName().toUpperCase() + "_" + typeName.toUpperCase()
+                        "" + id,
+                        "'" + typeName + "'",
+                        "'/documents/" + pair.getKey().getModuleName().replaceAll("(?=[A-Z])", "-").replaceFirst("-", "").toLowerCase() + "/" + typeName.replaceAll("(?=[A-Z])", "-").replaceFirst("-", "").toLowerCase() + "'",
+                        "'" + pair.getKey().getClassName() + "'",
+                        "'ROLE_" + pair.getKey().getModuleName().toUpperCase() + "_" + typeName.toUpperCase() + "'"
                 ));
             }
         }
@@ -40,19 +50,6 @@ public class MenuEntryGenerationService {
     public MenuEntryGenerationService() {
         this.data = new TableData("menu_item", "code", "url", "parent", "label", "role");
         currentTemplate = generateTemplate(INSERT_TEMPLATE, data);
-    }
-
-//    private String nullString(String s){
-//        if(s == null) return "NULL";
-//        return s;
-//    }
-//
-//    public String generateQuery(String code, String url, String parent, String label, String role){
-//        return String.format(currentTemplate,nullString(code),nullString(url),nullString(parent),nullString(label),(role));
-//    }
-
-    public String generateQuery(String code, String url, String parent, String label, String role){
-        return String.format(currentTemplate,code,url,parent,label,role);
     }
 
     private String generateTemplate(String insertTemplate, TableData data) {
