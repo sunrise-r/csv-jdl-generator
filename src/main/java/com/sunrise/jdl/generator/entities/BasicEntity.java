@@ -6,10 +6,4 @@ public abstract class BasicEntity {
      */
     protected String className;
 
-    /**
-     * Отображаемое имя сущности.
-     */
-    protected String label;
-
-    protected String title;
 }

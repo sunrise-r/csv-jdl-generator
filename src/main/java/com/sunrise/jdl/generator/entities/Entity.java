@@ -8,7 +8,12 @@ import java.util.List;
  */
 public class Entity extends BasicEntity{
 
+    /**
+     * Отображаемое имя сущности.
+     */
+    private String label;
 
+    private String title;
 
     /**
      * Список полей класса
