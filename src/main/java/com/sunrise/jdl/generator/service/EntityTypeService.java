@@ -122,6 +122,7 @@ public class EntityTypeService {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
         Collection<Action> actions = actionService.readDataFromCSV(stream);
 
         List<BaseData> baseDataList = convertToBaseDataAndBaseField(parentWithFields, (List) actions);
@@ -143,8 +144,9 @@ public class EntityTypeService {
         for (BaseData baseData : baseDataList) {
             Path baseDataPath = null;
             try {
-                baseDataPath = Files.createDirectories(Paths.get(destinationFolder + "/" + baseData.getCode()));
-                mapper.writeValue(new File(baseDataPath + "/" + baseData.getCode() + ".json"), baseData);
+                String correctPath = baseData.getCode().substring(0, 1).toLowerCase() + baseData.getCode().substring(1);
+                baseDataPath = Files.createDirectories(Paths.get(destinationFolder + "/" + correctPath));
+                mapper.writeValue(new File(baseDataPath + "/" + correctPath + ".json"), baseData);
             } catch (IOException e) {
                 System.err.println("Ошибка создания директории назначения: " + Arrays.toString(e.getStackTrace()));
             }
@@ -170,8 +172,8 @@ public class EntityTypeService {
             BaseData baseData = new BaseData(entry.getKey());
             for (Field field : entry.getValue()) {
                 baseData.getListFields().add(new BaseField(field));
-                baseData.setActions(actions);
             }
+            baseData.setActions(actions);
             listBaseData.add(baseData);
         }
         return listBaseData;
