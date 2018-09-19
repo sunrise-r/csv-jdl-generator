@@ -17,7 +17,7 @@ import java.util.*;
 
 public class EntityTypeServiceTest {
 
-    public static final String FOLDER_FOR_TEST = "~/Documents/test/";
+    public static final String FOLDER_FOR_TEST = "target/generated-test-sources/test";
     private EntityTypeService entityTypeService = new EntityTypeService();
 
     private EntitiesService entitiesService = new EntitiesService(new Settings());
@@ -110,8 +110,12 @@ public class EntityTypeServiceTest {
     }
 
     @Test
-    public void testWriteToJsonFile() throws IOException, URISyntaxException {
+    public void testWriteToJsonFile() throws IOException {
         Path folderForTest = Paths.get(FOLDER_FOR_TEST);
+//        if (Files.exists(folderForTest)) {
+//            Files.delete(folderForTest);
+//        }
+//        Files.createDirectory(folderForTest);
 
         EntityTypeService service = new EntityTypeService();
         ObjectMapper mapper = new ObjectMapper();
@@ -131,7 +135,7 @@ public class EntityTypeServiceTest {
         File destinationFolder = new File(FOLDER_FOR_TEST);
         File[] files = destinationFolder.listFiles();
         Assert.assertEquals(files.length, 3);
-        BaseData baseData = mapper.readValue(new File("~/Documents/test/baseData1/baseData1.json"), BaseData.class);
+        BaseData baseData = mapper.readValue(new File( FOLDER_FOR_TEST + "/baseData1/baseData1.json"), BaseData.class);
         Assert.assertEquals(baseData.getCode(), "baseData1");
         Assert.assertEquals(baseData.getListFields().size(), 5);
         Assert.assertEquals(baseData.getListFields().get(0).getName(), "поле1");
@@ -139,7 +143,7 @@ public class EntityTypeServiceTest {
         Assert.assertEquals(baseData.getActions().size(), 12);
         Assert.assertEquals(baseData.getActions().get(0).getStyle(), "newBtn");
 
-        baseData = mapper.readValue(new File("~/Documents/test/baseData2/baseData2.json"), BaseData.class);
+        baseData = mapper.readValue(new File(FOLDER_FOR_TEST + "/baseData2/baseData2.json"), BaseData.class);
         Assert.assertEquals(baseData.getCode(), "baseData2");
         Assert.assertEquals(baseData.getListFields().size(), 5);
         Assert.assertEquals(baseData.getListFields().get(1).getName(), "поле2");
@@ -147,7 +151,7 @@ public class EntityTypeServiceTest {
         Assert.assertEquals(baseData.getActions().size(), 12);
         Assert.assertEquals(baseData.getActions().get(1).getStyle(), "operationBtn");
 
-        baseData = mapper.readValue(new File("~/Documents/test/baseData3/baseData3.json"), BaseData.class);
+        baseData = mapper.readValue(new File(FOLDER_FOR_TEST + "/baseData3/baseData3.json"), BaseData.class);
         Assert.assertEquals(baseData.getCode(), "baseData3");
         Assert.assertEquals(baseData.getListFields().size(), 5);
         Assert.assertEquals(baseData.getListFields().get(4).getName(), "поле5");
@@ -155,13 +159,11 @@ public class EntityTypeServiceTest {
         Assert.assertEquals(baseData.getActions().size(), 12);
         Assert.assertEquals(baseData.getActions().get(11).getStyle(), "refreshBtn");
 
-
-        Files.walk(folderForTest)
-                .sorted(Comparator.reverseOrder())
-                .map(Path::toFile)
-                .forEach(File::delete);
-        Assert.assertFalse("Directory still exists",
-                Files.exists(folderForTest));
-
+//        Files.walk(folderForTest)
+//                .sorted(Comparator.reverseOrder())
+//                .map(Path::toFile)
+//                .forEach(File::delete);
+//        Assert.assertFalse("Directory still exists",
+//                Files.exists(folderForTest));
     }
 }
