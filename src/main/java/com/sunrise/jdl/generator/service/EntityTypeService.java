@@ -7,15 +7,10 @@ import com.sunrise.jdl.generator.entities.Field;
 import com.sunrise.jdl.generator.entities.ResultWithWarnings;
 import com.sunrise.jdl.generator.forJson.BaseData;
 import com.sunrise.jdl.generator.forJson.BaseField;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVRecord;
 
 import java.io.*;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -115,10 +110,15 @@ public class EntityTypeService {
      */
     public void writeToJsonFile(String fileWithActions, String destinationFolder, Map<String, Set<Field>> parentWithFields)  {
         ActionService actionService = new ActionService();
-//        InputStream stream = this.getClass().getResourceAsStream(fileWithActions);
         InputStream stream = null;
         try {
-            stream = new FileInputStream(new File(fileWithActions));
+            File file = new File(fileWithActions);
+            if (file.exists()) {
+                stream = new FileInputStream(file);
+            } else {
+                stream = this.getClass().getResourceAsStream(fileWithActions);
+            }
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
