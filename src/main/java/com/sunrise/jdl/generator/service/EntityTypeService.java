@@ -1,12 +1,16 @@
 package com.sunrise.jdl.generator.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sunrise.jdl.generator.actions.Action;
 import com.sunrise.jdl.generator.entities.Entity;
 import com.sunrise.jdl.generator.entities.Field;
 import com.sunrise.jdl.generator.entities.ResultWithWarnings;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVRecord;
+import com.sunrise.jdl.generator.forJson.BaseData;
+import com.sunrise.jdl.generator.forJson.BaseField;
 
 import java.io.*;
+import java.net.URISyntaxException;
+import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -49,7 +53,7 @@ public class EntityTypeService {
      *
      * @param parentName       - имя родительской сущности
      * @param childrenEntities - список дочерних сущностей
-     * @return Map<String   ,       Set   <   Field>> result - имя родителя и список его полей
+     * @return Map<String                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               Set                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               <                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               Field>> result - имя родителя и список его полей
      */
     public Map<String, Set<Field>> prepareDataForParentEntity(String parentName, List<Entity> childrenEntities) {
         Map<Field, Byte> fieldsWithFrequency = new HashMap<>();
@@ -92,5 +96,83 @@ public class EntityTypeService {
         return new ResultWithWarnings<>(warnings, result);
     }
 
+    /**
+     * Метод конвертирует данные из параметра parentWithFields в объекты BaseData и записывает их
+     * в json-файл в директории destinationFolder. Внутри директории destinationFolder для каждого объекта BaseData
+     * создается собственная директория, в которую записывается json-файл. Если директория destinationFolder уже существует -
+     * она будет пересоздана.
+     *
+     * @param fileWithActions   - путь к csv-файлу c Action (объекты Action создаются при парсинге файла),
+     *                          которые добавляются к каждому объекту BaseData
+     * @param destinationFolder - директория, в которой создадутся директории с файлами для объектов BaseData.
+     * @param parentWithFields  - исходные данные для конвертации в объекты BaseData
+     * @throws FileNotFoundException
+     */
+    public void writeToJsonFile(String fileWithActions, String destinationFolder, Map<String, Set<Field>> parentWithFields) throws FileNotFoundException {
+        ActionService actionService = new ActionService();
+        InputStream stream = null;
 
+        File file = new File(fileWithActions);
+        if (file.exists()) {
+            stream = new FileInputStream(file);
+        } else {
+            stream = this.getClass().getResourceAsStream(fileWithActions);
+        }
+
+        Collection<Action> actions = actionService.readDataFromCSV(stream);
+
+        List<BaseData> baseDataList = convertToBaseDataAndBaseField(parentWithFields, (List) actions);
+        ObjectMapper mapper = new ObjectMapper();
+
+        Path targetFolder = Paths.get(destinationFolder);
+
+        if (Files.exists(targetFolder)) {
+            try {
+                Files.walk(targetFolder)
+                        .sorted(Comparator.reverseOrder())
+                        .map(Path::toFile)
+                        .forEach(File::delete);
+            } catch (IOException e) {
+                System.err.println("Ошибка при очистке целевой директории: " + Arrays.toString(e.getStackTrace()));
+            }
+        }
+
+        for (BaseData baseData : baseDataList) {
+            Path baseDataPath = null;
+            try {
+                String correctPath = baseData.getCode().substring(0, 1).toLowerCase() + baseData.getCode().substring(1);
+                baseDataPath = Files.createDirectories(Paths.get(destinationFolder + "/" + correctPath));
+                mapper.writeValue(new File(baseDataPath + "/" + correctPath + ".json"), baseData);
+            } catch (IOException e) {
+                System.err.println("Ошибка создания директории назначения: " + Arrays.toString(e.getStackTrace()));
+            }
+        }
+
+    }
+
+
+    /**
+     * Конвертация входных данных в объекты BaseData (используется для корректной записи в json-формате в файл).
+     * Объект BaseData создаяется для каждой пары ключ-значение.
+     * Ключ карты используется как name для BaseData. Объекты Field в значении карты Set<Field> конвертируются в объекты
+     * BaseField (также используются для корректной записи в json-формате в файл) и сохряняются в поле listFields
+     * у соответствующего объекта BaseData.
+     * У всех созданных объектов BaseData полю actions присваиваится значение List actions.
+     *
+     * @param parentWithFields
+     * @param actions          - список возможных действий. Получается при парсинге файла в формате csv.
+     * @return listBaseData - список созданных BaseData
+     */
+    private List<BaseData> convertToBaseDataAndBaseField(Map<String, Set<Field>> parentWithFields, List actions) {
+        List<BaseData> listBaseData = new ArrayList<>();
+        for (Map.Entry<String, Set<Field>> entry : parentWithFields.entrySet()) {
+            BaseData baseData = new BaseData(entry.getKey());
+            for (Field field : entry.getValue()) {
+                baseData.getListFields().add(new BaseField(field));
+            }
+            baseData.setActions(actions);
+            listBaseData.add(baseData);
+        }
+        return listBaseData;
+    }
 }
