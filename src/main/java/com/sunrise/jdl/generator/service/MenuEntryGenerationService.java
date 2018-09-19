@@ -1,6 +1,7 @@
 package com.sunrise.jdl.generator.service;
 
 
+import com.sunrise.jdl.generator.entities.EntityType;
 import com.sunrise.jdl.generator.entities.ModuleInfo;
 
 import java.io.InputStream;
@@ -21,28 +22,28 @@ public class MenuEntryGenerationService {
 
     public List<String> generateQueries(InputStream resource) {
         List<String> result = new ArrayList<>();
-        Map<ModuleInfo, List<String>> modules = csvEntityTypeReader.readWithModules(resource);
+        Map<ModuleInfo, List<EntityType>> modules = csvEntityTypeReader.readWithModules(resource);
         long itemid = 0l;
         long moduleid = 0l;
-        for (Map.Entry<ModuleInfo, List<String>> pair : modules.entrySet()) {
+        for (Map.Entry<ModuleInfo, List<EntityType>> pair : modules.entrySet()) {
             result.add(String.format(
                     currentTemplate,
-                    "NULL",
                     "'" + pair.getKey().getModuleName() + "'",
                     "'/documents/" + pair.getKey().getModuleName().replaceAll("(?=[A-Z])", "-").replaceFirst("-", "").toLowerCase() + "'",
+                    "NULL",
                     "'"+pair.getKey().getClassName()+"'",
                     "'ROLE_" + pair.getKey().getModuleName().toUpperCase() + "'"
                     ));
             moduleid = ++itemid;
-            for (String typeName : pair.getValue()) {
+            for (EntityType type : pair.getValue()) {
                 itemid++;
                 result.add(String.format(
                         currentTemplate,
+                        "'" + type.name + "'",
+                        "'/documents/" + pair.getKey().getModuleName().replaceAll("(?=[A-Z])", "-").replaceFirst("-", "").toLowerCase() + "/" + type.name.replaceAll("(?=[A-Z])", "-").replaceFirst("-", "").toLowerCase() + "'",
                         "" + moduleid,
-                        "'" + typeName + "'",
-                        "'/documents/" + pair.getKey().getModuleName().replaceAll("(?=[A-Z])", "-").replaceFirst("-", "").toLowerCase() + "/" + typeName.replaceAll("(?=[A-Z])", "-").replaceFirst("-", "").toLowerCase() + "'",
-                        "'" + pair.getKey().getClassName() + "'",
-                        "'ROLE_" + pair.getKey().getModuleName().toUpperCase() + "_" + typeName.toUpperCase() + "'"
+                        "'" + type.label + "'",
+                        "'ROLE_" + pair.getKey().getModuleName().toUpperCase() + "_" + type.name.toUpperCase() + "'"
                 ));
             }
         }
@@ -50,12 +51,12 @@ public class MenuEntryGenerationService {
     }
 
     public MenuEntryGenerationService() {
-        this.data = new TableData("menu_item", "code", "url", "parent", "label", "role");
+        this.data = new TableData("menu_item", "code", "url", "parent_id", "label", "role");
         currentTemplate = generateTemplate(INSERT_TEMPLATE, data);
     }
 
     private String generateTemplate(String insertTemplate, TableData data) {
-        return String.format(insertTemplate, data.parentColumnName, data.urlColumnName, data.codeColumnName, data.labelColumnName, data.roleColumnName, "%s", "%s", "%s", "%s", "%s");
+        return String.format(insertTemplate, data.codeColumnName, data.urlColumnName, data.parentColumnName, data.labelColumnName, data.roleColumnName, "%s", "%s", "%s", "%s", "%s");
     }
 
     public String getCurrentTemplate() {
