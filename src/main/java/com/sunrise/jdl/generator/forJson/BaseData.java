@@ -42,10 +42,10 @@ public class BaseData {
     }
 
     /**
-     * @param name
+     * @param code
      */
-    public BaseData(String name) {
-        this.name = name;
+    public BaseData(String code) {
+        this.code = code;
         this.listFields = new ArrayList<>();
         this.actions = new ArrayList<>();
     }

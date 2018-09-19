@@ -132,7 +132,7 @@ public class EntityTypeServiceTest {
         File[] files = destinationFolder.listFiles();
         Assert.assertEquals(files.length, 3);
         BaseData baseData = mapper.readValue(new File("~/Documents/test/baseData1/baseData1.json"), BaseData.class);
-        Assert.assertEquals(baseData.getName(), "baseData1");
+        Assert.assertEquals(baseData.getCode(), "baseData1");
         Assert.assertEquals(baseData.getListFields().size(), 5);
         Assert.assertEquals(baseData.getListFields().get(0).getName(), "поле1");
         Assert.assertEquals(baseData.getListFields().get(0).getCode(), "field1");
@@ -140,7 +140,7 @@ public class EntityTypeServiceTest {
         Assert.assertEquals(baseData.getActions().get(0).getStyle(), "newBtn");
 
         baseData = mapper.readValue(new File("~/Documents/test/baseData2/baseData2.json"), BaseData.class);
-        Assert.assertEquals(baseData.getName(), "baseData2");
+        Assert.assertEquals(baseData.getCode(), "baseData2");
         Assert.assertEquals(baseData.getListFields().size(), 5);
         Assert.assertEquals(baseData.getListFields().get(1).getName(), "поле2");
         Assert.assertEquals(baseData.getListFields().get(1).getCode(), "field2");
@@ -148,7 +148,7 @@ public class EntityTypeServiceTest {
         Assert.assertEquals(baseData.getActions().get(1).getStyle(), "operationBtn");
 
         baseData = mapper.readValue(new File("~/Documents/test/baseData3/baseData3.json"), BaseData.class);
-        Assert.assertEquals(baseData.getName(), "baseData3");
+        Assert.assertEquals(baseData.getCode(), "baseData3");
         Assert.assertEquals(baseData.getListFields().size(), 5);
         Assert.assertEquals(baseData.getListFields().get(4).getName(), "поле5");
         Assert.assertEquals(baseData.getListFields().get(4).getCode(), "field5");

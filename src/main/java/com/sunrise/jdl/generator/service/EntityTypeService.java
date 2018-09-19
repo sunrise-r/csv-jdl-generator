@@ -143,8 +143,8 @@ public class EntityTypeService {
         for (BaseData baseData : baseDataList) {
             Path baseDataPath = null;
             try {
-                baseDataPath = Files.createDirectories(Paths.get(destinationFolder + "/" + baseData.getName()));
-                mapper.writeValue(new File(baseDataPath + "/" + baseData.getName() + ".json"), baseData);
+                baseDataPath = Files.createDirectories(Paths.get(destinationFolder + "/" + baseData.getCode()));
+                mapper.writeValue(new File(baseDataPath + "/" + baseData.getCode() + ".json"), baseData);
             } catch (IOException e) {
                 System.err.println("Ошибка создания директории назначения: " + Arrays.toString(e.getStackTrace()));
             }
