@@ -41,7 +41,7 @@ public class MenuEntryGenerationService {
                         currentTemplate,
                         "'" + type.name + "'",
                         "'/documents/" + pair.getKey().getModuleName().replaceAll("(?=[A-Z])", "-").replaceFirst("-", "").toLowerCase() + "/" + type.name.replaceAll("(?=[A-Z])", "-").replaceFirst("-", "").toLowerCase() + "'",
-                        "" + moduleid,
+                        "(SELECT m.id FROM (SELECT id FROM "+data.tableName+" WHERE "+data.codeColumnName+"='"+pair.getKey().getModuleName()+"') as m)",
                         "'" + type.label + "'",
                         "'ROLE_" + pair.getKey().getModuleName().toUpperCase() + "_" + type.name.toUpperCase() + "'"
                 ));
