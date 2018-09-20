@@ -30,6 +30,12 @@ public class Action {
     private String code;
 
     /**
+     * Пусто конструктор необходим для десериализации (используется в тесте)
+     */
+    public Action() {
+
+    }
+    /**
      * Конструктор
      * @param displayType
      * @param group

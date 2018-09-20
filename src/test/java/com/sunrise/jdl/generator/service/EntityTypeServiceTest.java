@@ -1,16 +1,23 @@
 package com.sunrise.jdl.generator.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sunrise.jdl.generator.entities.Entity;
 import com.sunrise.jdl.generator.entities.Field;
 import com.sunrise.jdl.generator.entities.ResultWithWarnings;
+import com.sunrise.jdl.generator.forJson.BaseData;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.nio.file.*;
 import java.util.*;
 
 public class EntityTypeServiceTest {
 
+    public static final String FOLDER_FOR_TEST = "target/generated-test-sources/test";
     private EntityTypeService entityTypeService = new EntityTypeService();
 
     private EntitiesService entitiesService = new EntitiesService(new Settings());
@@ -28,28 +35,28 @@ public class EntityTypeServiceTest {
     }
 
     @Test
-    public void mergeTypesTest(){
-        InputStream stream= this.getClass().getResourceAsStream("/entityTypes.csv");
-        Map<String,List<String>> types = entityTypeService.readCsv(stream);
+    public void mergeTypesTest() {
+        InputStream stream = this.getClass().getResourceAsStream("/entityTypes.csv");
+        Map<String, List<String>> types = entityTypeService.readCsv(stream);
         ArrayList<InputStream> streams = new ArrayList<>(1);
         streams.add(this.getClass().getResourceAsStream("/entitiesForTheEntityTypesTest.csv"));
         Collection<Entity> entities = entitiesService.readAll(streams);
         ResultWithWarnings<Map<String, List<Entity>>> resultWithWarnings = entityTypeService.mergeTypesWithThemSubtypes(entities, types);
 
-        Assert.assertEquals(resultWithWarnings.warnings.size(),0);
-        Map<String, List<Entity>> result =  resultWithWarnings.result;
+        Assert.assertEquals(resultWithWarnings.warnings.size(), 0);
+        Map<String, List<Entity>> result = resultWithWarnings.result;
         List<Entity> entities1 = result.get("Account");
         List<Entity> entities2 = result.get("Agreement");
         List<Entity> entities3 = result.get("Profile");
-        Assert.assertEquals(entities1.size(),2);
-        Assert.assertEquals(entities2.size(),1);
-        Assert.assertEquals(entities3.size(),3);
-        Assert.assertEquals(entities1.get(0).getClassName(),"AccountLocalCertificate");
-        Assert.assertEquals(entities1.get(1).getClassName(),"AccountCloudCertificate");
-        Assert.assertEquals(entities2.get(0).getClassName(),"Agreement");
-        Assert.assertEquals(entities3.get(0).getClassName(),"BuisnessCard");
-        Assert.assertEquals(entities3.get(1).getClassName(),"Records");
-        Assert.assertEquals(entities3.get(2).getClassName(),"ProfileRegistrationData");
+        Assert.assertEquals(entities1.size(), 2);
+        Assert.assertEquals(entities2.size(), 1);
+        Assert.assertEquals(entities3.size(), 3);
+        Assert.assertEquals(entities1.get(0).getClassName(), "AccountLocalCertificate");
+        Assert.assertEquals(entities1.get(1).getClassName(), "AccountCloudCertificate");
+        Assert.assertEquals(entities2.get(0).getClassName(), "Agreement");
+        Assert.assertEquals(entities3.get(0).getClassName(), "BuisnessCard");
+        Assert.assertEquals(entities3.get(1).getClassName(), "Records");
+        Assert.assertEquals(entities3.get(2).getClassName(), "ProfileRegistrationData");
     }
 
     @Test
@@ -91,14 +98,72 @@ public class EntityTypeServiceTest {
     }
 
     @Test
-    public void mergeWarningsTest(){
-        InputStream stream= this.getClass().getResourceAsStream("/entityTypes.csv");
-        Map<String,List<String>> types = entityTypeService.readCsv(stream);
+    public void mergeWarningsTest() {
+        InputStream stream = this.getClass().getResourceAsStream("/entityTypes.csv");
+        Map<String, List<String>> types = entityTypeService.readCsv(stream);
         ArrayList<InputStream> streams = new ArrayList<>(1);
         streams.add(this.getClass().getResourceAsStream("/entitiesForTheEntityTypesTest.csv"));
         Collection<Entity> entities = entitiesService.readAll(streams);
-        types.get("Account").set(0,"WRONG");
+        types.get("Account").set(0, "WRONG");
         ResultWithWarnings<Map<String, List<Entity>>> resultWithWarnings = entityTypeService.mergeTypesWithThemSubtypes(entities, types);
-        Assert.assertEquals(resultWithWarnings.warnings.size(),1);
+        Assert.assertEquals(resultWithWarnings.warnings.size(), 1);
+    }
+
+    @Test
+    public void testWriteToJsonFile() throws IOException {
+        Path folderForTest = Paths.get(FOLDER_FOR_TEST);
+//        if (Files.exists(folderForTest)) {
+//            Files.delete(folderForTest);
+//        }
+//        Files.createDirectory(folderForTest);
+
+        EntityTypeService service = new EntityTypeService();
+        ObjectMapper mapper = new ObjectMapper();
+
+        Field field1 = new Field("String", "field1", "", true, true, "поле1");
+        Field field2 = new Field("String", "field2", "10", true, true, "поле2");
+        Field field3 = new Field("String", "field3", "10", true, true, "поле3");
+        Field field4 = new Field("String", "field4", "", true, true, "поле4");
+        Field field5 = new Field("String", "field5", "20", true, true, "поле5");
+        Map<String, Set<Field>> crudeData = new HashMap<>();
+        crudeData.put("baseData1", new HashSet<>(Arrays.asList(field1, field2, field3, field4, field5)));
+        crudeData.put("baseData2", new HashSet<>(Arrays.asList(field1, field2, field3, field4, field5)));
+        crudeData.put("baseData3", new HashSet<>(Arrays.asList(field1, field2, field3, field4, field5)));
+
+        service.writeToJsonFile("/action.csv", FOLDER_FOR_TEST, crudeData);
+
+        File destinationFolder = new File(FOLDER_FOR_TEST);
+        File[] files = destinationFolder.listFiles();
+        Assert.assertEquals(files.length, 3);
+        BaseData baseData = mapper.readValue(new File( FOLDER_FOR_TEST + "/baseData1/baseData1.json"), BaseData.class);
+        Assert.assertEquals(baseData.getCode(), "baseData1");
+        Assert.assertEquals(baseData.getListFields().size(), 5);
+        Assert.assertEquals(baseData.getListFields().get(0).getName(), "поле1");
+        Assert.assertEquals(baseData.getListFields().get(0).getCode(), "field1");
+        Assert.assertEquals(baseData.getActions().size(), 12);
+        Assert.assertEquals(baseData.getActions().get(0).getStyle(), "newBtn");
+
+        baseData = mapper.readValue(new File(FOLDER_FOR_TEST + "/baseData2/baseData2.json"), BaseData.class);
+        Assert.assertEquals(baseData.getCode(), "baseData2");
+        Assert.assertEquals(baseData.getListFields().size(), 5);
+        Assert.assertEquals(baseData.getListFields().get(1).getName(), "поле2");
+        Assert.assertEquals(baseData.getListFields().get(1).getCode(), "field2");
+        Assert.assertEquals(baseData.getActions().size(), 12);
+        Assert.assertEquals(baseData.getActions().get(1).getStyle(), "operationBtn");
+
+        baseData = mapper.readValue(new File(FOLDER_FOR_TEST + "/baseData3/baseData3.json"), BaseData.class);
+        Assert.assertEquals(baseData.getCode(), "baseData3");
+        Assert.assertEquals(baseData.getListFields().size(), 5);
+        Assert.assertEquals(baseData.getListFields().get(4).getName(), "поле5");
+        Assert.assertEquals(baseData.getListFields().get(4).getCode(), "field5");
+        Assert.assertEquals(baseData.getActions().size(), 12);
+        Assert.assertEquals(baseData.getActions().get(11).getStyle(), "refreshBtn");
+
+//        Files.walk(folderForTest)
+//                .sorted(Comparator.reverseOrder())
+//                .map(Path::toFile)
+//                .forEach(File::delete);
+//        Assert.assertFalse("Directory still exists",
+//                Files.exists(folderForTest));
     }
 }

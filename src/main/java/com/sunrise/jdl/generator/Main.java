@@ -1,6 +1,7 @@
 package com.sunrise.jdl.generator;
 
 import com.sunrise.jdl.generator.entities.Entity;
+import com.sunrise.jdl.generator.entities.Field;
 import com.sunrise.jdl.generator.entities.Relation;
 import com.sunrise.jdl.generator.entities.ResultWithWarnings;
 import com.sunrise.jdl.generator.service.*;
@@ -8,6 +9,9 @@ import org.apache.commons.cli.*;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,6 +36,7 @@ public class Main {
     private static final String GID_GENERATION = "jsonGeneration";
     private static final String GID_ENTITIES = "entities";
     private static final String GID_RELATIONS = "relations";
+    private static final String GID_ACTIONS = "actions";
     private static EntitiesService entitiesService = null;
     private static EntityTypeService entityTypeService = new EntityTypeService();
 
@@ -55,6 +60,8 @@ public class Main {
         options.addOption(GID_GENERATION, false, "set the \"Generate Interface Description\" operation type");
         options.addOption(GID_ENTITIES,true,"path to the 'entities' csv file");
         options.addOption(GID_RELATIONS,true,"path to the 'relations' csv file");
+        options.addOption(GID_ACTIONS, true, "path to the 'actions' csv file");
+
 
 
         CommandLineParser parser = new DefaultParser();
@@ -100,20 +107,30 @@ public class Main {
     }
 
     private static void gidGenerator(CommandLine cmd) throws FileNotFoundException{
-        if(!(cmd.hasOption(GID_ENTITIES) && cmd.hasOption(GID_RELATIONS))){
-            System.err.println("No args for the '" + GID_ENTITIES + "' or "+ GID_RELATIONS +" param");
+        if(!(cmd.hasOption(GID_ENTITIES) && cmd.hasOption(GID_RELATIONS)
+                && cmd.hasOption(GID_ACTIONS) && cmd.hasOption(TARGET_RESOURCE_FOLDER))){
+            System.err.println("No args for the '" + GID_ENTITIES + "' or '"+ GID_RELATIONS + "' or '"
+                    + GID_ACTIONS + "' or '" + TARGET_RESOURCE_FOLDER + "' param");
         }
+
         File entitiesFile = new File(cmd.getOptionValue(GID_ENTITIES));
         File relationsFile = new File(cmd.getOptionValue(GID_RELATIONS));
-        if(!entitiesFile.isFile() || !relationsFile.isFile())
-            throw new FileNotFoundException();
+        File actionsFile = new File(cmd.getOptionValue(GID_ACTIONS));
 
-        CSVEntityReader csvEntityReader = new CSVEntityReader();
-        Collection<Entity> entities = csvEntityReader.readDataFromCSV(new FileInputStream(entitiesFile));
-        Map<String, List<String>> relations = entityTypeService.readCsv(new FileInputStream(relationsFile));
+        if(!entitiesFile.isFile() || !relationsFile.isFile() || !actionsFile.isFile()){
+            throw new FileNotFoundException();
+        }
+
+
+        EntitiesService entitiesService = new EntitiesService(new Settings());
+        Collection<Entity> entities = entitiesService.readDataFromCSV(new FileInputStream(entitiesFile));
+
+        Map<String, List<String>> relations = entityTypeService.readCsv(new FileInputStream(relationsFile)); // Добавить опцию пути
         ResultWithWarnings<Map<String, List<Entity>>> entitiesHierarchy = entityTypeService.mergeTypesWithThemSubtypes(entities, relations);
         entitiesHierarchy.warnings.forEach(x -> System.out.println("WARNING: " + x));
-        // Тут должно быть продолжение 168-й задачей!
+        Map<String, Set<Field>> baseDataWithBaseFields= entityTypeService.prepareDataForParentEntity(entitiesHierarchy.result);
+        entityTypeService.writeToJsonFile(cmd.getOptionValue(GID_ACTIONS), cmd.getOptionValue(TARGET_RESOURCE_FOLDER), baseDataWithBaseFields);
+
     }
 
     private static void jdlGenerator(CommandLine cmd) {
