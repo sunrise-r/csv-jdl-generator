@@ -5,6 +5,7 @@ import com.sunrise.jdl.generator.entities.Field;
 import com.sunrise.jdl.generator.entities.Relation;
 import com.sunrise.jdl.generator.entities.ResultWithWarnings;
 import com.sunrise.jdl.generator.service.*;
+import com.sunrise.jdl.generator.ui.UIGenerateParameters;
 import org.apache.commons.cli.*;
 import org.apache.commons.io.FileUtils;
 
@@ -34,6 +35,8 @@ public class Main {
     private static final String GID_ENTITIES = "entities";
     private static final String GID_RELATIONS = "relations";
     private static final String GID_ACTIONS = "actions";
+    private static final String REGISTRY_CODE = "registryCode";
+    private static final String REGISTRY_TYPES = "registryTypes";
     private static EntitiesService entitiesService = null;
     private static EntityTypeService entityTypeService = new EntityTypeService();
 
@@ -127,7 +130,10 @@ public class Main {
         Map<String, Set<Field>> baseDataWithBaseFields = entityTypeService.prepareDataForParentEntity(entitiesHierarchy.result);
         File file = new File(cmd.getOptionValue(GID_ACTIONS));
         InputStream actionsStream = new FileInputStream(file);
-        entityTypeService.generateEntitiesPresentations(actionsStream, cmd.getOptionValue(TARGET_RESOURCE_FOLDER), baseDataWithBaseFields, "defaultRegistry");
+        UIGenerateParameters parameters = new UIGenerateParameters();
+        parameters.setRegistryCode(cmd.getOptionValue(REGISTRY_CODE));
+        parameters.setProjectionsTypes(Arrays.stream(cmd.getOptionValue(REGISTRY_TYPES).split(",")).collect(Collectors.toList()));
+        entityTypeService.generateEntitiesPresentations(actionsStream, cmd.getOptionValue(TARGET_RESOURCE_FOLDER), baseDataWithBaseFields, parameters);
 
     }
 
