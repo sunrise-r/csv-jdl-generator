@@ -1,6 +1,7 @@
 package com.sunrise.jdl.generator.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.sunrise.jdl.generator.actions.Action;
 import com.sunrise.jdl.generator.entities.Entity;
 import com.sunrise.jdl.generator.entities.Field;
@@ -123,6 +124,7 @@ public class EntityTypeService {
 
         List<BaseData> baseDataList = convertToBaseDataAndBaseField(parentWithFields, (List) actions);
         ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
         Path targetFolder = Paths.get(destinationFolder);
 
