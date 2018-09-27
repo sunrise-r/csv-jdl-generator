@@ -1,8 +1,8 @@
 {
-  "registryCode": "sampleRegistryCode",
+  "registryCode": "userRegistry",
   "projectionsInfoes": [
     {
-      "name": "new",
+      "name": "New",
       "filters": [
         {
           "field": "arhive",
@@ -19,7 +19,7 @@
       ]
     },
     {
-      "name": "inner",
+      "name": "Inner",
       "filters": [
         {
           "field": "status",
@@ -32,7 +32,7 @@
       ]
     },
     {
-      "name": "archive",
+      "name": "Archive",
       "filters": [
         {
           "field": "arhive",
