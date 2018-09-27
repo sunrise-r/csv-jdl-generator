@@ -14,7 +14,7 @@
 
 ####GID-Generation:
 -gidGeneration
--entities /home/igorch/work/gid-test/entities.jdl
--relations /home/igorch/work/gid-test/relations.jdl
--actions /home/igorch/work/gid-test/actions.jdl
+-entities /home/igorch/work/gid-test/entities.cvs
+-relations /home/igorch/work/gid-test/relations.cvs
+-actions /home/igorch/work/gid-test/actions.cvs
 -targetResourceFolder /home/igorch/work/gid-test/target

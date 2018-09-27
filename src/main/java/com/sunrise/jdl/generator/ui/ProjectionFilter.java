@@ -10,19 +10,19 @@ public class ProjectionFilter {
     /**
      * Название фильтра
      */
-    private String name;
+    private String field;
 
     /**
      * Значения фильтров
      */
     private List<String> values;
 
-    public String getName() {
-        return name;
+    public String getField() {
+        return field;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setField(String field) {
+        this.field = field;
     }
 
     public List<String> getValues() {

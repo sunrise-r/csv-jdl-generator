@@ -129,7 +129,7 @@ public class EntityTypeServiceTest {
         projectionParameter.setName(defaultType);
         List<ProjectionFilter> filters = new ArrayList<>();
         ProjectionFilter filter = new ProjectionFilter();
-        filter.setName("name");
+        filter.setField("name");
         filters.add(filter);
         projectionParameter.setFilters(filters);
         List<ProjectionParameter> projectionParameters = new ArrayList<>();
@@ -143,7 +143,7 @@ public class EntityTypeServiceTest {
         ProjectionInfo projectionInfo = mapper.readValue(new File(FOLDER_FOR_TEST + "/baseData1Presentation/baseData1" + defaultType + "Projection.json"), ProjectionInfo.class);
         Assert.assertEquals("baseData1DefaultProjection", projectionInfo.getCode());
         Assert.assertEquals("baseData1Presentation", projectionInfo.getParentCode());
-        Assert.assertEquals("name", projectionInfo.getFilters().get(0).getName());
+        Assert.assertEquals("name", projectionInfo.getFilters().get(0).getField());
         Assert.assertEquals(5, projectionInfo.getListFields().size());
         Assert.assertEquals("поле1", projectionInfo.getListFields().get(0).getName());
         Assert.assertEquals("field1", projectionInfo.getListFields().get(0).getCode());
