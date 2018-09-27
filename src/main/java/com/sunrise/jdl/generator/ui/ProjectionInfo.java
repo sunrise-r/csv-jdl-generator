@@ -1,8 +1,7 @@
-package com.sunrise.jdl.generator.forJson;
+package com.sunrise.jdl.generator.ui;
 
 import com.sunrise.jdl.generator.actions.Action;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

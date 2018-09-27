@@ -4,8 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sunrise.jdl.generator.entities.Entity;
 import com.sunrise.jdl.generator.entities.Field;
 import com.sunrise.jdl.generator.entities.ResultWithWarnings;
-import com.sunrise.jdl.generator.forJson.ProjectionInfo;
-import com.sunrise.jdl.generator.forJson.RegistryItem;
+import com.sunrise.jdl.generator.ui.ProjectionInfo;
+import com.sunrise.jdl.generator.ui.RegistryItem;
+import com.sunrise.jdl.generator.ui.UIGenerateParameters;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -123,12 +124,17 @@ public class EntityTypeServiceTest {
         crudeData.put("baseData2", new HashSet<>(Arrays.asList(field1, field2, field3, field4, field5)));
         crudeData.put("baseData3", new HashSet<>(Arrays.asList(field1, field2, field3, field4, field5)));
 
-        entityTypeService.generateEntitiesPresentations(this.getClass().getResourceAsStream("/action.csv"), FOLDER_FOR_TEST, crudeData, registryCode);
+        UIGenerateParameters parameters = new UIGenerateParameters();
+        parameters.setRegistryCode(registryCode);
+        parameters.setProjectionsTypes(new ArrayList<>());
+        String defaultType="Default";
+        parameters.getProjectionsTypes().add(defaultType);
+        entityTypeService.generateEntitiesPresentations(this.getClass().getResourceAsStream("/action.csv"), FOLDER_FOR_TEST, crudeData, parameters);
 
         File destinationFolder = new File(FOLDER_FOR_TEST);
         File[] files = destinationFolder.listFiles();
         Assert.assertEquals(files.length, 3);
-        ProjectionInfo projectionInfo = mapper.readValue(new File(FOLDER_FOR_TEST + "/baseData1Presentation/baseData1DefaultProjection.json"), ProjectionInfo.class);
+        ProjectionInfo projectionInfo = mapper.readValue(new File(FOLDER_FOR_TEST + "/baseData1Presentation/baseData1"+defaultType+"Projection.json"), ProjectionInfo.class);
         Assert.assertEquals("baseData1DefaultProjection", projectionInfo.getCode());
         Assert.assertEquals("baseData1Presentation", projectionInfo.getParentCode());
         Assert.assertEquals(5, projectionInfo.getListFields().size());
@@ -142,7 +148,7 @@ public class EntityTypeServiceTest {
         Assert.assertEquals("baseData1Presentation", presentationnfo.getName());
         Assert.assertEquals(registryCode, presentationnfo.getParentCode());
 
-        projectionInfo = mapper.readValue(new File(FOLDER_FOR_TEST + "/baseData2Presentation/baseData2DefaultProjection.json"), ProjectionInfo.class);
+        projectionInfo = mapper.readValue(new File(FOLDER_FOR_TEST + "/baseData2Presentation/baseData2"+defaultType+"Projection.json"), ProjectionInfo.class);
         Assert.assertEquals( "baseData2DefaultProjection",projectionInfo.getCode());
         Assert.assertEquals(5,projectionInfo.getListFields().size());
         Assert.assertEquals( "поле2",projectionInfo.getListFields().get(1).getName());
@@ -150,7 +156,7 @@ public class EntityTypeServiceTest {
         Assert.assertEquals( 12,projectionInfo.getActions().size());
         Assert.assertEquals( "operationBtn",projectionInfo.getActions().get(1).getStyle());
 
-        projectionInfo = mapper.readValue(new File(FOLDER_FOR_TEST + "/baseData3Presentation/baseData3DefaultProjection.json"), ProjectionInfo.class);
+        projectionInfo = mapper.readValue(new File(FOLDER_FOR_TEST + "/baseData3Presentation/baseData3"+defaultType+"Projection.json"), ProjectionInfo.class);
         Assert.assertEquals( "baseData3DefaultProjection",projectionInfo.getCode());
         Assert.assertEquals( 5,projectionInfo.getListFields().size());
         Assert.assertEquals( "поле5",projectionInfo.getListFields().get(4).getName());
