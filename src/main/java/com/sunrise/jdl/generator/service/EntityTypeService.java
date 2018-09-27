@@ -7,6 +7,7 @@ import com.sunrise.jdl.generator.entities.Entity;
 import com.sunrise.jdl.generator.entities.Field;
 import com.sunrise.jdl.generator.entities.ResultWithWarnings;
 import com.sunrise.jdl.generator.ui.ProjectionInfo;
+import com.sunrise.jdl.generator.ui.ProjectionParameter;
 import com.sunrise.jdl.generator.ui.RegistryItem;
 import com.sunrise.jdl.generator.service.iad.UIGeneratorService;
 import com.sunrise.jdl.generator.ui.UIGenerateParameters;
@@ -126,7 +127,7 @@ public class EntityTypeService {
             RegistryItem registryItem = uiGeneratorService.createPresenationFor(entityName, generateParameters.getRegistryCode());
             Path baseDataPath = Files.createDirectories(Paths.get(destinationFolder + "/" + registryItem.getCode()));
             mapper.writeValue(new File(baseDataPath + "/" + registryItem.getCode() + ".json"), registryItem);
-            for (String projectionType : generateParameters.getProjectionsTypes()) {
+            for (ProjectionParameter projectionType : generateParameters.getProjectionsInfoes()) {
                 ProjectionInfo projectionInfo = uiGeneratorService.toProjectionInfo(entityName, entityInfoes.get(entityName), actions, registryItem.getCode(), projectionType);
                 mapper.writeValue(new File(baseDataPath + "/" + projectionInfo.getCode() + ".json"), projectionInfo);
             }

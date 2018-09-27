@@ -9,7 +9,7 @@ public class UIGenerateParameters {
 
     private String registryCode;
 
-    private List<String> projectionsTypes;
+    private List<ProjectionParameter> projectionsInfoes;
 
     public String getRegistryCode() {
         return registryCode;
@@ -19,11 +19,11 @@ public class UIGenerateParameters {
         this.registryCode = registryCode;
     }
 
-    public List<String> getProjectionsTypes() {
-        return projectionsTypes;
+    public List<ProjectionParameter> getProjectionsInfoes() {
+        return projectionsInfoes;
     }
 
-    public void setProjectionsTypes(List<String> projectionsTypes) {
-        this.projectionsTypes = projectionsTypes;
+    public void setProjectionsInfoes(List<ProjectionParameter> projectionsInfoes) {
+        this.projectionsInfoes = projectionsInfoes;
     }
 }
