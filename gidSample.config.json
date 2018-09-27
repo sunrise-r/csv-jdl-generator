@@ -1,0 +1,46 @@
+{
+  "registryCode": "sampleRegistryCode",
+  "projectionsInfoes": [
+    {
+      "name": "new",
+      "filters": [
+        {
+          "field": "arhive",
+          "values": [
+            "false"
+          ]
+        },
+        {
+          "field": "status",
+          "values": [
+            "NEW"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "inner",
+      "filters": [
+        {
+          "field": "status",
+          "values": [
+            "ACCEPTED",
+            "REJECTED",
+            "REVIEW"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "archive",
+      "filters": [
+        {
+          "field": "arhive",
+          "values": [
+            "true"
+          ]
+        }
+      ]
+    }
+  ]
+}

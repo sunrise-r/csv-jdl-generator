@@ -5,6 +5,7 @@ import com.sunrise.jdl.generator.entities.Field;
 import com.sunrise.jdl.generator.entities.Relation;
 import com.sunrise.jdl.generator.entities.ResultWithWarnings;
 import com.sunrise.jdl.generator.service.*;
+import com.sunrise.jdl.generator.service.iad.UIGeneratorService;
 import com.sunrise.jdl.generator.ui.UIGenerateParameters;
 import org.apache.commons.cli.*;
 import org.apache.commons.io.FileUtils;
@@ -35,8 +36,7 @@ public class Main {
     private static final String GID_ENTITIES = "entities";
     private static final String GID_RELATIONS = "relations";
     private static final String GID_ACTIONS = "actions";
-    private static final String REGISTRY_CODE = "registryCode";
-    private static final String REGISTRY_TYPES = "registryTypes";
+    private static final String GID_CONFIG_FILE = "gidConfigFile";
     private static EntitiesService entitiesService = null;
     private static EntityTypeService entityTypeService = new EntityTypeService();
 
@@ -61,6 +61,7 @@ public class Main {
         options.addOption(GID_ENTITIES, true, "path to the 'entities' csv file");
         options.addOption(GID_RELATIONS, true, "path to the 'relations' csv file");
         options.addOption(GID_ACTIONS, true, "path to the 'actions' csv file");
+        options.addOption(GID_CONFIG_FILE,true,"gid config file path");
 
 
         CommandLineParser parser = new DefaultParser();
@@ -112,6 +113,8 @@ public class Main {
                     + GID_ACTIONS + "' or '" + TARGET_RESOURCE_FOLDER + "' param");
         }
 
+        UIGeneratorService generatorService = new UIGeneratorService();
+
         File entitiesFile = new File(cmd.getOptionValue(GID_ENTITIES));
         File relationsFile = new File(cmd.getOptionValue(GID_RELATIONS));
         File actionsFile = new File(cmd.getOptionValue(GID_ACTIONS));
@@ -130,11 +133,8 @@ public class Main {
         Map<String, Set<Field>> baseDataWithBaseFields = entityTypeService.prepareDataForParentEntity(entitiesHierarchy.result);
         File file = new File(cmd.getOptionValue(GID_ACTIONS));
         InputStream actionsStream = new FileInputStream(file);
-        UIGenerateParameters parameters = new UIGenerateParameters();
-        parameters.setRegistryCode(cmd.getOptionValue(REGISTRY_CODE));
-        parameters.setProjectionsTypes(Arrays.stream(cmd.getOptionValue(REGISTRY_TYPES).split(",")).collect(Collectors.toList()));
+        UIGenerateParameters parameters = generatorService.loadConfig(cmd.getOptionValue(GID_CONFIG_FILE));
         entityTypeService.generateEntitiesPresentations(actionsStream, cmd.getOptionValue(TARGET_RESOURCE_FOLDER), baseDataWithBaseFields, parameters);
-
     }
 
     private static void jdlGenerator(CommandLine cmd) {

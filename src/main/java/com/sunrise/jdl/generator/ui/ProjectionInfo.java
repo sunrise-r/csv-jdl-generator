@@ -20,6 +20,8 @@ public class ProjectionInfo extends RegistryItem{
      */
     private List<Action> actions;
 
+    private List<ProjectionFilter> filters;
+
 
     public List<Action> getActions() {
         return actions;
@@ -37,5 +39,11 @@ public class ProjectionInfo extends RegistryItem{
         this.listFields = listFields;
     }
 
+    public List<ProjectionFilter> getFilters() {
+        return filters;
+    }
 
+    public void setFilters(List<ProjectionFilter> filters) {
+        this.filters = filters;
+    }
 }

@@ -1,10 +1,9 @@
 package com.sunrise.jdl.generator.service.iad;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sunrise.jdl.generator.actions.Action;
 import com.sunrise.jdl.generator.entities.Field;
-import com.sunrise.jdl.generator.ui.BaseField;
-import com.sunrise.jdl.generator.ui.ProjectionInfo;
-import com.sunrise.jdl.generator.ui.RegistryItem;
+import com.sunrise.jdl.generator.ui.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,12 +29,14 @@ public class UIGeneratorService {
      * @param fields           поля сущности
      * @param actions          доступные действия для проекции
      * @param presentationCode Код представления
+     * @param projectionType
      * @return Информация о проекции
      */
-    public ProjectionInfo toProjectionInfo(String entityName, Set<Field> fields, Collection<Action> actions, String presentationCode, String projectionType) {
+    public ProjectionInfo toProjectionInfo(String entityName, Set<Field> fields, Collection<Action> actions, String presentationCode, ProjectionParameter projectionType) {
         ProjectionInfo projectionInfo = new ProjectionInfo();
-        projectionInfo.setCode(getProjectionCode(entityName, projectionType));
-        projectionInfo.setName(getProjectionCode(entityName, projectionType));
+        projectionInfo.setCode(getProjectionCode(entityName, projectionType.getName()));
+        projectionInfo.setName(getProjectionCode(entityName, projectionType.getName()));
+        projectionInfo.setFilters(projectionType.getFilters());
         projectionInfo.setParentCode(presentationCode);
         projectionInfo.setListFields(fields.stream().map(f -> new BaseField(f)).collect(Collectors.toList()));
         projectionInfo.setActions(new ArrayList<>(actions));
@@ -82,7 +83,7 @@ public class UIGeneratorService {
     }
 
     private String getProjectionCode(String entityName, String type) {
-        return toLowcase(String.format(PROJECTION_CODE_TEMPLATE, entityName,type));
+        return toLowcase(String.format(PROJECTION_CODE_TEMPLATE, entityName, type));
     }
 
     private String toLowcase(String toLower) {
@@ -90,4 +91,14 @@ public class UIGeneratorService {
     }
 
 
+    /**
+     * Load gid generation config file
+     *
+     * @param configPath path to config file
+     * @return UIGenerationParameters
+     */
+    public UIGenerateParameters loadConfig(String configPath) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(new File(configPath), UIGenerateParameters.class);
+    }
 }
