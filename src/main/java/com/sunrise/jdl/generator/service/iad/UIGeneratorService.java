@@ -20,19 +20,22 @@ public class UIGeneratorService {
 
     private static final String PRESENTATION_CODE_TEMPLATE = "%sPresentation";
 
+    private static final String PROJECTION_CODE_TEMPLATE = "%s%sProjection";
+
 
     /**
      * Преобразовать данные о сщуности в информацию о проекции
-     * @param entityName Название сущности
-     * @param fields поля сущности
-     * @param actions доступные действия для проекции
+     *
+     * @param entityName       Название сущности
+     * @param fields           поля сущности
+     * @param actions          доступные действия для проекции
      * @param presentationCode Код представления
      * @return Информация о проекции
      */
-    public ProjectionInfo toProjectionInfo(String entityName, Set<Field> fields, Collection<Action> actions, String presentationCode) {
+    public ProjectionInfo toProjectionInfo(String entityName, Set<Field> fields, Collection<Action> actions, String presentationCode, String projectionType) {
         ProjectionInfo projectionInfo = new ProjectionInfo();
-        projectionInfo.setCode(entityName);
-        projectionInfo.setName(entityName);
+        projectionInfo.setCode(getProjectionCode(entityName, projectionType));
+        projectionInfo.setName(getProjectionCode(entityName, projectionType));
         projectionInfo.setParentCode(presentationCode);
         projectionInfo.setListFields(fields.stream().map(f -> new BaseField(f)).collect(Collectors.toList()));
         projectionInfo.setActions(new ArrayList<>(actions));
@@ -75,7 +78,15 @@ public class UIGeneratorService {
 
 
     private String getPresentationName(String entityName) {
-        return String.format(PRESENTATION_CODE_TEMPLATE, entityName);
+        return toLowcase(String.format(PRESENTATION_CODE_TEMPLATE, entityName));
+    }
+
+    private String getProjectionCode(String entityName, String type) {
+        return toLowcase(String.format(PROJECTION_CODE_TEMPLATE, entityName,type));
+    }
+
+    private String toLowcase(String toLower) {
+        return Character.toLowerCase(toLower.charAt(0)) + toLower.substring(1);
     }
 
 
