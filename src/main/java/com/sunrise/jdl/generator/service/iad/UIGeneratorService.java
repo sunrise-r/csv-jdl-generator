@@ -25,10 +25,10 @@ public class UIGeneratorService {
      * @return Информация о проекции
      */
     public ProjectionInfo toProjectionInfo(Map.Entry<String, Set<Field>> entry, Collection<Action> actions) {
-        ProjectionInfo projectionInfo = new ProjectionInfo(entry.getKey());
-        for (Field field : entry.getValue()) {
-            projectionInfo.getListFields().add(new BaseField(field));
-        }
+        ProjectionInfo projectionInfo = new ProjectionInfo();
+        projectionInfo.setCode(entry.getKey());
+        projectionInfo.setName(entry.getKey());
+        projectionInfo.setListFields(entry.getValue().stream().map(f->new BaseField(f)).collect(Collectors.toList()));
         projectionInfo.setActions(new ArrayList<>(actions));
         return projectionInfo;
     }
