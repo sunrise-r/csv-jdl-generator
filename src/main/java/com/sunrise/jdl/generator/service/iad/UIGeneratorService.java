@@ -5,6 +5,10 @@ import com.sunrise.jdl.generator.entities.Field;
 import com.sunrise.jdl.generator.forJson.BaseField;
 import com.sunrise.jdl.generator.forJson.ProjectionInfo;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,8 +34,34 @@ public class UIGeneratorService {
     }
 
 
-    public List<ProjectionInfo> toProjectionInfo(Map<String, Set<Field>> entityInfoes, Collection<Action> actions){
-        return entityInfoes.entrySet().stream().map(x->this.toProjectionInfo(x,actions)).collect(Collectors.toList());
+    /**
+     * Преобразует данные о сущностях в список их проекций
+     *
+     * @param entityInfoes Информация о сущностях
+     * @param actions      Список доступных actions для сущностей
+     * @return Список проекций созданный на сонове @entitiesInfoes
+     */
+    public List<ProjectionInfo> toProjectionInfo(Map<String, Set<Field>> entityInfoes, Collection<Action> actions) {
+        return entityInfoes.entrySet().stream().map(x -> this.toProjectionInfo(x, actions)).collect(Collectors.toList());
+    }
+
+    /**
+     * Очистить целевую диркторию  генерации файлов описания интерфейса
+     *
+     * @param targetDirectory Целевая директория
+     * @throws IOException Возникает в случае если невозможно очистить директорию
+     */
+    public void cleanupTargetDirecotry(Path targetDirectory) throws IOException {
+        if (Files.exists(targetDirectory)) {
+            try {
+                Files.walk(targetDirectory)
+                        .sorted(Comparator.reverseOrder())
+                        .map(Path::toFile)
+                        .forEach(File::delete);
+            } catch (IOException e) {
+                throw new IOException("Ошибка при очистке целевой директории: " + Arrays.toString(e.getStackTrace()));
+            }
+        }
     }
 
 }

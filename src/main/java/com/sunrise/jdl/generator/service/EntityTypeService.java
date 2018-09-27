@@ -110,7 +110,7 @@ public class EntityTypeService {
      * @param parentWithFields  - исходные данные для конвертации в объекты BaseData
      * @throws FileNotFoundException
      */
-    public boolean writeToJsonFile(   InputStream actionsStream, String destinationFolder, Map<String, Set<Field>> parentWithFields) throws FileNotFoundException {
+    public boolean writeToJsonFile(InputStream actionsStream, String destinationFolder, Map<String, Set<Field>> parentWithFields) throws IOException {
         ActionService actionService = new ActionService();
         Collection<Action> actions = actionService.readDataFromCSV(actionsStream);
         List<ProjectionInfo> projectionInfoList = toProjectionInfo(parentWithFields, actions);
@@ -118,18 +118,18 @@ public class EntityTypeService {
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
         Path targetFolder = Paths.get(destinationFolder);
+        uiGeneratorService.cleanupTargetDirecotry(targetFolder);
 
-        if (Files.exists(targetFolder)) {
+       /* if (Files.exists(targetFolder)) {
             try {
                 Files.walk(targetFolder)
                         .sorted(Comparator.reverseOrder())
                         .map(Path::toFile)
                         .forEach(File::delete);
             } catch (IOException e) {
-                System.err.println("Ошибка при очистке целевой директории: " + Arrays.toString(e.getStackTrace()));
-                return false;
+                throw new IOException("Ошибка при очистке целевой директории: " + Arrays.toString(e.getStackTrace()));
             }
-        }
+        }*/
 
         for (ProjectionInfo projectionInfo : projectionInfoList) {
             Path baseDataPath = null;

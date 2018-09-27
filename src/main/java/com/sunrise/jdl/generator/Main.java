@@ -40,7 +40,7 @@ public class Main {
     private static EntitiesService entitiesService = null;
     private static EntityTypeService entityTypeService = new EntityTypeService();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         Options options = new Options();
         options.addOption(SOURCE_FOLDER, true, "set source folder with csv files");
@@ -105,7 +105,7 @@ public class Main {
         }
     }
 
-    private static void gidGenerator(CommandLine cmd) throws FileNotFoundException {
+    private static void gidGenerator(CommandLine cmd) throws IOException {
         if (!(cmd.hasOption(GID_ENTITIES) && cmd.hasOption(GID_RELATIONS)
                 && cmd.hasOption(GID_ACTIONS) && cmd.hasOption(TARGET_RESOURCE_FOLDER))) {
             System.err.println("No args for the '" + GID_ENTITIES + "' or '" + GID_RELATIONS + "' or '"
