@@ -105,25 +105,14 @@ public class EntityTypeService {
      * создается собственная директория, в которую записывается json-файл. Если директория destinationFolder уже существует -
      * она будет пересоздана.
      *
-     * @param fileWithActions   - путь к csv-файлу c Action (объекты Action создаются при парсинге файла),
-     *                          которые добавляются к каждому объекту BaseData
+     * @param actionsStream   - поток с данным описвающие доступные actions
      * @param destinationFolder - директория, в которой создадутся директории с файлами для объектов BaseData.
      * @param parentWithFields  - исходные данные для конвертации в объекты BaseData
      * @throws FileNotFoundException
      */
-    public void writeToJsonFile(String fileWithActions, String destinationFolder, Map<String, Set<Field>> parentWithFields) throws FileNotFoundException {
+    public boolean writeToJsonFile(   InputStream actionsStream, String destinationFolder, Map<String, Set<Field>> parentWithFields) throws FileNotFoundException {
         ActionService actionService = new ActionService();
-        InputStream actionsStream = null;
-
-        File file = new File(fileWithActions);
-        if (file.exists()) {
-            actionsStream = new FileInputStream(file);
-        } else {
-            actionsStream = this.getClass().getResourceAsStream(fileWithActions); //why?
-        }
-
         Collection<Action> actions = actionService.readDataFromCSV(actionsStream);
-
         List<ProjectionInfo> projectionInfoList = toProjectionInfo(parentWithFields, actions);
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -138,6 +127,7 @@ public class EntityTypeService {
                         .forEach(File::delete);
             } catch (IOException e) {
                 System.err.println("Ошибка при очистке целевой директории: " + Arrays.toString(e.getStackTrace()));
+                return false;
             }
         }
 
@@ -151,7 +141,7 @@ public class EntityTypeService {
                 System.err.println("Ошибка создания директории назначения: " + Arrays.toString(e.getStackTrace()));
             }
         }
-
+        return  true;
     }
 
 

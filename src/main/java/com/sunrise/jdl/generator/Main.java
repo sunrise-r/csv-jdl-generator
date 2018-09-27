@@ -58,10 +58,9 @@ public class Main {
 
         options.addOption(JDL_GENERATION, false, "set the \"JDL-Generation\" operation type");
         options.addOption(GID_GENERATION, false, "set the \"Generate Interface Description\" operation type");
-        options.addOption(GID_ENTITIES,true,"path to the 'entities' csv file");
-        options.addOption(GID_RELATIONS,true,"path to the 'relations' csv file");
+        options.addOption(GID_ENTITIES, true, "path to the 'entities' csv file");
+        options.addOption(GID_RELATIONS, true, "path to the 'relations' csv file");
         options.addOption(GID_ACTIONS, true, "path to the 'actions' csv file");
-
 
 
         CommandLineParser parser = new DefaultParser();
@@ -86,7 +85,7 @@ public class Main {
         if (cmd.hasOption(GID_GENERATION)) {
             try {
                 gidGenerator(cmd);
-            } catch (FileNotFoundException e){
+            } catch (FileNotFoundException e) {
                 System.err.println("File not found!");
             }
 
@@ -106,10 +105,10 @@ public class Main {
         }
     }
 
-    private static void gidGenerator(CommandLine cmd) throws FileNotFoundException{
-        if(!(cmd.hasOption(GID_ENTITIES) && cmd.hasOption(GID_RELATIONS)
-                && cmd.hasOption(GID_ACTIONS) && cmd.hasOption(TARGET_RESOURCE_FOLDER))){
-            System.err.println("No args for the '" + GID_ENTITIES + "' or '"+ GID_RELATIONS + "' or '"
+    private static void gidGenerator(CommandLine cmd) throws FileNotFoundException {
+        if (!(cmd.hasOption(GID_ENTITIES) && cmd.hasOption(GID_RELATIONS)
+                && cmd.hasOption(GID_ACTIONS) && cmd.hasOption(TARGET_RESOURCE_FOLDER))) {
+            System.err.println("No args for the '" + GID_ENTITIES + "' or '" + GID_RELATIONS + "' or '"
                     + GID_ACTIONS + "' or '" + TARGET_RESOURCE_FOLDER + "' param");
         }
 
@@ -117,7 +116,7 @@ public class Main {
         File relationsFile = new File(cmd.getOptionValue(GID_RELATIONS));
         File actionsFile = new File(cmd.getOptionValue(GID_ACTIONS));
 
-        if(!entitiesFile.isFile() || !relationsFile.isFile() || !actionsFile.isFile()){
+        if (!entitiesFile.isFile() || !relationsFile.isFile() || !actionsFile.isFile()) {
             throw new FileNotFoundException();
         }
 
@@ -128,8 +127,10 @@ public class Main {
         Map<String, List<String>> relations = entityTypeService.readCsv(new FileInputStream(relationsFile)); // Добавить опцию пути
         ResultWithWarnings<Map<String, List<Entity>>> entitiesHierarchy = entityTypeService.mergeTypesWithThemSubtypes(entities, relations);
         entitiesHierarchy.warnings.forEach(x -> System.out.println("WARNING: " + x));
-        Map<String, Set<Field>> baseDataWithBaseFields= entityTypeService.prepareDataForParentEntity(entitiesHierarchy.result);
-        entityTypeService.writeToJsonFile(cmd.getOptionValue(GID_ACTIONS), cmd.getOptionValue(TARGET_RESOURCE_FOLDER), baseDataWithBaseFields);
+        Map<String, Set<Field>> baseDataWithBaseFields = entityTypeService.prepareDataForParentEntity(entitiesHierarchy.result);
+        File file = new File(cmd.getOptionValue(GID_ACTIONS));
+        InputStream actionsStream = new FileInputStream(file);
+        entityTypeService.writeToJsonFile(actionsStream, cmd.getOptionValue(TARGET_RESOURCE_FOLDER), baseDataWithBaseFields);
 
     }
 

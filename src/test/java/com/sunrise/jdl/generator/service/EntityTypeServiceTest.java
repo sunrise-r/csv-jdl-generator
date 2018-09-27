@@ -122,12 +122,12 @@ public class EntityTypeServiceTest {
         crudeData.put("baseData2", new HashSet<>(Arrays.asList(field1, field2, field3, field4, field5)));
         crudeData.put("baseData3", new HashSet<>(Arrays.asList(field1, field2, field3, field4, field5)));
 
-        service.writeToJsonFile("/action.csv", FOLDER_FOR_TEST, crudeData);
+        service.writeToJsonFile(this.getClass().getResourceAsStream("/action.csv"), FOLDER_FOR_TEST, crudeData);
 
         File destinationFolder = new File(FOLDER_FOR_TEST);
         File[] files = destinationFolder.listFiles();
         Assert.assertEquals(files.length, 3);
-        ProjectionInfo projectionInfo = mapper.readValue(new File( FOLDER_FOR_TEST + "/baseData1/baseData1.json"), ProjectionInfo.class);
+        ProjectionInfo projectionInfo = mapper.readValue(new File(FOLDER_FOR_TEST + "/baseData1/baseData1.json"), ProjectionInfo.class);
         Assert.assertEquals(projectionInfo.getCode(), "baseData1");
         Assert.assertEquals(projectionInfo.getListFields().size(), 5);
         Assert.assertEquals(projectionInfo.getListFields().get(0).getName(), "поле1");
