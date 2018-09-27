@@ -144,9 +144,9 @@ public class EntityTypeServiceTest {
         Assert.assertEquals("baseData1DefaultProjection", projectionInfo.getCode());
         Assert.assertEquals("baseData1Presentation", projectionInfo.getParentCode());
         Assert.assertEquals("name", projectionInfo.getFilters().get(0).getField());
-        Assert.assertEquals(5, projectionInfo.getListFields().size());
-        Assert.assertEquals("поле1", projectionInfo.getListFields().get(0).getName());
-        Assert.assertEquals("field1", projectionInfo.getListFields().get(0).getCode());
+        Assert.assertEquals(5, projectionInfo.getFields().size());
+        Assert.assertEquals("поле1", projectionInfo.getFields().get(0).getName());
+        Assert.assertEquals("field1", projectionInfo.getFields().get(0).getCode());
         Assert.assertEquals(12, projectionInfo.getActions().size());
         Assert.assertEquals("newBtn", projectionInfo.getActions().get(0).getStyle());
 
@@ -157,17 +157,17 @@ public class EntityTypeServiceTest {
 
         projectionInfo = mapper.readValue(new File(FOLDER_FOR_TEST + "/baseData2Presentation/baseData2" + defaultType + "Projection.json"), ProjectionInfo.class);
         Assert.assertEquals("baseData2DefaultProjection", projectionInfo.getCode());
-        Assert.assertEquals(5, projectionInfo.getListFields().size());
-        Assert.assertEquals("поле2", projectionInfo.getListFields().get(1).getName());
-        Assert.assertEquals("field2", projectionInfo.getListFields().get(1).getCode());
+        Assert.assertEquals(5, projectionInfo.getFields().size());
+        Assert.assertEquals("поле2", projectionInfo.getFields().get(1).getName());
+        Assert.assertEquals("field2", projectionInfo.getFields().get(1).getCode());
         Assert.assertEquals(12, projectionInfo.getActions().size());
         Assert.assertEquals("operationBtn", projectionInfo.getActions().get(1).getStyle());
 
         projectionInfo = mapper.readValue(new File(FOLDER_FOR_TEST + "/baseData3Presentation/baseData3" + defaultType + "Projection.json"), ProjectionInfo.class);
         Assert.assertEquals("baseData3DefaultProjection", projectionInfo.getCode());
-        Assert.assertEquals(5, projectionInfo.getListFields().size());
-        Assert.assertEquals("поле5", projectionInfo.getListFields().get(4).getName());
-        Assert.assertEquals("field5", projectionInfo.getListFields().get(4).getCode());
+        Assert.assertEquals(5, projectionInfo.getFields().size());
+        Assert.assertEquals("поле5", projectionInfo.getFields().get(4).getName());
+        Assert.assertEquals("field5", projectionInfo.getFields().get(4).getCode());
         Assert.assertEquals(12, projectionInfo.getActions().size());
         Assert.assertEquals("refreshBtn", projectionInfo.getActions().get(11).getStyle());
     }

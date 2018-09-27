@@ -13,7 +13,7 @@ public class ProjectionInfo extends RegistryItem{
     /**
      * Список полей
      */
-    private List<BaseField> listFields;
+    private List<BaseField> fields;
 
     /**
      * Список действий которые можно производить с объектом
@@ -31,12 +31,12 @@ public class ProjectionInfo extends RegistryItem{
         this.actions = actions;
     }
 
-    public List<BaseField> getListFields() {
-        return listFields;
+    public List<BaseField> getFields() {
+        return fields;
     }
 
-    public void setListFields(List<BaseField> listFields) {
-        this.listFields = listFields;
+    public void setFields(List<BaseField> fields) {
+        this.fields = fields;
     }
 
     public List<ProjectionFilter> getFilters() {

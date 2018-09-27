@@ -19,7 +19,7 @@ public class UIGeneratorService {
 
     private static final String PRESENTATION_CODE_TEMPLATE = "%sPresentation";
 
-    private static final String PROJECTION_CODE_TEMPLATE = "%s%sProjection";
+    private static final String PROJECTION_CODE_TEMPLATE = "%s%sListProjection";
 
 
     /**
@@ -38,7 +38,7 @@ public class UIGeneratorService {
         projectionInfo.setName(getProjectionCode(entityName, projectionType.getName()));
         projectionInfo.setFilters(projectionType.getFilters());
         projectionInfo.setParentCode(presentationCode);
-        projectionInfo.setListFields(fields.stream().map(f -> new BaseField(f)).collect(Collectors.toList()));
+        projectionInfo.setFields(fields.stream().map(f -> new BaseField(f)).collect(Collectors.toList()));
         projectionInfo.setActions(new ArrayList<>(actions));
         return projectionInfo;
     }
