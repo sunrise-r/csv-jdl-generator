@@ -61,7 +61,7 @@ public class Main {
         options.addOption(GID_ENTITIES, true, "path to the 'entities' csv file");
         options.addOption(GID_RELATIONS, true, "path to the 'relations' csv file");
         options.addOption(GID_ACTIONS, true, "path to the 'actions' csv file");
-        options.addOption(GID_CONFIG_FILE,true,"gid config file path");
+        options.addOption(GID_CONFIG_FILE, true, "gid config file path");
 
 
         CommandLineParser parser = new DefaultParser();
@@ -84,11 +84,7 @@ public class Main {
         }
 
         if (cmd.hasOption(GID_GENERATION)) {
-            try {
-                gidGenerator(cmd);
-            } catch (FileNotFoundException e) {
-                System.err.println("File not found!");
-            }
+            gidGenerator(cmd);
 
         } else if (cmd.hasOption(JDL_GENERATION)) {
             jdlGenerator(cmd);
@@ -119,8 +115,15 @@ public class Main {
         File relationsFile = new File(cmd.getOptionValue(GID_RELATIONS));
         File actionsFile = new File(cmd.getOptionValue(GID_ACTIONS));
 
-        if (!entitiesFile.isFile() || !relationsFile.isFile() || !actionsFile.isFile()) {
-            throw new FileNotFoundException();
+        if (!entitiesFile.isFile()) {
+            throw new FileNotFoundException(entitiesFile.getAbsolutePath());
+        }
+        if (!relationsFile.isFile()) {
+            throw new FileNotFoundException(relationsFile.getAbsolutePath());
+        }
+
+        if (!actionsFile.isFile()) {
+            throw new FileNotFoundException(actionsFile.getAbsolutePath());
         }
 
 
