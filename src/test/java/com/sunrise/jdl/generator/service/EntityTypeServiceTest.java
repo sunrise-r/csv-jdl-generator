@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sunrise.jdl.generator.entities.Entity;
 import com.sunrise.jdl.generator.entities.Field;
 import com.sunrise.jdl.generator.entities.ResultWithWarnings;
-import com.sunrise.jdl.generator.forJson.ProjectionInfo;
-import com.sunrise.jdl.generator.forJson.RegistryItem;
+import com.sunrise.jdl.generator.ui.ProjectionInfo;
+import com.sunrise.jdl.generator.ui.RegistryItem;
 import org.junit.Assert;
 import org.junit.Test;
 

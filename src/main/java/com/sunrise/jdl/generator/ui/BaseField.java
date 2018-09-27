@@ -1,4 +1,4 @@
-package com.sunrise.jdl.generator.forJson;
+package com.sunrise.jdl.generator.ui;
 
 import com.sunrise.jdl.generator.entities.Field;
 

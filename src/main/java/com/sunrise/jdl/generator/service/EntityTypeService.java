@@ -6,8 +6,8 @@ import com.sunrise.jdl.generator.actions.Action;
 import com.sunrise.jdl.generator.entities.Entity;
 import com.sunrise.jdl.generator.entities.Field;
 import com.sunrise.jdl.generator.entities.ResultWithWarnings;
-import com.sunrise.jdl.generator.forJson.ProjectionInfo;
-import com.sunrise.jdl.generator.forJson.RegistryItem;
+import com.sunrise.jdl.generator.ui.ProjectionInfo;
+import com.sunrise.jdl.generator.ui.RegistryItem;
 import com.sunrise.jdl.generator.service.iad.UIGeneratorService;
 
 import java.io.*;

@@ -1,6 +1,6 @@
 package com.sunrise.jdl.generator.service.iad;
 
-import com.sunrise.jdl.generator.forJson.RegistryItem;
+import com.sunrise.jdl.generator.ui.RegistryItem;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

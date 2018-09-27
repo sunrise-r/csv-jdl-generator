@@ -2,9 +2,9 @@ package com.sunrise.jdl.generator.service.iad;
 
 import com.sunrise.jdl.generator.actions.Action;
 import com.sunrise.jdl.generator.entities.Field;
-import com.sunrise.jdl.generator.forJson.BaseField;
-import com.sunrise.jdl.generator.forJson.ProjectionInfo;
-import com.sunrise.jdl.generator.forJson.RegistryItem;
+import com.sunrise.jdl.generator.ui.BaseField;
+import com.sunrise.jdl.generator.ui.ProjectionInfo;
+import com.sunrise.jdl.generator.ui.RegistryItem;
 
 import java.io.File;
 import java.io.IOException;
