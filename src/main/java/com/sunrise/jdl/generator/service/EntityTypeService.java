@@ -119,18 +119,6 @@ public class EntityTypeService {
 
         Path targetFolder = Paths.get(destinationFolder);
         uiGeneratorService.cleanupTargetDirecotry(targetFolder);
-
-       /* if (Files.exists(targetFolder)) {
-            try {
-                Files.walk(targetFolder)
-                        .sorted(Comparator.reverseOrder())
-                        .map(Path::toFile)
-                        .forEach(File::delete);
-            } catch (IOException e) {
-                throw new IOException("Ошибка при очистке целевой директории: " + Arrays.toString(e.getStackTrace()));
-            }
-        }*/
-
         for (ProjectionInfo projectionInfo : projectionInfoList) {
             Path baseDataPath = null;
             try {
