@@ -5,6 +5,7 @@ import com.sunrise.jdl.generator.entities.Entity;
 import com.sunrise.jdl.generator.entities.Field;
 import com.sunrise.jdl.generator.entities.ResultWithWarnings;
 import com.sunrise.jdl.generator.forJson.ProjectionInfo;
+import com.sunrise.jdl.generator.forJson.RegistryItem;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -109,8 +110,8 @@ public class EntityTypeServiceTest {
 
     @Test
     public void testWriteToJsonFile() throws IOException {
-        EntityTypeService service = new EntityTypeService();
-        ObjectMapper mapper = new ObjectMapper();
+        final ObjectMapper mapper = new ObjectMapper();
+        final String registryCode = "registryCode";
 
         Field field1 = new Field("String", "field1", "", true, true, "поле1");
         Field field2 = new Field("String", "field2", "10", true, true, "поле2");
@@ -122,33 +123,39 @@ public class EntityTypeServiceTest {
         crudeData.put("baseData2", new HashSet<>(Arrays.asList(field1, field2, field3, field4, field5)));
         crudeData.put("baseData3", new HashSet<>(Arrays.asList(field1, field2, field3, field4, field5)));
 
-        service.writeToJsonFile(this.getClass().getResourceAsStream("/action.csv"), FOLDER_FOR_TEST, crudeData);
+        entityTypeService.generateEntitiesPresentations(this.getClass().getResourceAsStream("/action.csv"), FOLDER_FOR_TEST, crudeData, registryCode);
 
         File destinationFolder = new File(FOLDER_FOR_TEST);
         File[] files = destinationFolder.listFiles();
         Assert.assertEquals(files.length, 3);
         ProjectionInfo projectionInfo = mapper.readValue(new File(FOLDER_FOR_TEST + "/baseData1/baseData1.json"), ProjectionInfo.class);
-        Assert.assertEquals(projectionInfo.getCode(), "baseData1");
-        Assert.assertEquals(projectionInfo.getListFields().size(), 5);
-        Assert.assertEquals(projectionInfo.getListFields().get(0).getName(), "поле1");
-        Assert.assertEquals(projectionInfo.getListFields().get(0).getCode(), "field1");
-        Assert.assertEquals(projectionInfo.getActions().size(), 12);
-        Assert.assertEquals(projectionInfo.getActions().get(0).getStyle(), "newBtn");
+        Assert.assertEquals("baseData1", projectionInfo.getCode());
+        Assert.assertEquals("baseData1Presentation", projectionInfo.getParentCode());
+        Assert.assertEquals(5, projectionInfo.getListFields().size());
+        Assert.assertEquals("поле1", projectionInfo.getListFields().get(0).getName());
+        Assert.assertEquals("field1", projectionInfo.getListFields().get(0).getCode());
+        Assert.assertEquals(12, projectionInfo.getActions().size());
+        Assert.assertEquals("newBtn", projectionInfo.getActions().get(0).getStyle());
+
+        RegistryItem presentationnfo = mapper.readValue(new File(FOLDER_FOR_TEST + "/baseData1/baseData1Presentation.json"), RegistryItem.class);
+        Assert.assertEquals("baseData1Presentation", presentationnfo.getCode());
+        Assert.assertEquals("baseData1Presentation", presentationnfo.getName());
+        Assert.assertEquals(registryCode, presentationnfo.getParentCode());
 
         projectionInfo = mapper.readValue(new File(FOLDER_FOR_TEST + "/baseData2/baseData2.json"), ProjectionInfo.class);
-        Assert.assertEquals(projectionInfo.getCode(), "baseData2");
-        Assert.assertEquals(projectionInfo.getListFields().size(), 5);
-        Assert.assertEquals(projectionInfo.getListFields().get(1).getName(), "поле2");
-        Assert.assertEquals(projectionInfo.getListFields().get(1).getCode(), "field2");
-        Assert.assertEquals(projectionInfo.getActions().size(), 12);
-        Assert.assertEquals(projectionInfo.getActions().get(1).getStyle(), "operationBtn");
+        Assert.assertEquals( "baseData2",projectionInfo.getCode());
+        Assert.assertEquals(5,projectionInfo.getListFields().size());
+        Assert.assertEquals( "поле2",projectionInfo.getListFields().get(1).getName());
+        Assert.assertEquals( "field2",projectionInfo.getListFields().get(1).getCode());
+        Assert.assertEquals( 12,projectionInfo.getActions().size());
+        Assert.assertEquals( "operationBtn",projectionInfo.getActions().get(1).getStyle());
 
         projectionInfo = mapper.readValue(new File(FOLDER_FOR_TEST + "/baseData3/baseData3.json"), ProjectionInfo.class);
-        Assert.assertEquals(projectionInfo.getCode(), "baseData3");
-        Assert.assertEquals(projectionInfo.getListFields().size(), 5);
-        Assert.assertEquals(projectionInfo.getListFields().get(4).getName(), "поле5");
-        Assert.assertEquals(projectionInfo.getListFields().get(4).getCode(), "field5");
-        Assert.assertEquals(projectionInfo.getActions().size(), 12);
-        Assert.assertEquals(projectionInfo.getActions().get(11).getStyle(), "refreshBtn");
+        Assert.assertEquals( "baseData3",projectionInfo.getCode());
+        Assert.assertEquals( 5,projectionInfo.getListFields().size());
+        Assert.assertEquals( "поле5",projectionInfo.getListFields().get(4).getName());
+        Assert.assertEquals( "field5",projectionInfo.getListFields().get(4).getCode());
+        Assert.assertEquals( 12,projectionInfo.getActions().size());
+        Assert.assertEquals( "refreshBtn",projectionInfo.getActions().get(11).getStyle());
     }
 }

@@ -20,18 +20,21 @@ public class UIGeneratorService {
 
     private static final String PRESENTATION_CODE_TEMPLATE = "%sPresentation";
 
+
     /**
      * Преобразовать данные о сщуности в информацию о проекции
-     *
-     * @param entry   Информация о сущности. Название и поле.
-     * @param actions Список доступных действий
+     * @param entityName Название сущности
+     * @param fields поля сущности
+     * @param actions доступные действия для проекции
+     * @param presentationCode Код представления
      * @return Информация о проекции
      */
-    public ProjectionInfo toProjectionInfo(Map.Entry<String, Set<Field>> entry, Collection<Action> actions) {
+    public ProjectionInfo toProjectionInfo(String entityName, Set<Field> fields, Collection<Action> actions, String presentationCode) {
         ProjectionInfo projectionInfo = new ProjectionInfo();
-        projectionInfo.setCode(entry.getKey());
-        projectionInfo.setName(entry.getKey());
-        projectionInfo.setListFields(entry.getValue().stream().map(f -> new BaseField(f)).collect(Collectors.toList()));
+        projectionInfo.setCode(entityName);
+        projectionInfo.setName(entityName);
+        projectionInfo.setParentCode(presentationCode);
+        projectionInfo.setListFields(fields.stream().map(f -> new BaseField(f)).collect(Collectors.toList()));
         projectionInfo.setActions(new ArrayList<>(actions));
         return projectionInfo;
     }
@@ -49,17 +52,6 @@ public class UIGeneratorService {
         item.setCode(getPresentationName(entityName));
         item.setName(item.getCode());
         return item;
-    }
-
-    /**
-     * Преобразует данные о сущностях в список их проекций
-     *
-     * @param entityInfoes Информация о сущностях
-     * @param actions      Список доступных actions для сущностей
-     * @return Список проекций созданный на сонове @entitiesInfoes
-     */
-    public List<ProjectionInfo> toProjectionInfo(Map<String, Set<Field>> entityInfoes, Collection<Action> actions) {
-        return entityInfoes.entrySet().stream().map(x -> this.toProjectionInfo(x, actions)).collect(Collectors.toList());
     }
 
     /**
@@ -85,5 +77,6 @@ public class UIGeneratorService {
     private String getPresentationName(String entityName) {
         return String.format(PRESENTATION_CODE_TEMPLATE, entityName);
     }
+
 
 }
