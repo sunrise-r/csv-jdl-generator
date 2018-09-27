@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Класс используется для записи данных в json-фррмате в файл
  */
-public class BaseData {
+public class ProjectionInfo {
 
     /**
      * Имя
@@ -38,13 +38,13 @@ public class BaseData {
     /**
      * Пустой конструкто используется для десериализации (используется в тесте)
      */
-    public BaseData() {
+    public ProjectionInfo() {
     }
 
     /**
      * @param code
      */
-    public BaseData(String code) {
+    public ProjectionInfo(String code) {
         this.code = code;
         this.listFields = new ArrayList<>();
         this.actions = new ArrayList<>();
