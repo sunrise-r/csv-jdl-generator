@@ -128,7 +128,12 @@ public class EntityTypeService {
             Path baseDataPath = Files.createDirectories(Paths.get(destinationFolder + "/" + registryItem.getCode()));
             mapper.writeValue(new File(baseDataPath + "/" + registryItem.getCode() + ".json"), registryItem);
             for (ProjectionParameter projectionType : generateParameters.getProjectionsInfoes()) {
-                ProjectionInfo projectionInfo = uiGeneratorService.toProjectionInfo(entityName, entityInfoes.get(entityName), actions, registryItem.getCode(), projectionType);
+                ProjectionInfo projectionInfo = null;
+                if(generateParameters.isUseEntityName()) {
+                    projectionInfo = uiGeneratorService.toProjectionInfo(entityName, entityInfoes.get(entityName), actions, registryItem.getCode(), projectionType);
+                }else{
+                    projectionInfo = uiGeneratorService.toProjectionInfo("", entityInfoes.get(entityName), actions, registryItem.getCode(), projectionType);
+                }
                 mapper.writeValue(new File(baseDataPath + "/" + projectionInfo.getCode() + ".json"), projectionInfo);
             }
         }

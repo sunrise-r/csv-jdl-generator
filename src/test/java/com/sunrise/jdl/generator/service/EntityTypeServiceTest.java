@@ -124,6 +124,7 @@ public class EntityTypeServiceTest {
 
         UIGenerateParameters parameters = new UIGenerateParameters();
         parameters.setRegistryCode(registryCode);
+        parameters.setUseEntityName(true);
         ProjectionParameter projectionParameter= new ProjectionParameter();
         String defaultType = "Default";
         projectionParameter.setName(defaultType);
