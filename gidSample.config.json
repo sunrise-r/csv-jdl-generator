@@ -1,5 +1,6 @@
 {
   "registryCode": "userRegistry",
+  "useEntityName": false,
   "projectionsInfoes": [
     {
       "name": "New",

@@ -11,6 +11,8 @@ public class UIGenerateParameters {
 
     private List<ProjectionParameter> projectionsInfoes;
 
+    private boolean useEntityName;
+
     public String getRegistryCode() {
         return registryCode;
     }
@@ -25,5 +27,13 @@ public class UIGenerateParameters {
 
     public void setProjectionsInfoes(List<ProjectionParameter> projectionsInfoes) {
         this.projectionsInfoes = projectionsInfoes;
+    }
+
+    public boolean isUseEntityName() {
+        return useEntityName;
+    }
+
+    public void setUseEntityName(boolean useEntityName) {
+        this.useEntityName = useEntityName;
     }
 }
