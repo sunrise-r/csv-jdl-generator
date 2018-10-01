@@ -32,17 +32,19 @@ public class BaseField {
      */
     private String displayFormat;
 
-    /**
-     * Пустой конструктор необходим для десериализации (используется в тесте)
-     */
-    public BaseField() {
-
+    public BaseField name(String name){
+        this.name=name;
+        return this;
     }
 
-    public BaseField(Field field) {
-        this.name = field.getFieldLabel();
-        this.code = field.getFieldName();
+    public BaseField code(String code){
+        this.code = code;
+        return this;
+    }
+
+    public BaseField displayFormat(String displayFormat){
         this.displayFormat = displayFormat;
+        return this;
     }
 
     public String getName() {
