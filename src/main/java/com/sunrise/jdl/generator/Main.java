@@ -130,7 +130,7 @@ public class Main {
         EntitiesService entitiesService = new EntitiesService(new Settings());
         Collection<Entity> entities = entitiesService.readDataFromCSV(new FileInputStream(entitiesFile));
 
-        Map<String, List<String>> relations = entityTypeService.readCsv(new FileInputStream(relationsFile)); // Добавить опцию пути
+        Map<String, List<String>> relations = entityTypeService.readCsv(new FileInputStream(relationsFile));
         ResultWithWarnings<Map<String, List<Entity>>> entitiesHierarchy = entityTypeService.mergeTypesWithThemSubtypes(entities, relations);
         entitiesHierarchy.warnings.forEach(x -> System.out.println("WARNING: " + x));
         Map<String, Set<Field>> baseDataWithBaseFields = entityTypeService.prepareDataForParentEntity(entitiesHierarchy.result);

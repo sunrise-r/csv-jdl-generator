@@ -58,7 +58,7 @@ public class EntityTypeService {
      *
      * @param parentName       - имя родительской сущности
      * @param childrenEntities - список дочерних сущностей
-     * @return Map<String   Set   < Field>> result - имя родителя и список его полей
+     * @return Map<String       Set       <   Field>> result - имя родителя и список его полей
      */
     public Map<String, Set<Field>> prepareDataForParentEntity(String parentName, List<Entity> childrenEntities) {
         Map<Field, Byte> fieldsWithFrequency = new HashMap<>();
@@ -120,18 +120,22 @@ public class EntityTypeService {
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
-        Path targetFolder = Paths.get(destinationFolder);
-        uiGeneratorService.cleanupTargetDirecotry(targetFolder);
-
         for (String entityName : entityInfoes.keySet()) {
             RegistryItem registryItem = uiGeneratorService.createPresenationFor(entityName, generateParameters.getRegistryCode());
-            Path baseDataPath = Files.createDirectories(Paths.get(destinationFolder + "/" + registryItem.getCode()));
+            Path path = Paths.get(destinationFolder + "/" + registryItem.getCode());
+
+            if (Files.isDirectory(path)) {
+                System.out.println("WARNING: Каталог " + registryItem.getCode() + " уже существует и не будет перезаписан");
+                continue;
+            }
+            Path baseDataPath = Files.createDirectories(path);
+
             mapper.writeValue(new File(baseDataPath + "/" + registryItem.getCode() + ".json"), registryItem);
             for (ProjectionParameter projectionType : generateParameters.getProjectionsInfoes()) {
-                ProjectionInfo projectionInfo = null;
-                if(generateParameters.isUseEntityName()) {
+                ProjectionInfo projectionInfo;
+                if (generateParameters.isUseEntityName()) {
                     projectionInfo = uiGeneratorService.toProjectionInfo(entityName, entityInfoes.get(entityName), actions, registryItem.getCode(), projectionType);
-                }else{
+                } else {
                     projectionInfo = uiGeneratorService.toProjectionInfo("", entityInfoes.get(entityName), actions, registryItem.getCode(), projectionType);
                 }
                 mapper.writeValue(new File(baseDataPath + "/" + projectionInfo.getCode() + ".json"), projectionInfo);
