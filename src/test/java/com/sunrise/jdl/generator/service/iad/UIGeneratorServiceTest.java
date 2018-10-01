@@ -7,10 +7,10 @@ import static org.junit.Assert.*;
 
 public class UIGeneratorServiceTest {
 
-    UIGeneratorService uiGeneratorService = new UIGeneratorService();
+    private UIGeneratorService uiGeneratorService = new UIGeneratorService();
 
     @Test
-    public void createPresenationFor() {
+    public void createPresentationFor() {
         String registryName = "registry";
         String entityName="entity";
         RegistryItem item = uiGeneratorService.createPresenationFor(entityName,registryName);

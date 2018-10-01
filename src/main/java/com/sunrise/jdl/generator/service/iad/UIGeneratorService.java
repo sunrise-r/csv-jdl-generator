@@ -72,16 +72,17 @@ public class UIGeneratorService {
     /**
      * Очистить целевую диркторию  генерации файлов описания интерфейса
      *
-     * @param targetDirectory Целевая директория
+     * @param directory Целевая директория
      * @throws IOException Возникает в случае если невозможно очистить директорию
      */
-    public void cleanupTargetDirecotry(Path targetDirectory) throws IOException {
-        if (Files.exists(targetDirectory)) {
+    public void removeDirectory(Path directory) throws IOException {
+        if (Files.exists(directory)) {
             try {
-                Files.walk(targetDirectory)
+                Files.walk(directory)
                         .sorted(Comparator.reverseOrder())
                         .map(Path::toFile)
                         .forEach(File::delete);
+                directory.toFile().delete();
             } catch (IOException e) {
                 throw new IOException("Ошибка при очистке целевой директории: " + Arrays.toString(e.getStackTrace()));
             }

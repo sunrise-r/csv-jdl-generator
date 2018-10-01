@@ -122,15 +122,20 @@ public class EntityTypeService {
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
-        Path targetFolder = Paths.get(destinationFolder);
-        uiGeneratorService.cleanupTargetDirecotry(targetFolder);
+        Path path = Paths.get(destinationFolder);
+
+        if (Files.isDirectory(path))
+            for (File f : path.toFile().listFiles())
+                if (f.isDirectory())
+                    uiGeneratorService.removeDirectory(f.toPath());
 
         for (String entityName : entityInfoes.keySet()) {
             RegistryItem registryItem = uiGeneratorService.createPresenationFor(entityName, generateParameters.getRegistryCode());
             Path baseDataPath = Files.createDirectories(Paths.get(destinationFolder + "/" + registryItem.getCode()));
+
             mapper.writeValue(new File(baseDataPath + "/" + registryItem.getCode() + ".json"), registryItem);
             for (ProjectionParameter projectionType : generateParameters.getProjectionsInfoes()) {
-                ProjectionInfo projectionInfo = null;
+                ProjectionInfo projectionInfo;
                 if (generateParameters.isUseEntityName()) {
                     projectionInfo = uiGeneratorService.toProjectionInfo(entityName, entityInfoes.get(entityName), actions, registryItem.getCode(), projectionType);
                 } else {
