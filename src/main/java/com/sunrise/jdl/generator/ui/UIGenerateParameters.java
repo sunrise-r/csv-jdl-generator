@@ -13,6 +13,8 @@ public class UIGenerateParameters {
 
     private boolean useEntityName;
 
+    private String microservice;
+
     public String getRegistryCode() {
         return registryCode;
     }
@@ -35,5 +37,13 @@ public class UIGenerateParameters {
 
     public void setUseEntityName(boolean useEntityName) {
         this.useEntityName = useEntityName;
+    }
+
+    public String getMicroservice() {
+        return microservice;
+    }
+
+    public void setMicroservice(String microservice) {
+        this.microservice = microservice;
     }
 }

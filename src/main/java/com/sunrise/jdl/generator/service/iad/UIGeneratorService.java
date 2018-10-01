@@ -3,6 +3,7 @@ package com.sunrise.jdl.generator.service.iad;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sunrise.jdl.generator.actions.Action;
 import com.sunrise.jdl.generator.entities.Field;
+import com.sunrise.jdl.generator.service.JDLFieldsType;
 import com.sunrise.jdl.generator.ui.*;
 
 import java.io.File;
@@ -38,10 +39,19 @@ public class UIGeneratorService {
         projectionInfo.setName(getProjectionCode(entityName, projectionType.getName()));
         projectionInfo.setFilters(projectionType.getFilters());
         projectionInfo.setParentCode(presentationCode);
-        projectionInfo.setFields(fields.stream().map(f -> new BaseField(f)).collect(Collectors.toList()));
+        projectionInfo.setFields(fields.stream().map(f -> new BaseField().code(f.getFieldName()).name(f.getFieldLabel()).displayFormat(parse(f.getFieldType()))).collect(Collectors.toList()));
         projectionInfo.setActions(new ArrayList<>(actions));
         projectionInfo.setOrder(projectionType.getOrder());
         return projectionInfo;
+    }
+
+    private String parse(String fieldType) {
+        try {
+            JDLFieldsType.valueOf(fieldType);
+            return fieldType;
+        } catch (Exception ex) {
+            return null;
+        }
     }
 
     /**

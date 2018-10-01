@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
 
 public class EntityTypeService {
 
+    private static final String RESOURCE_URL_TEMPLATE = "%s/api/%s/_search";
+
     private CSVEntityTypeReader csvEntityTypeReader = new CSVEntityTypeReader();
 
     UIGeneratorService uiGeneratorService = new UIGeneratorService();
@@ -139,10 +141,16 @@ public class EntityTypeService {
                 } else {
                     projectionInfo = uiGeneratorService.toProjectionInfo("", entityInfoes.get(entityName), actions, registryItem.getCode(), projectionType);
                 }
+                projectionInfo.setSearchUrl(generateSearchUrl(entityName, generateParameters.getMicroservice()));
                 mapper.writeValue(new File(baseDataPath + "/" + projectionInfo.getCode() + ".json"), projectionInfo);
             }
         }
         return true;
+    }
+
+    private String generateSearchUrl(String code, String microservice) {
+        String urlCode = Arrays.stream(code.split("(?=\\p{Upper})")).collect(Collectors.joining("-"));
+        return String.format(RESOURCE_URL_TEMPLATE, microservice, urlCode).toLowerCase();
     }
 
 }

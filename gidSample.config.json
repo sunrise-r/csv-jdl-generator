@@ -1,6 +1,7 @@
 {
   "registryCode": "userRegistry",
   "useEntityName": false,
+  "microservice": "partnerDocuments",
   "projectionsInfoes": [
     {
       "name": "New",
