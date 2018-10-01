@@ -16,12 +16,24 @@ public class ProjectionInfo extends RegistryItem{
     private List<BaseField> fields;
 
     /**
+     * Порядок для сортировки
+     */
+    private int order;
+
+    /**
      * Список действий которые можно производить с объектом
      */
     private List<Action> actions;
 
     private List<ProjectionFilter> filters;
 
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
 
     public List<Action> getActions() {
         return actions;

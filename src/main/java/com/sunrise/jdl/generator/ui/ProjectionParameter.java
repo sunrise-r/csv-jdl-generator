@@ -12,9 +12,24 @@ public class ProjectionParameter {
     private String name;
 
     /**
+     * Order of projection
+     */
+    private int order;
+
+    /**
      * List of filters for projection
      */
     private List<ProjectionFilter> filters;
+
+
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
 
     public String getName() {
         return name;

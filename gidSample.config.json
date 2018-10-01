@@ -4,6 +4,7 @@
   "projectionsInfoes": [
     {
       "name": "New",
+      "order": 1,
       "filters": [
         {
           "field": "arhive",
@@ -21,6 +22,7 @@
     },
     {
       "name": "Inner",
+      "order": 2,
       "filters": [
         {
           "field": "status",
@@ -34,6 +36,7 @@
     },
     {
       "name": "Archive",
+      "order": 3,
       "filters": [
         {
           "field": "arhive",
