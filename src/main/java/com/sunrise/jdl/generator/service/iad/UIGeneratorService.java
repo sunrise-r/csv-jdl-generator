@@ -41,6 +41,7 @@ public class UIGeneratorService {
         projectionInfo.setParentCode(presentationCode);
         projectionInfo.setFields(fields.stream().map(f -> new BaseField().code(f.getFieldName()).name(f.getFieldLabel()).displayFormat(parse(f.getFieldType()))).collect(Collectors.toList()));
         projectionInfo.setActions(new ArrayList<>(actions));
+        projectionInfo.setOrder(projectionType.getOrder());
         return projectionInfo;
     }
 
