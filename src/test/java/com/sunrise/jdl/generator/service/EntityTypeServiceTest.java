@@ -125,6 +125,7 @@ public class EntityTypeServiceTest {
         UIGenerateParameters parameters = new UIGenerateParameters();
         parameters.setRegistryCode(registryCode);
         parameters.setUseEntityName(true);
+        parameters.setMicroservice("testService");
         ProjectionParameter projectionParameter= new ProjectionParameter();
         String defaultType = "Default";
         projectionParameter.setName(defaultType);
@@ -143,6 +144,7 @@ public class EntityTypeServiceTest {
         Assert.assertEquals(files.length, 3);
         ProjectionInfo projectionInfo = mapper.readValue(new File(FOLDER_FOR_TEST + "/baseData1Presentation/baseData1" + defaultType + "ListProjection.json"), ProjectionInfo.class);
         Assert.assertEquals("baseData1DefaultListProjection", projectionInfo.getCode());
+        Assert.assertEquals("testservice/api/base-data1/_search", projectionInfo.getSearchUrl());
         Assert.assertEquals("baseData1Presentation", projectionInfo.getParentCode());
         Assert.assertEquals("name", projectionInfo.getFilters().get(0).getField());
         Assert.assertEquals(5, projectionInfo.getFields().size());

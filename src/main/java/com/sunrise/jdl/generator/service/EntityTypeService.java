@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
 
 public class EntityTypeService {
 
+    private static final String RESOURCE_URL_TEMPLATE = "%s/api/%s/_search";
+
     private CSVEntityTypeReader csvEntityTypeReader = new CSVEntityTypeReader();
 
     UIGeneratorService uiGeneratorService = new UIGeneratorService();
@@ -58,7 +60,7 @@ public class EntityTypeService {
      *
      * @param parentName       - имя родительской сущности
      * @param childrenEntities - список дочерних сущностей
-     * @return Map<String   Set   < Field>> result - имя родителя и список его полей
+     * @return Map<String               Set               <       Field>> result - имя родителя и список его полей
      */
     public Map<String, Set<Field>> prepareDataForParentEntity(String parentName, List<Entity> childrenEntities) {
         Map<Field, Byte> fieldsWithFrequency = new HashMap<>();
@@ -129,15 +131,21 @@ public class EntityTypeService {
             mapper.writeValue(new File(baseDataPath + "/" + registryItem.getCode() + ".json"), registryItem);
             for (ProjectionParameter projectionType : generateParameters.getProjectionsInfoes()) {
                 ProjectionInfo projectionInfo = null;
-                if(generateParameters.isUseEntityName()) {
+                if (generateParameters.isUseEntityName()) {
                     projectionInfo = uiGeneratorService.toProjectionInfo(entityName, entityInfoes.get(entityName), actions, registryItem.getCode(), projectionType);
-                }else{
+                } else {
                     projectionInfo = uiGeneratorService.toProjectionInfo("", entityInfoes.get(entityName), actions, registryItem.getCode(), projectionType);
                 }
+                projectionInfo.setSearchUrl(generateSearchUrl(entityName, generateParameters.getMicroservice()));
                 mapper.writeValue(new File(baseDataPath + "/" + projectionInfo.getCode() + ".json"), projectionInfo);
             }
         }
         return true;
+    }
+
+    private String generateSearchUrl(String code, String microservice) {
+        String urlCode = Arrays.stream(code.split("(?=\\p{Upper})")).collect(Collectors.joining("-"));
+        return String.format(RESOURCE_URL_TEMPLATE, microservice, urlCode).toLowerCase();
     }
 
 }

@@ -20,8 +20,21 @@ public class ProjectionInfo extends RegistryItem{
      */
     private List<Action> actions;
 
+    private String searchUrl;
+
+    /**
+     * Список фильров которые применяются к проекции.
+     * Проекция может описывать определенный набор данных для. Для получения этого набора данных испольузеются фильтры.
+     */
     private List<ProjectionFilter> filters;
 
+    public String getSearchUrl() {
+        return searchUrl;
+    }
+
+    public void setSearchUrl(String searchUrl) {
+        this.searchUrl = searchUrl;
+    }
 
     public List<Action> getActions() {
         return actions;
