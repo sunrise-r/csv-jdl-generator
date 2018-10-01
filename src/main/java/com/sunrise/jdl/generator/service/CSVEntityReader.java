@@ -104,20 +104,20 @@ public class CSVEntityReader {
             return source;
         }
         if ("строка".equals(check)) {
-            return EntitiesService.JDLFieldsType.String.toString();
+            return JDLFieldsType.String.toString();
         }
         if ("дата/время".equals(check)) {
-            return EntitiesService.JDLFieldsType.ZonedDateTime.toString();
+            return JDLFieldsType.ZonedDateTime.toString();
 
         }
         if ("число".equals(check)) {
-            return EntitiesService.JDLFieldsType.Integer.toString();
+            return JDLFieldsType.Integer.toString();
         }
         if ("дробное".equals(check)) {
-            return EntitiesService.JDLFieldsType.BigDecimal.toString();
+            return JDLFieldsType.BigDecimal.toString();
         }
         if ("булев".equals(check)) {
-            return EntitiesService.JDLFieldsType.Boolean.toString();
+            return JDLFieldsType.Boolean.toString();
         }
 
 
