@@ -20,6 +20,9 @@ public class ProjectionInfo extends RegistryItem{
      */
     private List<Action> actions;
 
+    /**
+     * URL  ресусра для поиска данных для проекции
+     */
     private String searchUrl;
 
     /**

@@ -38,7 +38,7 @@ public class UIGeneratorService {
         projectionInfo.setName(getProjectionCode(entityName, projectionType.getName()));
         projectionInfo.setFilters(projectionType.getFilters());
         projectionInfo.setParentCode(presentationCode);
-        projectionInfo.setFields(fields.stream().map(f -> new BaseField(f)).collect(Collectors.toList()));
+        projectionInfo.setFields(fields.stream().map(f -> new BaseField().code(f.getFieldName()).name(f.getFieldLabel()).displayFormat(f.getFieldType())).collect(Collectors.toList()));
         projectionInfo.setActions(new ArrayList<>(actions));
         return projectionInfo;
     }
