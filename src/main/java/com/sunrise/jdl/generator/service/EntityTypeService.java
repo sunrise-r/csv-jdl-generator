@@ -58,7 +58,7 @@ public class EntityTypeService {
      *
      * @param parentName       - имя родительской сущности
      * @param childrenEntities - список дочерних сущностей
-     * @return Map<String       Set       <   Field>> result - имя родителя и список его полей
+     * @return Map<String               Set               <       Field>> result - имя родителя и список его полей
      */
     public Map<String, Set<Field>> prepareDataForParentEntity(String parentName, List<Entity> childrenEntities) {
         Map<Field, Byte> fieldsWithFrequency = new HashMap<>();
@@ -120,15 +120,16 @@ public class EntityTypeService {
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
+        Path path = Paths.get(destinationFolder);
+
+        if (Files.isDirectory(path))
+            for (File f : path.toFile().listFiles())
+                if (f.isDirectory())
+                    uiGeneratorService.removeDirectory(f.toPath());
+
         for (String entityName : entityInfoes.keySet()) {
             RegistryItem registryItem = uiGeneratorService.createPresenationFor(entityName, generateParameters.getRegistryCode());
-            Path path = Paths.get(destinationFolder + "/" + registryItem.getCode());
-
-            if (Files.isDirectory(path)) {
-                System.out.println("WARNING: Каталог " + registryItem.getCode() + " уже существует и не будет перезаписан");
-                continue;
-            }
-            Path baseDataPath = Files.createDirectories(path);
+            Path baseDataPath = Files.createDirectories(Paths.get(destinationFolder + "/" + registryItem.getCode()));
 
             mapper.writeValue(new File(baseDataPath + "/" + registryItem.getCode() + ".json"), registryItem);
             for (ProjectionParameter projectionType : generateParameters.getProjectionsInfoes()) {
