@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Класс используется для записи данных в json-фррмате в файл
  */
-public class ProjectionInfo extends RegistryItem{
+public class ProjectionInfo extends RegistryItem {
 
 
     /**
@@ -26,6 +26,7 @@ public class ProjectionInfo extends RegistryItem{
     private List<Action> actions;
 
     private List<ProjectionFilter> filters;
+    private String searchUrl;
 
     public int getOrder() {
         return order;
@@ -57,5 +58,13 @@ public class ProjectionInfo extends RegistryItem{
 
     public void setFilters(List<ProjectionFilter> filters) {
         this.filters = filters;
+    }
+
+    public void setSearchUrl(String searchUrl) {
+        this.searchUrl = searchUrl;
+    }
+
+    public String getSearchUrl() {
+        return searchUrl;
     }
 }
