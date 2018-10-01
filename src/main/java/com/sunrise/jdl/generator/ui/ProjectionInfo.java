@@ -16,27 +16,23 @@ public class ProjectionInfo extends RegistryItem{
     private List<BaseField> fields;
 
     /**
+     * Порядок для сортировки
+     */
+    private int order;
+
+    /**
      * Список действий которые можно производить с объектом
      */
     private List<Action> actions;
 
-    /**
-     * URL  ресусра для поиска данных для проекции
-     */
-    private String searchUrl;
-
-    /**
-     * Список фильров которые применяются к проекции.
-     * Проекция может описывать определенный набор данных для. Для получения этого набора данных испольузеются фильтры.
-     */
     private List<ProjectionFilter> filters;
 
-    public String getSearchUrl() {
-        return searchUrl;
+    public int getOrder() {
+        return order;
     }
 
-    public void setSearchUrl(String searchUrl) {
-        this.searchUrl = searchUrl;
+    public void setOrder(int order) {
+        this.order = order;
     }
 
     public List<Action> getActions() {
