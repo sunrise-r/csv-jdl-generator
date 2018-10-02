@@ -17,6 +17,16 @@ public class UIGenerateParameters {
 
     private String microservice;
 
+    private List<String> ignoreColumns;
+
+    public List<String> getIgnoreColumns() {
+        return ignoreColumns;
+    }
+
+    public void setIgnoreColumns(List<String> ignoreColumns) {
+        this.ignoreColumns = ignoreColumns;
+    }
+
     public String getRegistryCode() {
         return registryCode;
     }

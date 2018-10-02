@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Сервис генерации данных визуального интерфейса
@@ -41,7 +40,7 @@ public class UIGeneratorService {
         // Добавляю все поля, кроме списков
         projectionInfo.setFields(new ArrayList<>());
         for (Field f : fields) {
-            if (!f.getFieldType().equals(JDLFieldsType.List.toString())) {
+            if (!f.getFieldType().equals(JDLFieldsType.List.toString()) && !generateParameters.getIgnoreColumns().contains(f.getFieldName())) {
                 projectionInfo.getFields().add(new BaseField().code(f.getFieldName()).name(f.getFieldLabel()).displayFormat(parse(f.getFieldType())));
             }
         }

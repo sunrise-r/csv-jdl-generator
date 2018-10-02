@@ -1,4 +1,5 @@
 {
+  "ignoreColumns": ["id"],
   "translationPath": "partnerGatewayApp.partnerDocuments",
   "registryCode": "userRegistry",
   "useEntityName": false,
