@@ -100,9 +100,15 @@ public class CSVEntityReader {
      */
     private String convertFieldType(String source) {
         String check = source.toLowerCase();
+
+        if (check.toLowerCase().startsWith("список")) {
+            return JDLFieldsType.List.toString();
+        }
+
         if (!isFieldOfJdlType(check)) {
             return source;
         }
+
         if ("строка".equals(check)) {
             return JDLFieldsType.String.toString();
         }
@@ -118,6 +124,10 @@ public class CSVEntityReader {
         }
         if ("булев".equals(check)) {
             return JDLFieldsType.Boolean.toString();
+        }
+
+        if (check.toLowerCase().startsWith("Список")) {
+            return JDLFieldsType.List.toString();
         }
 
 

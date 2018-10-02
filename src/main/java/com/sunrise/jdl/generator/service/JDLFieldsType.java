@@ -27,7 +27,9 @@ public enum JDLFieldsType {
 
     Enumeration("Enumeration"),
 
-    Blob("Blob");
+    Blob("Blob"),
+
+    List("List");
 
     /**
      * Строковое представление типа в формате JDL

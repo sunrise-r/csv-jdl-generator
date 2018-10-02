@@ -61,6 +61,7 @@ public class EntitiesService {
         convertableToJdlTypes.add("дата/время");
         convertableToJdlTypes.add("дробное");
         convertableToJdlTypes.add("булев");
+        convertableToJdlTypes.add("список");
         if (entitiesToIngore != null) {
             this.entitiesToIngore.addAll(settings.getEntitiesToIngore());
         }
