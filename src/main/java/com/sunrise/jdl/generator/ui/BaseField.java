@@ -1,7 +1,5 @@
 package com.sunrise.jdl.generator.ui;
 
-import com.sunrise.jdl.generator.entities.Field;
-
 /**
  * Класс используется для корректной записи полей в json-файл объектов BaseData
  */
@@ -18,6 +16,11 @@ public class BaseField {
     private String code;
 
     /**
+     * Код перевода
+     */
+    private String translationCode;
+
+    /**
      * Возможность произвести сортировку по полю
      */
     private boolean sorting = true;
@@ -32,6 +35,11 @@ public class BaseField {
      */
     private String displayFormat;
 
+    public BaseField translationCode(String translationCode){
+        this. translationCode = translationCode;
+        return this;
+    }
+
     public BaseField name(String name){
         this.name=name;
         return this;
@@ -45,6 +53,14 @@ public class BaseField {
     public BaseField displayFormat(String displayFormat){
         this.displayFormat = displayFormat;
         return this;
+    }
+
+    public String getTranslationCode() {
+        return translationCode;
+    }
+
+    public void setTranslationCode(String translationCode) {
+        this.translationCode = translationCode;
     }
 
     public String getName() {

@@ -7,8 +7,7 @@ import java.util.List;
 /**
  * Класс используется для записи данных в json-фррмате в файл
  */
-public class ProjectionInfo extends RegistryItem{
-
+public class ProjectionInfo extends RegistryItem {
 
     /**
      * Список полей
@@ -25,6 +24,15 @@ public class ProjectionInfo extends RegistryItem{
      */
     private List<Action> actions;
 
+    /**
+     * URL  ресусра для поиска данных для проекции
+     */
+    private String searchUrl;
+
+    /**
+     * Список фильров которые применяются к проекции.
+     * Проекция может описывать определенный набор данных для. Для получения этого набора данных испольузеются фильтры.
+     */
     private List<ProjectionFilter> filters;
 
     public int getOrder() {
@@ -57,5 +65,13 @@ public class ProjectionInfo extends RegistryItem{
 
     public void setFilters(List<ProjectionFilter> filters) {
         this.filters = filters;
+    }
+
+    public void setSearchUrl(String searchUrl) {
+        this.searchUrl = searchUrl;
+    }
+
+    public String getSearchUrl() {
+        return searchUrl;
     }
 }

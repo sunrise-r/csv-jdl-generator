@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class EntityTypeService {
 
-    private static final String RESOURCE_URL_TEMPLATE = "%s/api/%s/_search";
+    private static final String RESOURCE_URL_TEMPLATE = "%s/api/_search/%s";
 
     private CSVEntityTypeReader csvEntityTypeReader = new CSVEntityTypeReader();
 
@@ -137,9 +137,9 @@ public class EntityTypeService {
             for (ProjectionParameter projectionType : generateParameters.getProjectionsInfoes()) {
                 ProjectionInfo projectionInfo;
                 if (generateParameters.isUseEntityName()) {
-                    projectionInfo = uiGeneratorService.toProjectionInfo(entityName, entityInfoes.get(entityName), actions, registryItem.getCode(), projectionType);
+                    projectionInfo = uiGeneratorService.toProjectionInfo(entityName, entityInfoes.get(entityName), actions, registryItem.getCode(), projectionType, generateParameters.getTranslationPath());
                 } else {
-                    projectionInfo = uiGeneratorService.toProjectionInfo("", entityInfoes.get(entityName), actions, registryItem.getCode(), projectionType);
+                    projectionInfo = uiGeneratorService.toProjectionInfo("", entityInfoes.get(entityName), actions, registryItem.getCode(), projectionType, generateParameters.getTranslationPath());
                 }
                 projectionInfo.setSearchUrl(generateSearchUrl(entityName, generateParameters.getMicroservice()));
                 mapper.writeValue(new File(baseDataPath + "/" + projectionInfo.getCode() + ".json"), projectionInfo);

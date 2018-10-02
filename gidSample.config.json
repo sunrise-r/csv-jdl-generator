@@ -1,4 +1,5 @@
 {
+  "translationPath": "partnerGatewayApp.partnerDocuments",
   "registryCode": "userRegistry",
   "useEntityName": false,
   "microservice": "partnerDocuments",

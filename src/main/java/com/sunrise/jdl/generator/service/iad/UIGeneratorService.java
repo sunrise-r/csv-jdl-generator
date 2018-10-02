@@ -33,7 +33,7 @@ public class UIGeneratorService {
      * @param projectionType
      * @return Информация о проекции
      */
-    public ProjectionInfo toProjectionInfo(String entityName, Set<Field> fields, Collection<Action> actions, String presentationCode, ProjectionParameter projectionType) {
+    public ProjectionInfo toProjectionInfo(String entityName, Set<Field> fields, Collection<Action> actions, String presentationCode, ProjectionParameter projectionType, String translationPath) {
         ProjectionInfo projectionInfo = new ProjectionInfo();
         projectionInfo.setCode(getProjectionCode(entityName, projectionType.getName()));
         projectionInfo.setName(getProjectionCode(entityName, projectionType.getName()));
@@ -52,6 +52,9 @@ public class UIGeneratorService {
 
         projectionInfo.setActions(new ArrayList<>(actions));
         projectionInfo.setOrder(projectionType.getOrder());
+
+
+
         return projectionInfo;
     }
 
