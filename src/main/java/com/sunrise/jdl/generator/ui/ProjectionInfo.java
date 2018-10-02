@@ -9,7 +9,6 @@ import java.util.List;
  */
 public class ProjectionInfo extends RegistryItem {
 
-
     /**
      * Список полей
      */
@@ -25,8 +24,25 @@ public class ProjectionInfo extends RegistryItem {
      */
     private List<Action> actions;
 
+    /**
+     * URL  ресусра для поиска данных для проекции
+     */
+    private String searchUrl;
+
+    /**
+     * Список фильров которые применяются к проекции.
+     * Проекция может описывать определенный набор данных для. Для получения этого набора данных испольузеются фильтры.
+     */
     private List<ProjectionFilter> filters;
     private String searchUrl;
+
+    public String getSearchUrl() {
+        return searchUrl;
+    }
+
+    public void setSearchUrl(String searchUrl) {
+        this.searchUrl = searchUrl;
+    }
 
     public int getOrder() {
         return order;

@@ -7,6 +7,8 @@ import java.util.List;
  */
 public class UIGenerateParameters {
 
+    private String translationPath;
+
     private String registryCode;
 
     private List<ProjectionParameter> projectionsInfoes;
@@ -29,6 +31,14 @@ public class UIGenerateParameters {
 
     public void setProjectionsInfoes(List<ProjectionParameter> projectionsInfoes) {
         this.projectionsInfoes = projectionsInfoes;
+    }
+
+    public String getTranslationPath() {
+        return translationPath;
+    }
+
+    public void setTranslationPath(String translationPath) {
+        this.translationPath = translationPath;
     }
 
     public boolean isUseEntityName() {
