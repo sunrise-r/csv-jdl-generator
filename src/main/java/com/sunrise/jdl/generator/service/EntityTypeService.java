@@ -136,11 +136,7 @@ public class EntityTypeService {
             mapper.writeValue(new File(baseDataPath + "/" + registryItem.getCode() + ".json"), registryItem);
             for (ProjectionParameter projectionType : generateParameters.getProjectionsInfoes()) {
                 ProjectionInfo projectionInfo;
-                if (generateParameters.isUseEntityName()) {
-                    projectionInfo = uiGeneratorService.toProjectionInfo(entityName, entityInfoes.get(entityName), actions, registryItem.getCode(), projectionType, generateParameters.getTranslationPath());
-                } else {
-                    projectionInfo = uiGeneratorService.toProjectionInfo("", entityInfoes.get(entityName), actions, registryItem.getCode(), projectionType, generateParameters.getTranslationPath());
-                }
+                projectionInfo = uiGeneratorService.toProjectionInfo(entityName, entityInfoes.get(entityName), actions, registryItem.getCode(), projectionType, generateParameters);
                 projectionInfo.setSearchUrl(generateSearchUrl(entityName, generateParameters.getMicroservice()));
                 mapper.writeValue(new File(baseDataPath + "/" + projectionInfo.getCode() + ".json"), projectionInfo);
             }

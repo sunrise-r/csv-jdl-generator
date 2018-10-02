@@ -33,26 +33,31 @@ public class UIGeneratorService {
      * @param projectionType
      * @return Информация о проекции
      */
-    public ProjectionInfo toProjectionInfo(String entityName, Set<Field> fields, Collection<Action> actions, String presentationCode, ProjectionParameter projectionType, String translationPath) {
+    public ProjectionInfo toProjectionInfo(String entityName, Set<Field> fields, Collection<Action> actions, String presentationCode, ProjectionParameter projectionType, UIGenerateParameters generateParameters) {
         ProjectionInfo projectionInfo = new ProjectionInfo();
-        projectionInfo.setCode(getProjectionCode(entityName, projectionType.getName()));
-        projectionInfo.setName(getProjectionCode(entityName, projectionType.getName()));
         projectionInfo.setFilters(projectionType.getFilters());
         projectionInfo.setParentCode(presentationCode);
 
         // Добавляю все поля, кроме списков
         projectionInfo.setFields(new ArrayList<>());
         for (Field f : fields) {
-            if(!f.getFieldType().equals(JDLFieldsType.List.toString())) {
+            if (!f.getFieldType().equals(JDLFieldsType.List.toString())) {
                 projectionInfo.getFields().add(new BaseField().code(f.getFieldName()).name(f.getFieldLabel()).displayFormat(parse(f.getFieldType())));
             }
         }
-        // Генерирую код перевода
-        projectionInfo.getFields().forEach(f -> f.setTranslationCode(translationPath + presentationCode.substring(0,1).toUpperCase() + presentationCode.substring(1) + '.' + f.getCode()));
-
         projectionInfo.setActions(new ArrayList<>(actions));
         projectionInfo.setOrder(projectionType.getOrder());
+        // Генерирую код перевода
+        projectionInfo.getFields().forEach(f -> f.setTranslationCode(generateParameters.getTranslationPath() + entityName.substring(0, 1).toUpperCase() + entityName.substring(1,entityName.length()-1) + '.' + f.getCode()));
 
+        String name;
+        if (generateParameters.isUseEntityName())
+            name = entityName;
+        else
+            name = "";
+
+        projectionInfo.setCode(getProjectionCode(name, projectionType.getName()));
+        projectionInfo.setName(getProjectionCode(name, projectionType.getName()));
 
 
         return projectionInfo;
