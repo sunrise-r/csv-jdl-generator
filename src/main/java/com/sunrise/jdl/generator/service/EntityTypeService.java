@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class EntityTypeService {
 
-    private static final String RESOURCE_URL_TEMPLATE = "%s/api/%s/_search";
+    private static final String RESOURCE_URL_TEMPLATE = "%s/api/_search/%s";
 
     private CSVEntityTypeReader csvEntityTypeReader = new CSVEntityTypeReader();
 

@@ -34,6 +34,7 @@ public class ProjectionInfo extends RegistryItem {
      * Проекция может описывать определенный набор данных для. Для получения этого набора данных испольузеются фильтры.
      */
     private List<ProjectionFilter> filters;
+    private String searchUrl;
 
     public String getSearchUrl() {
         return searchUrl;
@@ -73,5 +74,13 @@ public class ProjectionInfo extends RegistryItem {
 
     public void setFilters(List<ProjectionFilter> filters) {
         this.filters = filters;
+    }
+
+    public void setSearchUrl(String searchUrl) {
+        this.searchUrl = searchUrl;
+    }
+
+    public String getSearchUrl() {
+        return searchUrl;
     }
 }
