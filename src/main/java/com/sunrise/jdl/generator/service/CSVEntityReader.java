@@ -120,6 +120,10 @@ public class CSVEntityReader {
             return JDLFieldsType.Boolean.toString();
         }
 
+        if (check.toLowerCase().startsWith("Список")) {
+            return JDLFieldsType.List.toString();
+        }
+
 
         throw new RuntimeException("Неудалось распарсить исходыне данные в JDL тип=" + check);
     }

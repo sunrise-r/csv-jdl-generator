@@ -39,7 +39,17 @@ public class UIGeneratorService {
         projectionInfo.setName(getProjectionCode(entityName, projectionType.getName()));
         projectionInfo.setFilters(projectionType.getFilters());
         projectionInfo.setParentCode(presentationCode);
-        projectionInfo.setFields(fields.stream().map(f -> new BaseField().code(f.getFieldName()).name(f.getFieldLabel()).displayFormat(parse(f.getFieldType()))).collect(Collectors.toList()));
+
+        // Добавляю все поля, кроме списков
+        projectionInfo.setFields(new ArrayList<>());
+        for (Field f : fields) {
+            if(!f.getFieldType().equals(JDLFieldsType.List.toString())) {
+                projectionInfo.getFields().add(new BaseField().code(f.getFieldName()).name(f.getFieldLabel()).displayFormat(parse(f.getFieldType())));
+            }
+        }
+        // Генерирую код перевода
+        projectionInfo.getFields().forEach(f -> f.setTranslationCode(translationPath + presentationCode.substring(0,1).toUpperCase() + presentationCode.substring(1) + '.' + f.getCode()));
+
         projectionInfo.setActions(new ArrayList<>(actions));
         projectionInfo.setOrder(projectionType.getOrder());
         return projectionInfo;
