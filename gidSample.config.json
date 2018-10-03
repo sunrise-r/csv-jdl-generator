@@ -9,7 +9,7 @@
       "order": 1,
       "filters": [
         {
-          "field": "arhive",
+          "field": "archive",
           "values": [
             "false"
           ]
@@ -41,7 +41,7 @@
       "order": 3,
       "filters": [
         {
-          "field": "arhive",
+          "field": "archive",
           "values": [
             "true"
           ]
