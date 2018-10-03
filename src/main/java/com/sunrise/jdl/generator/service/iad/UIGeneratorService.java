@@ -48,7 +48,7 @@ public class UIGeneratorService {
         projectionInfo.setActions(new ArrayList<>(actions));
         projectionInfo.setOrder(projectionType.getOrder());
         // Генерирую код перевода
-        projectionInfo.getFields().forEach(f -> f.setTranslationCode(generateParameters.getTranslationPath() + entityName.substring(0, 1).toUpperCase() + entityName.substring(1,entityName.length()-1) + '.' + f.getCode()));
+        projectionInfo.getFields().forEach(f -> f.setTranslationCode(generateParameters.getTranslationPath() + entityName.substring(0, 1).toUpperCase() + entityName.substring(1) + '.' + f.getCode()));
 
         String name;
         if (generateParameters.isUseEntityName())
