@@ -36,7 +36,7 @@ public class EntitiesServiceTest {
         Assert.assertEquals("EmailAddress", contactsFields.get(4).getFieldType());
         Assert.assertEquals("String", contactsFields.get(5).getFieldType());
         Assert.assertEquals("SocialNetwork", contactsFields.get(6).getFieldType());
-        Assert.assertEquals("Список<Document>", contactsFields.get(7).getFieldType());
+        Assert.assertEquals("List", contactsFields.get(7).getFieldType());
 
         Entity license = result.stream().skip(1).findFirst().get();
         List<Field> licenseFields = license.getFields();
@@ -51,7 +51,7 @@ public class EntitiesServiceTest {
         Assert.assertEquals("String", licenseFields.get(7).getFieldType());
         Assert.assertEquals("Employee", licenseFields.get(8).getFieldType());
         Assert.assertEquals("Group", licenseFields.get(9).getFieldType());
-        Assert.assertEquals("Список<Document>", licenseFields.get(10).getFieldType());
+        Assert.assertEquals("List", licenseFields.get(10).getFieldType());
     }
 
     @Test
@@ -70,7 +70,7 @@ public class EntitiesServiceTest {
         Assert.assertEquals("EmailAddress", contactsFields.get(4).getFieldType());
         Assert.assertEquals("String", contactsFields.get(5).getFieldType());
         Assert.assertEquals("SocialNetwork", contactsFields.get(6).getFieldType());
-        Assert.assertEquals("Список<Document>", contactsFields.get(7).getFieldType());
+        Assert.assertEquals("List", contactsFields.get(7).getFieldType());
 
         Entity license = result.stream().skip(1).findFirst().get();
         List<Field> licenseFields = license.getFields();
@@ -85,7 +85,7 @@ public class EntitiesServiceTest {
         Assert.assertEquals("String", licenseFields.get(7).getFieldType());
         Assert.assertEquals("Employee", licenseFields.get(8).getFieldType());
         Assert.assertEquals("Group", licenseFields.get(9).getFieldType());
-        Assert.assertEquals("Список<Document>", licenseFields.get(10).getFieldType());
+        Assert.assertEquals("List", licenseFields.get(10).getFieldType());
 
     }
 
