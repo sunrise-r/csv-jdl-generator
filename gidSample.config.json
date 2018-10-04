@@ -6,6 +6,34 @@
   "pluralTranslations": false,
   "pluralPresentations": true,
   "pluralSearchURL": true,
+
+  "additionalFields": [
+    {
+      "fieldName": "status",
+      "fieldType": "String",
+      "fieldLength": "12",
+      "fieldLabel": "Статус",
+      "jdlType": true,
+      "required": false
+    },
+    {
+      "fieldName": "number",
+      "fieldType": "String",
+      "fieldLength": "50",
+      "fieldLabel": "Номер",
+      "jdlType": true,
+      "required": false
+    },
+    {
+      "fieldName": "archive",
+      "fieldType": "String",
+      "fieldLength": "6",
+      "fieldLabel": "Архив",
+      "jdlType": true,
+      "required": false
+    }
+  ],
+
   "projectionsInfoes": [
     {
       "name": "New",
