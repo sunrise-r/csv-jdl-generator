@@ -1,5 +1,8 @@
 package com.sunrise.jdl.generator.ui;
 
+import com.sunrise.jdl.generator.entities.Field;
+import com.sunrise.jdl.generator.entities.FieldBuilder;
+
 import java.util.List;
 
 /**
@@ -22,6 +25,16 @@ public class UIGenerateParameters {
     private boolean pluralPresentations;
 
     private boolean pluralSearchURL;
+
+    private List<FieldBuilder> additionalFields;
+
+    public List<FieldBuilder> getAdditionalFields() {
+        return additionalFields;
+    }
+
+    public void setAdditionalFields(List<FieldBuilder> additionalFields) {
+        this.additionalFields = additionalFields;
+    }
 
     public boolean isPluralSearchURL() {
         return pluralSearchURL;

@@ -1,9 +1,6 @@
 package com.sunrise.jdl.generator;
 
-import com.sunrise.jdl.generator.entities.Entity;
-import com.sunrise.jdl.generator.entities.Field;
-import com.sunrise.jdl.generator.entities.Relation;
-import com.sunrise.jdl.generator.entities.ResultWithWarnings;
+import com.sunrise.jdl.generator.entities.*;
 import com.sunrise.jdl.generator.service.*;
 import com.sunrise.jdl.generator.service.iad.UIGeneratorService;
 import com.sunrise.jdl.generator.ui.UIGenerateParameters;
@@ -126,17 +123,17 @@ public class Main {
             throw new FileNotFoundException(actionsFile.getAbsolutePath());
         }
 
-
+        UIGenerateParameters parameters = generatorService.loadConfig(cmd.getOptionValue(GID_CONFIG_FILE));
         EntitiesService entitiesService = new EntitiesService(new Settings());
         Collection<Entity> entities = entitiesService.readDataFromCSV(new FileInputStream(entitiesFile));
-
+        for (FieldBuilder fb : parameters.getAdditionalFields())
+            entities.forEach((x) -> x.getFields().add(fb.build()));
         Map<String, List<String>> relations = entityTypeService.readCsv(new FileInputStream(relationsFile));
         ResultWithWarnings<Map<String, List<Entity>>> entitiesHierarchy = entityTypeService.mergeTypesWithThemSubtypes(entities, relations);
         entitiesHierarchy.warnings.forEach(x -> System.out.println("WARNING: " + x));
         Map<String, Set<Field>> baseDataWithBaseFields = entityTypeService.prepareDataForParentEntity(entitiesHierarchy.result);
         File file = new File(cmd.getOptionValue(GID_ACTIONS));
         InputStream actionsStream = new FileInputStream(file);
-        UIGenerateParameters parameters = generatorService.loadConfig(cmd.getOptionValue(GID_CONFIG_FILE));
         entityTypeService.generateEntitiesPresentations(actionsStream, cmd.getOptionValue(TARGET_RESOURCE_FOLDER), baseDataWithBaseFields, parameters);
     }
 
