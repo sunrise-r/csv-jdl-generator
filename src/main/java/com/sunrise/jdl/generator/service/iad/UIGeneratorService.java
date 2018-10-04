@@ -5,13 +5,13 @@ import com.sunrise.jdl.generator.actions.Action;
 import com.sunrise.jdl.generator.entities.Field;
 import com.sunrise.jdl.generator.service.JDLFieldsType;
 import com.sunrise.jdl.generator.ui.*;
+import org.atteo.evo.inflector.English;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Сервис генерации данных визуального интерфейса
@@ -21,7 +21,6 @@ public class UIGeneratorService {
     private static final String PRESENTATION_CODE_TEMPLATE = "%sPresentation";
 
     private static final String PROJECTION_CODE_TEMPLATE = "%s%sListProjection";
-
 
     /**
      * Преобразовать данные о сщуности в информацию о проекции
@@ -34,6 +33,7 @@ public class UIGeneratorService {
      * @return Информация о проекции
      */
     public ProjectionInfo toProjectionInfo(String entityName, Set<Field> fields, Collection<Action> actions, String presentationCode, ProjectionParameter projectionType, UIGenerateParameters generateParameters) {
+
         ProjectionInfo projectionInfo = new ProjectionInfo();
         projectionInfo.setFilters(projectionType.getFilters());
         projectionInfo.setParentCode(presentationCode);
@@ -47,15 +47,12 @@ public class UIGeneratorService {
         }
         projectionInfo.setActions(new ArrayList<>(actions));
         projectionInfo.setOrder(projectionType.getOrder());
+
         // Генерирую код перевода
-        projectionInfo.getFields().forEach(f -> f.setTranslationCode(generateParameters.getTranslationPath() + entityName.substring(0, 1).toUpperCase() + entityName.substring(1) + '.' + f.getCode()));
+        String translationEntityName = generateParameters.isPluralPresentations() ? English.plural(entityName) : entityName;
+        projectionInfo.getFields().forEach(f -> f.setTranslationCode(generateParameters.getTranslationPath() + translationEntityName.substring(0, 1).toUpperCase() + translationEntityName.substring(1) + '.' + f.getCode()));
 
-        String name;
-        if (generateParameters.isUseEntityName())
-            name = entityName;
-        else
-            name = "";
-
+        String name = generateParameters.isUseEntityName() ? entityName : "";
         projectionInfo.setCode(getProjectionCode(name, projectionType.getName()));
         projectionInfo.setName(getProjectionCode(name, projectionType.getName()));
 

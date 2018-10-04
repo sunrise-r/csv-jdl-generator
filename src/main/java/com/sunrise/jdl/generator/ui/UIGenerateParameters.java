@@ -17,6 +17,26 @@ public class UIGenerateParameters {
 
     private String microservice;
 
+    private boolean pluralTranslations;
+
+    private boolean pluralPresentations;
+
+    public boolean isPluralTranslations() {
+        return pluralTranslations;
+    }
+
+    public void setPluralTranslations(boolean pluralTranslations) {
+        this.pluralTranslations = pluralTranslations;
+    }
+
+    public boolean isPluralPresentations() {
+        return pluralPresentations;
+    }
+
+    public void setPluralPresentations(boolean pluralPresentations) {
+        this.pluralPresentations = pluralPresentations;
+    }
+
     public String getRegistryCode() {
         return registryCode;
     }

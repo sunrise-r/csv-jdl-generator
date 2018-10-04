@@ -11,6 +11,7 @@ import com.sunrise.jdl.generator.ui.ProjectionParameter;
 import com.sunrise.jdl.generator.ui.RegistryItem;
 import com.sunrise.jdl.generator.service.iad.UIGeneratorService;
 import com.sunrise.jdl.generator.ui.UIGenerateParameters;
+import org.atteo.evo.inflector.English;
 
 import java.io.*;
 import java.nio.file.*;
@@ -119,6 +120,8 @@ public class EntityTypeService {
         ActionService actionService = new ActionService();
         Collection<Action> actions = actionService.readDataFromCSV(actionsStream);
 
+
+
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
@@ -130,7 +133,7 @@ public class EntityTypeService {
                     uiGeneratorService.removeDirectory(f.toPath());
 
         for (String entityName : entityInfoes.keySet()) {
-            RegistryItem registryItem = uiGeneratorService.createPresenationFor(entityName, generateParameters.getRegistryCode());
+            RegistryItem registryItem = uiGeneratorService.createPresenationFor(generateParameters.isPluralPresentations() ? English.plural(entityName) : entityName, generateParameters.getRegistryCode());
             Path baseDataPath = Files.createDirectories(Paths.get(destinationFolder + "/" + registryItem.getCode()));
 
             mapper.writeValue(new File(baseDataPath + "/" + registryItem.getCode() + ".json"), registryItem);

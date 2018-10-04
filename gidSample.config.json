@@ -3,8 +3,8 @@
   "registryCode": "userRegistry",
   "useEntityName": false,
   "microservice": "partnerDocuments",
-  "pluralMenuItems": true,
-  "pluralPresentations": false,
+  "pluralTranslations": false,
+  "pluralPresentations": true,
   "projectionsInfoes": [
     {
       "name": "New",
