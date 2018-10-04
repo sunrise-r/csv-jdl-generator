@@ -120,8 +120,6 @@ public class EntityTypeService {
         ActionService actionService = new ActionService();
         Collection<Action> actions = actionService.readDataFromCSV(actionsStream);
 
-
-
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
@@ -140,16 +138,16 @@ public class EntityTypeService {
             for (ProjectionParameter projectionType : generateParameters.getProjectionsInfoes()) {
                 ProjectionInfo projectionInfo;
                 projectionInfo = uiGeneratorService.toProjectionInfo(entityName, entityInfoes.get(entityName), actions, registryItem.getCode(), projectionType, generateParameters);
-                projectionInfo.setSearchUrl(generateSearchUrl(entityName, generateParameters.getMicroservice()));
+                projectionInfo.setSearchUrl(generateSearchUrl(entityName, generateParameters.getMicroservice(), generateParameters.isPluralSearchURL()));
                 mapper.writeValue(new File(baseDataPath + "/" + projectionInfo.getCode() + ".json"), projectionInfo);
             }
         }
         return true;
     }
 
-    private String generateSearchUrl(String code, String microservice) {
+    private String generateSearchUrl(String code, String microservice, boolean plural) {
         String urlCode = Arrays.stream(code.split("(?=\\p{Upper})")).collect(Collectors.joining("-"));
-        return String.format(RESOURCE_URL_TEMPLATE, microservice, urlCode).toLowerCase();
+        return String.format(RESOURCE_URL_TEMPLATE, microservice, plural ? English.plural(urlCode) : urlCode).toLowerCase();
     }
 
 }

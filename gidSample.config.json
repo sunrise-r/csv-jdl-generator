@@ -5,6 +5,7 @@
   "microservice": "partnerDocuments",
   "pluralTranslations": false,
   "pluralPresentations": true,
+  "pluralSearchURL": true,
   "projectionsInfoes": [
     {
       "name": "New",

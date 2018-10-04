@@ -21,6 +21,16 @@ public class UIGenerateParameters {
 
     private boolean pluralPresentations;
 
+    private boolean pluralSearchURL;
+
+    public boolean isPluralSearchURL() {
+        return pluralSearchURL;
+    }
+
+    public void setPluralSearchURL(boolean pluralSearchURL) {
+        this.pluralSearchURL = pluralSearchURL;
+    }
+
     public boolean isPluralTranslations() {
         return pluralTranslations;
     }
