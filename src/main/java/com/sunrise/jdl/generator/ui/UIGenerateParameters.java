@@ -30,6 +30,16 @@ public class UIGenerateParameters {
 
     private String additionalFieldsTranslationPath;
 
+    private String titlePath;
+
+    public String getTitlePath() {
+        return titlePath;
+    }
+
+    public void setTitlePath(String titlePath) {
+        this.titlePath = titlePath;
+    }
+
     public String getAdditionalFieldsTranslationPath() {
         return additionalFieldsTranslationPath;
     }

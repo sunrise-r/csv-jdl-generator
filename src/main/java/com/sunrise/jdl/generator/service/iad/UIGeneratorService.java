@@ -61,8 +61,7 @@ public class UIGeneratorService {
 
         String name = generateParameters.isUseEntityName() ? entityName : "";
         projectionInfo.setCode(getProjectionCode(name, projectionType.getName()));
-        projectionInfo.setName(getProjectionCode(name, projectionType.getName()));
-
+        projectionInfo.setName(generateParameters.getTitlePath().replaceAll("<ENTITY_NAME>", translationEntityName));
 
         return projectionInfo;
     }
