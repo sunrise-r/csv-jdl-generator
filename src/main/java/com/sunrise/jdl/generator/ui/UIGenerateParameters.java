@@ -28,6 +28,16 @@ public class UIGenerateParameters {
 
     private List<FieldBuilder> additionalFields;
 
+    private String additionalFieldsTranslationPath;
+
+    public String getAdditionalFieldsTranslationPath() {
+        return additionalFieldsTranslationPath;
+    }
+
+    public void setAdditionalFieldsTranslationPath(String additionalFieldsTranslationPath) {
+        this.additionalFieldsTranslationPath = additionalFieldsTranslationPath;
+    }
+
     public List<FieldBuilder> getAdditionalFields() {
         return additionalFields;
     }

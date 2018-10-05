@@ -7,6 +7,7 @@
   "pluralPresentations": true,
   "pluralSearchURL": true,
 
+  "additionalFieldsTranslationPath": "additionalFields",
   "additionalFields": [
     {
       "fieldName": "status",

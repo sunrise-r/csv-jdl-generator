@@ -50,7 +50,14 @@ public class UIGeneratorService {
 
         // Генерирую код перевода
         String translationEntityName = generateParameters.isPluralTranslations() ? English.plural(entityName) : entityName;
-        projectionInfo.getFields().forEach(f -> f.setTranslationCode(generateParameters.getTranslationPath() + translationEntityName.substring(0, 1).toUpperCase() + translationEntityName.substring(1) + '.' + f.getCode()));
+        List<String> names = new ArrayList<>();
+        generateParameters.getAdditionalFields().forEach(x -> names.add(x.getFieldName()));
+        for (BaseField f : projectionInfo.getFields()) {
+            if (names.contains(f.getCode()))
+                f.setTranslationCode(generateParameters.getAdditionalFieldsTranslationPath() + '.' + f.getCode());
+            else
+                f.setTranslationCode(generateParameters.getTranslationPath() + translationEntityName.substring(0, 1).toUpperCase() + translationEntityName.substring(1) + '.' + f.getCode());
+        }
 
         String name = generateParameters.isUseEntityName() ? entityName : "";
         projectionInfo.setCode(getProjectionCode(name, projectionType.getName()));
