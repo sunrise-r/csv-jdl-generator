@@ -61,7 +61,7 @@ public class UIGeneratorService {
 
         String name = generateParameters.isUseEntityName() ? entityName : "";
         projectionInfo.setCode(getProjectionCode(name, projectionType.getName()));
-        projectionInfo.setName(generateParameters.getTitlePath().replaceAll("<ENTITY_NAME>", translationEntityName));
+        projectionInfo.setName(projectionInfo.getCode());
 
         return projectionInfo;
     }
@@ -82,11 +82,11 @@ public class UIGeneratorService {
      * @param registryCode код  реестра интерфейсов
      * @return Базовая инфомрация о представлении созданная на основе @entityName and @registryCode
      */
-    public RegistryItem createPresenationFor(String entityName, String registryCode) {
+    public RegistryItem createPresentationFor(String entityName, String registryCode, UIGenerateParameters generateParameters) {
         RegistryItem item = new RegistryItem();
         item.setParentCode(registryCode);
-        item.setCode(getPresentationName(entityName));
-        item.setName(item.getCode());
+        item.setCode(generateParameters.isPluralPresentations() ? English.plural(getPresentationName(entityName)) : getPresentationName(entityName));
+        item.setName(generateParameters.getTitlePath().replaceAll("<ENTITY_NAME>", generateParameters.isPluralTranslations() ? English.plural(entityName) : entityName));
         return item;
     }
 

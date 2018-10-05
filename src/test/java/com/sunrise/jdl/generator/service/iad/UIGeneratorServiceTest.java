@@ -1,6 +1,7 @@
 package com.sunrise.jdl.generator.service.iad;
 
 import com.sunrise.jdl.generator.ui.RegistryItem;
+import com.sunrise.jdl.generator.ui.UIGenerateParameters;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -13,7 +14,10 @@ public class UIGeneratorServiceTest {
     public void createPresentationFor() {
         String registryName = "registry";
         String entityName="entity";
-        RegistryItem item = uiGeneratorService.createPresenationFor(entityName,registryName);
+        UIGenerateParameters params =  new UIGenerateParameters();
+        params.setPluralTranslations(false);
+        params.setTranslationPath("");
+        RegistryItem item = uiGeneratorService.createPresentationFor(entityName,registryName, params);
         assertEquals(entityName+"Presentation",item.getCode());
         assertEquals(entityName+"Presentation",item.getName());
         assertEquals(registryName,item.getParentCode());

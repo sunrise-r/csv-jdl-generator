@@ -131,9 +131,8 @@ public class EntityTypeService {
                     uiGeneratorService.removeDirectory(f.toPath());
 
         for (String entityName : entityInfoes.keySet()) {
-            RegistryItem registryItem = uiGeneratorService.createPresenationFor(generateParameters.isPluralPresentations() ? English.plural(entityName) : entityName, generateParameters.getRegistryCode());
+            RegistryItem registryItem = uiGeneratorService.createPresentationFor(entityName, generateParameters.getRegistryCode(), generateParameters);
             Path baseDataPath = Files.createDirectories(Paths.get(destinationFolder + "/" + registryItem.getCode()));
-
             mapper.writeValue(new File(baseDataPath + "/" + registryItem.getCode() + ".json"), registryItem);
             for (ProjectionParameter projectionType : generateParameters.getProjectionsInfoes()) {
                 ProjectionInfo projectionInfo;
