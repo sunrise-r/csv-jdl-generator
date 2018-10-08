@@ -85,7 +85,7 @@ public class UIGeneratorService {
     public RegistryItem createPresentationFor(String entityName, String registryCode, UIGenerateParameters generateParameters) {
         RegistryItem item = new RegistryItem();
         item.setParentCode(registryCode);
-        item.setCode(generateParameters.isPluralPresentations() ? English.plural(getPresentationName(entityName)) : getPresentationName(entityName));
+        item.setCode(getPresentationName(generateParameters.isPluralPresentations() ? English.plural(entityName) : entityName));
         item.setName(generateParameters.getTitlePath().replaceAll("<ENTITY_NAME>", generateParameters.isPluralTranslations() ? English.plural(entityName) : entityName));
         return item;
     }
