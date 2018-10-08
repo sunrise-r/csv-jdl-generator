@@ -112,11 +112,11 @@ public class EntityTypeService {
      *
      * @param actionsStream      - поток с данным описвающие доступные actions
      * @param destinationFolder  - директория, в которой создадутся директории с файлами для объектов BaseData.
-     * @param entityInfoes       - исходные данные для генерации описания UI
+     * @param entitiesInfo       - исходные данные для генерации описания UI
      * @param generateParameters Параметры генерации
      * @throws FileNotFoundException
      */
-    public boolean generateEntitiesPresentations(InputStream actionsStream, String destinationFolder, Map<String, Set<Field>> entityInfoes, UIGenerateParameters generateParameters) throws IOException {
+    public boolean generateEntitiesPresentations(InputStream actionsStream, String destinationFolder, Map<String, Set<Field>> entitiesInfo, Map<String, List<Entity>> entitiesHierarchy , UIGenerateParameters generateParameters) throws IOException {
         ActionService actionService = new ActionService();
         Collection<Action> actions = actionService.readDataFromCSV(actionsStream);
 
@@ -130,15 +130,18 @@ public class EntityTypeService {
                 if (f.isDirectory())
                     uiGeneratorService.removeDirectory(f.toPath());
 
-        for (String entityName : entityInfoes.keySet()) {
+        for (String entityName : entitiesInfo.keySet()) {
             RegistryItem registryItem = uiGeneratorService.createPresentationFor(entityName, generateParameters.getRegistryCode(), generateParameters);
             Path baseDataPath = Files.createDirectories(Paths.get(destinationFolder + "/" + registryItem.getCode()));
             mapper.writeValue(new File(baseDataPath + "/" + registryItem.getCode() + ".json"), registryItem);
             for (ProjectionParameter projectionType : generateParameters.getProjectionsInfoes()) {
                 ProjectionInfo projectionInfo;
-                projectionInfo = uiGeneratorService.toProjectionInfo(entityName, entityInfoes.get(entityName), actions, registryItem.getCode(), projectionType, generateParameters);
+                projectionInfo = uiGeneratorService.toProjectionInfo(entityName, entitiesInfo.get(entityName), actions, registryItem.getCode(), projectionType, generateParameters);
                 projectionInfo.setSearchUrl(generateSearchUrl(entityName, generateParameters.getMicroservice(), generateParameters.isPluralSearchURL()));
                 mapper.writeValue(new File(baseDataPath + "/" + projectionInfo.getCode() + ".json"), projectionInfo);
+            }
+            for (Entity entity : entitiesHierarchy.get(entityName)) {
+                mapper.writeValue(new File(baseDataPath + "/" + entity.getClassName() + "FormProjection"),entity);
             }
         }
         return true;
