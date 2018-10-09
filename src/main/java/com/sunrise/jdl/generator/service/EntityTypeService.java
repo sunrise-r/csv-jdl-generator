@@ -141,7 +141,7 @@ public class EntityTypeService {
                 mapper.writeValue(new File(baseDataPath + "/" + projectionInfo.getCode() + ".json"), projectionInfo);
             }
             for (Entity entity : entitiesHierarchy.get(entityName)) {
-                mapper.writeValue(new File(baseDataPath + "/" + entity.getClassName() + "FormProjection"),entity);
+                mapper.writeValue(new File(baseDataPath + "/" + entity.getClassName() + "FormProjection.json"),entity);
             }
         }
         return true;
