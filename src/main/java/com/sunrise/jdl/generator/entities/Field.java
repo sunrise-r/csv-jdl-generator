@@ -81,6 +81,14 @@ public class Field {
         return JdlType;
     }
 
+    public String getFieldLength() {
+        return fieldLength;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
     /**
      * Возвращает строковое представление в формте jdl.
      *
