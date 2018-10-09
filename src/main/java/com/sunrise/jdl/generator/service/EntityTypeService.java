@@ -6,11 +6,8 @@ import com.sunrise.jdl.generator.actions.Action;
 import com.sunrise.jdl.generator.entities.Entity;
 import com.sunrise.jdl.generator.entities.Field;
 import com.sunrise.jdl.generator.entities.ResultWithWarnings;
-import com.sunrise.jdl.generator.ui.ProjectionInfo;
-import com.sunrise.jdl.generator.ui.ProjectionParameter;
-import com.sunrise.jdl.generator.ui.RegistryItem;
+import com.sunrise.jdl.generator.ui.*;
 import com.sunrise.jdl.generator.service.iad.UIGeneratorService;
-import com.sunrise.jdl.generator.ui.UIGenerateParameters;
 import org.atteo.evo.inflector.English;
 
 import java.io.*;
@@ -141,7 +138,8 @@ public class EntityTypeService {
                 mapper.writeValue(new File(baseDataPath + "/" + projectionInfo.getCode() + ".json"), projectionInfo);
             }
             for (Entity entity : entitiesHierarchy.get(entityName)) {
-                mapper.writeValue(new File(baseDataPath + "/" + entity.getClassName() + "FormProjection.json"),entity);
+                FormProjection formProjection = new FormProjection(entity.getClassName(), generateParameters.getTranslationPath() + entity.getClassName() + ".detail.title" , registryItem.getCode(), entity.getFields());
+                mapper.writeValue(new File(baseDataPath + "/" + entity.getClassName() + "FormProjection.json"),formProjection);
             }
         }
         return true;

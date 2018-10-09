@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Класс для хранения сущностей
  */
-public class Entity extends BasicEntity{
+public class Entity extends BasicEntity {
 
     /**
      * Отображаемое имя сущности.
@@ -49,7 +49,6 @@ public class Entity extends BasicEntity{
         return fields;
     }
 
-
     public List<Relation> getRelations() {
         return relations;
     }
@@ -61,7 +60,6 @@ public class Entity extends BasicEntity{
     public String getTitle() {
         return title;
     }
-
 
     /**
      * @return Возвращает строковое представление entity в формате jdl
