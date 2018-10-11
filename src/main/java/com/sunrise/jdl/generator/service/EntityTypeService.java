@@ -141,7 +141,7 @@ public class EntityTypeService {
             for (Entity entity : entitiesHierarchy.get(entityName)) {
                 FormProjection formProjection = new FormProjection(entity.getClassName(), generateParameters.getTranslationPath() + entity.getClassName() + ".detail.title" , registryItem.getCode(), entity.getFields());
                 IntStream.range(0, formProjection.getFields().size()).forEach(i -> {
-                    if(!formProjection.getFields().get(i).isJdlType()) {
+                    if(!(formProjection.getFields().get(i).isJdlType() || formProjection.getFields().get(i).getFieldType().equals("List"))) {
                         formProjection.getFields().set(i, formProjection.getFields().get(i).clone().fieldType("Entity"));
                     }
                 });
