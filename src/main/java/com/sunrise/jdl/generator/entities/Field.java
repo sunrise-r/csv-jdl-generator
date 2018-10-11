@@ -23,33 +23,33 @@ public class Field {
     /**
      * Тип поля
      */
-    private final String fieldType;
+    private String fieldType;
 
     /**
      * Название поля
      */
-    private final String fieldName;
+    private String fieldName;
 
     /**
      * Длинна поля.
      */
-    private final String fieldLength;
+    private String fieldLength;
 
     /**
      * Если тип поля поддерживается в JDL - отмечаем его true.
      * При создании Field данное поле в конструкторе устанавливается false.
      */
-    private final boolean JdlType;
+    private boolean JdlType;
 
     /**
      * Являтся ли поле обязательным
      */
-    private final boolean required;
+    private boolean required;
 
     /**
      * Метка поля. Название поля которео должно отображаться пользователю
      */
-    private final String fieldLabel;
+    private String fieldLabel;
 
     /**
      * Конструктор
@@ -81,12 +81,41 @@ public class Field {
         return JdlType;
     }
 
+    public Field fieldType(String fieldType) {
+        this.fieldType = fieldType;
+        return this;
+    }
+
     public String getFieldLength() {
         return fieldLength;
     }
 
     public boolean isRequired() {
         return required;
+    }
+
+    public void setFieldType(String fieldType) {
+        this.fieldType = fieldType;
+    }
+
+    public void setFieldName(String fieldName) {
+        this.fieldName = fieldName;
+    }
+
+    public void setFieldLength(String fieldLength) {
+        this.fieldLength = fieldLength;
+    }
+
+    public void setJdlType(boolean jdlType) {
+        JdlType = jdlType;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
+    public void setFieldLabel(String fieldLabel) {
+        this.fieldLabel = fieldLabel;
     }
 
     /**
@@ -129,5 +158,9 @@ public class Field {
 
     public String getFieldLabel() {
         return fieldLabel;
+    }
+
+    public Field clone() {
+        return new Field(fieldType, fieldName, fieldLength, JdlType, required, fieldLabel);
     }
 }

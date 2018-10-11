@@ -106,7 +106,7 @@ public class CSVEntityReader {
         }
 
         if (!isFieldOfJdlType(check)) {
-            return source;
+            return "Entity";
         }
 
         if ("строка".equals(check)) {
