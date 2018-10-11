@@ -29,6 +29,8 @@ public enum JDLFieldsType {
 
     Blob("Blob"),
 
+    Status("Status"),
+
     List("List");
 
     /**

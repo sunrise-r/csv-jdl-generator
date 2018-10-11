@@ -12,7 +12,7 @@
   "additionalFields": [
     {
       "fieldName": "status",
-      "fieldType": "String",
+      "fieldType": "Status",
       "fieldLength": "12",
       "fieldLabel": "Статус",
       "jdlType": true,
