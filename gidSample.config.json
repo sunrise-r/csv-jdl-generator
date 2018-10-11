@@ -28,7 +28,7 @@
     },
     {
       "fieldName": "archive",
-      "fieldType": "String",
+      "fieldType": "Boolean",
       "fieldLength": "6",
       "fieldLabel": "Архив",
       "jdlType": true,
