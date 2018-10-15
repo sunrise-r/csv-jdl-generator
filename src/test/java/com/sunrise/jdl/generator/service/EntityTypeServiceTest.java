@@ -155,7 +155,7 @@ public class EntityTypeServiceTest {
 
         RegistryItem presentationnfo = mapper.readValue(new File(FOLDER_FOR_TEST + "/baseData1Presentation/baseData1Presentation.json"), RegistryItem.class);
         Assert.assertEquals("baseData1Presentation", presentationnfo.getCode());
-        Assert.assertEquals("baseData1Presentation", presentationnfo.getName());
+        Assert.assertEquals("baseData1Presentation", presentationnfo.getLabel());
         Assert.assertEquals(registryCode, presentationnfo.getParentCode());
 
         projectionInfo = mapper.readValue(new File(FOLDER_FOR_TEST + "/baseData2Presentation/baseData2" + defaultType + "ListProjection.json"), ProjectionInfo.class);

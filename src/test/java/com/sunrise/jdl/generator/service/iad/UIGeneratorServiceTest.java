@@ -19,7 +19,7 @@ public class UIGeneratorServiceTest {
         params.setTranslationPath("");
         RegistryItem item = uiGeneratorService.createPresentationFor(entityName,registryName, params);
         assertEquals(entityName+"Presentation",item.getCode());
-        assertEquals(entityName+"Presentation",item.getName());
+        assertEquals(entityName+"Presentation",item.getLabel());
         assertEquals(registryName,item.getParentCode());
     }
 }

@@ -61,7 +61,7 @@ public class UIGeneratorService {
 
         String name = generateParameters.isUseEntityName() ? entityName : "";
         projectionInfo.setCode(getProjectionCode(name, projectionType.getName()));
-        projectionInfo.setName(generateParameters.getTranslationPath() + ".tabs." + projectionType.getName().toLowerCase());
+        projectionInfo.setLabel(generateParameters.getTranslationPath() + ".tabs." + projectionType.getName().toLowerCase());
 
         return projectionInfo;
     }
@@ -86,7 +86,7 @@ public class UIGeneratorService {
         RegistryItem item = new RegistryItem();
         item.setParentCode(registryCode);
         item.setCode(getPresentationName(generateParameters.isPluralPresentations() ? English.plural(entityName) : entityName));
-        item.setName(generateParameters.getTitlePath().replaceAll("<ENTITY_NAME>", generateParameters.isPluralTranslations() ? English.plural(entityName) : entityName));
+        item.setLabel(generateParameters.getTitlePath().replaceAll("<ENTITY_NAME>", generateParameters.isPluralTranslations() ? English.plural(entityName) : entityName));
         return item;
     }
 
