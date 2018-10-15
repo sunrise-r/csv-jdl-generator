@@ -2,6 +2,7 @@ package com.sunrise.jdl.generator.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.sunrise.jdl.generator.FixMethods;
 import com.sunrise.jdl.generator.actions.Action;
 import com.sunrise.jdl.generator.entities.Entity;
 import com.sunrise.jdl.generator.entities.Field;
@@ -136,7 +137,7 @@ public class EntityTypeService {
                 ProjectionInfo projectionInfo;
                 projectionInfo = uiGeneratorService.toProjectionInfo(entityName, entitiesInfo.get(entityName), actions, registryItem.getCode(), projectionType, generateParameters);
                 projectionInfo.setSearchUrl(generateSearchUrl(entityName, generateParameters.getMicroservice(), generateParameters.isPluralSearchURL()));
-                mapper.writeValue(new File(baseDataPath + "/" + projectionInfo.getCode() + ".json"), projectionInfo);
+                mapper.writeValue(new File(baseDataPath + "/" + projectionInfo.getCode() + "ListProjection.json"), projectionInfo);
             }
             for (Entity entity : entitiesHierarchy.get(entityName)) {
                 FormProjection formProjection = new FormProjection(entity.getClassName(), generateParameters.getTranslationPath() + entity.getClassName() + ".detail.title" , registryItem.getCode(), entity.getFields());

@@ -1,6 +1,7 @@
 package com.sunrise.jdl.generator.service.iad;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sunrise.jdl.generator.FixMethods;
 import com.sunrise.jdl.generator.actions.Action;
 import com.sunrise.jdl.generator.entities.Field;
 import com.sunrise.jdl.generator.service.JDLFieldsType;
@@ -63,6 +64,8 @@ public class UIGeneratorService {
         projectionInfo.setCode(getProjectionCode(name, projectionType.getName()));
         projectionInfo.setLabel(generateParameters.getTranslationPath() + ".tabs." + projectionType.getName().toLowerCase());
 
+
+        FixMethods.fixListProjections(projectionInfo);
         return projectionInfo;
     }
 
