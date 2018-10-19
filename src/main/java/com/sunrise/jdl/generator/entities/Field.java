@@ -31,7 +31,7 @@ public class Field {
     private String fieldName;
 
     /**
-     * Длинна поля.
+     * Длина поля.
      */
     private String fieldLength;
 
@@ -42,12 +42,12 @@ public class Field {
     private boolean JdlType;
 
     /**
-     * Являтся ли поле обязательным
+     * Является ли поле обязательным
      */
     private boolean required;
 
     /**
-     * Метка поля. Название поля которео должно отображаться пользователю
+     * Метка поля. Название поля, которое должно отображаться пользователю
      */
     private String fieldLabel;
 
@@ -55,10 +55,10 @@ public class Field {
      * Конструктор
      *  @param fieldType   тип поля
      * @param fieldName   название поля
-     * @param fieldLength длинна поля
+     * @param fieldLength длина поля
      * @param jdlType     является ли поле сопоставимым с типом JDL
      * @param required    является ли поле обязательным
-     * @param fieldLabel Метка поля
+     * @param fieldLabel метка поля
      */
     public Field(String fieldType, String fieldName, String fieldLength, boolean jdlType, boolean required, String fieldLabel) {
         this.fieldType = fieldType;
@@ -119,9 +119,9 @@ public class Field {
     }
 
     /**
-     * Возвращает строковое представление в формте jdl.
+     * Возвращает строковое представление в формате jdl.
      *
-     * @return string in jdl-format
+     * @return string in the jdl-format
      */
     @Override
     public String toString() {

@@ -9,5 +9,4 @@ public class FixMethods {
         projectionInfo.setCode(projectionInfo.getCode().replaceAll("ListProjection",""));
     }
 
-
 }

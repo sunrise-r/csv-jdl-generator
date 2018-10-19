@@ -2,6 +2,7 @@ package com.sunrise.jdl.generator.service;
 
 import com.sunrise.jdl.generator.entities.Entity;
 import com.sunrise.jdl.generator.entities.Field;
+import com.sunrise.jdl.generator.entities.FieldWithValue;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
@@ -29,6 +30,7 @@ public class CSVEntityReader {
     public static final int FIELDTYPE = 7;
     public static final int FIELDSIZE = 8;
     public static final int FIELD_REQUIRED = 10;
+    public static final int FIELD_INPUT_TYPE = 13;
     private final Set<String> fieldsToIngore;
     private final Set<String> entitiesToIngore;
     private final Set<String> convertableToJdlTypes;
@@ -67,10 +69,21 @@ public class CSVEntityReader {
                 String required = record.get(FIELD_REQUIRED).trim();
                 String fieldLabel = record.get(FIELD_LABEL).trim();
                 String entityTitle = record.get(ENTITY_TITLE).trim();
+                String fieldInputType = record.get(FIELD_INPUT_TYPE).trim();
+
 
                 if (!possibleClassName.equals("") && !possibleClassName.contains("П") && !possibleClassName.isEmpty() && !entitiesToIngore.contains(possibleClassName)) {
                     className = possibleClassName;
-                    Field field = new Field(convertFieldType(fieldType), fieldName, fieldLength, isFieldOfJdlType(fieldType), isRequired(required), fieldLabel);
+
+                    Field field;
+
+                    if(fieldInputType.contains(":")){
+                        int splitter = fieldInputType.indexOf(':');
+                        field = new FieldWithValue(convertFieldType(fieldType), fieldName, fieldLength, isFieldOfJdlType(fieldType), isRequired(required), fieldLabel, fieldInputType.substring(splitter+1) , FieldWithValue.FieldInputType.valueOf(fieldInputType.substring(0,splitter)));
+                    } else {
+                        field = new Field(convertFieldType(fieldType), fieldName, fieldLength, isFieldOfJdlType(fieldType), isRequired(required), fieldLabel);
+                    }
+
                     ArrayList<Field> arrayList = new ArrayList<>();
                     if (!fieldsToIngore.contains(fieldName)) {
                         arrayList.add(field);
