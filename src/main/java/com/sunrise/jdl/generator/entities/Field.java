@@ -52,6 +52,11 @@ public class Field {
     private String fieldLabel;
 
     /**
+     * Спрятано ли поле в проекции формы
+     */
+    private boolean hidden;
+
+    /**
      * Конструктор
      *  @param fieldType   тип поля
      * @param fieldName   название поля
@@ -60,13 +65,14 @@ public class Field {
      * @param required    является ли поле обязательным
      * @param fieldLabel метка поля
      */
-    public Field(String fieldType, String fieldName, String fieldLength, boolean jdlType, boolean required, String fieldLabel) {
+    public Field(String fieldType, String fieldName, String fieldLength, boolean jdlType, boolean required, String fieldLabel, boolean hidden) {
         this.fieldType = fieldType;
         this.fieldName = fieldName;
         this.fieldLength = fieldLength;
         this.JdlType = jdlType;
         this.required = required;
         this.fieldLabel = fieldLabel;
+        this.hidden = hidden;
     }
 
     public String getFieldName() {
@@ -84,6 +90,14 @@ public class Field {
     public Field fieldType(String fieldType) {
         this.fieldType = fieldType;
         return this;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
     }
 
     public String getFieldLength() {
@@ -161,6 +175,6 @@ public class Field {
     }
 
     public Field clone() {
-        return new Field(fieldType, fieldName, fieldLength, JdlType, required, fieldLabel);
+        return new Field(fieldType, fieldName, fieldLength, JdlType, required, fieldLabel, hidden);
     }
 }

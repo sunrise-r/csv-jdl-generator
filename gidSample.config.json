@@ -16,7 +16,8 @@
       "fieldLength": "12",
       "fieldLabel": "Статус",
       "jdlType": true,
-      "required": false
+      "required": false,
+      "hidden": true
     },
     {
       "fieldName": "number",
@@ -24,7 +25,8 @@
       "fieldLength": "50",
       "fieldLabel": "Номер",
       "jdlType": true,
-      "required": false
+      "required": false,
+      "hidden": true
     },
     {
       "fieldName": "archive",
@@ -32,7 +34,8 @@
       "fieldLength": "6",
       "fieldLabel": "Архив",
       "jdlType": true,
-      "required": false
+      "required": false,
+      "hidden": true
     }
   ],
 

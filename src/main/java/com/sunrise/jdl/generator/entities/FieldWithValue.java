@@ -33,8 +33,8 @@ public class FieldWithValue extends Field {
      * @param defaultValue предустановленное значение
      * @param fieldInputType
      */
-    public FieldWithValue(String fieldType, String fieldName, String fieldLength, boolean jdlType, boolean required, String fieldLabel, String defaultValue, FieldInputType fieldInputType) {
-        super(fieldType, fieldName, fieldLength, jdlType, required, fieldLabel);
+    public FieldWithValue(String fieldType, String fieldName, String fieldLength, boolean jdlType, boolean required, String fieldLabel, String defaultValue, FieldInputType fieldInputType, boolean hidden) {
+        super(fieldType, fieldName, fieldLength, jdlType, required, fieldLabel, hidden);
         this.defaultValue = defaultValue;
         this.fieldInputType = fieldInputType;
     }

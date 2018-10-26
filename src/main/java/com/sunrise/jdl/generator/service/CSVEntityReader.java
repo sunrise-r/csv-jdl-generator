@@ -79,9 +79,9 @@ public class CSVEntityReader {
 
                     if(fieldInputType.contains(":")){
                         int splitter = fieldInputType.indexOf(':');
-                        field = new FieldWithValue(convertFieldType(fieldType), fieldName, fieldLength, isFieldOfJdlType(fieldType), isRequired(required), fieldLabel, fieldInputType.substring(splitter+1) , FieldWithValue.FieldInputType.valueOf(fieldInputType.substring(0,splitter)));
+                        field = new FieldWithValue(convertFieldType(fieldType), fieldName, fieldLength, isFieldOfJdlType(fieldType), isRequired(required), fieldLabel, fieldInputType.substring(splitter+1) , FieldWithValue.FieldInputType.valueOf(fieldInputType.substring(0,splitter)),false);
                     } else {
-                        field = new Field(convertFieldType(fieldType), fieldName, fieldLength, isFieldOfJdlType(fieldType), isRequired(required), fieldLabel);
+                        field = new Field(convertFieldType(fieldType), fieldName, fieldLength, isFieldOfJdlType(fieldType), isRequired(required), fieldLabel, false); // TODO: 26.10.18 Убрать хардкод hidden
                     }
 
                     ArrayList<Field> arrayList = new ArrayList<>();
@@ -91,7 +91,7 @@ public class CSVEntityReader {
                     Entity entity = new Entity(className, arrayList, entityLabel, entityTitle);
                     toReturn.put(className, entity);
                 } else if (possibleClassName.equals("") && toReturn.size() > 0 && !fieldsToIngore.contains(fieldName)) {
-                    toReturn.get(className).getFields().add(new Field(convertFieldType(fieldType), fieldName, fieldLength, isFieldOfJdlType(fieldType), isRequired(required), fieldLabel));
+                    toReturn.get(className).getFields().add(new Field(convertFieldType(fieldType), fieldName, fieldLength, isFieldOfJdlType(fieldType), isRequired(required), fieldLabel, false)); // TODO: 26.10.18 Убрать хардкод hidden
                 }
             }
         } catch (FileNotFoundException e) {

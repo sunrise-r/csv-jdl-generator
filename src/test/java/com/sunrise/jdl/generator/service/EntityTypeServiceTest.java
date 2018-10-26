@@ -59,11 +59,11 @@ public class EntityTypeServiceTest {
 
     @Test
     public void testPrepareDataForParent() {
-        Field field1 = new Field("String", "field1", "", true, true, "поле1");
-        Field field2 = new Field("String", "field2", "10", true, true, "поле2");
-        Field field3 = new Field("String", "field3", "10", true, true, "поле3");
-        Field field4 = new Field("String", "field4", "", true, true, "поле4");
-        Field field5 = new Field("String", "field5", "20", true, true, "поле5");
+        Field field1 = new Field("String", "field1", "", true, true, "поле1", false);
+        Field field2 = new Field("String", "field2", "10", true, true, "поле2", false);
+        Field field3 = new Field("String", "field3", "10", true, true, "поле3", false);
+        Field field4 = new Field("String", "field4", "", true, true, "поле4", false);
+        Field field5 = new Field("String", "field5", "20", true, true, "поле5", false);
         Entity entity1 = new Entity("Entity1", Arrays.asList(field1, field2, field3, field4, field5), "Label1", "Title1");
         Entity entity2 = new Entity("Entity1", Arrays.asList(field1, field2, field4, field5), "Label2", "Title2");
         Entity entity3 = new Entity("Entity3", Arrays.asList(field1, field3, field4, field5), "Label3", "Title3");
@@ -112,11 +112,11 @@ public class EntityTypeServiceTest {
         final ObjectMapper mapper = new ObjectMapper();
         final String registryCode = "registryCode";
 
-        Field field1 = new Field("String", "field1", "", true, true, "поле1");
-        Field field2 = new Field("String", "field2", "10", true, true, "поле2");
-        Field field3 = new Field("String", "field3", "10", true, true, "поле3");
-        Field field4 = new Field("String", "field4", "", true, true, "поле4");
-        Field field5 = new Field("String", "field5", "20", true, true, "поле5");
+        Field field1 = new Field("String", "field1", "", true, true, "поле1", false);
+        Field field2 = new Field("String", "field2", "10", true, true, "поле2", false);
+        Field field3 = new Field("String", "field3", "10", true, true, "поле3", false);
+        Field field4 = new Field("String", "field4", "", true, true, "поле4", false);
+        Field field5 = new Field("String", "field5", "20", true, true, "поле5", false);
         Map<String, Set<Field>> crudeData = new HashMap<>();
         crudeData.put("baseData1", new HashSet<>(Arrays.asList(field1, field2, field3, field4, field5)));
         crudeData.put("baseData2", new HashSet<>(Arrays.asList(field1, field2, field3, field4, field5)));

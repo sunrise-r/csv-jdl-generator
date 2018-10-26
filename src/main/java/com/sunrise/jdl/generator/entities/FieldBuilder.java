@@ -4,12 +4,25 @@ public class FieldBuilder {
     private String fieldType;
     private String fieldName;
     private String fieldLength;
+    private String fieldLabel;
     private boolean jdlType;
     private boolean required;
-    private String fieldLabel;
+    private boolean hidden;
+
+    public boolean isJdlType() {
+        return jdlType;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
 
     public Field build(){
-        return new Field(fieldType, fieldName, fieldLength, jdlType, required, fieldLabel);
+        return new Field(fieldType, fieldName, fieldLength, jdlType, required, fieldLabel, hidden);
     }
 
     public String getFieldType() {

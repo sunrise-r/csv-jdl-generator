@@ -29,8 +29,8 @@ public class DescriptionServiceTest extends TestCase {
     }
 
     private List<Field> generateFields() {
-        Field fld = new Field("testType", "testName", "10", true, false, "testFieldLabel");
-        Field fld2 = new Field("testType2", "testName2", "10", true, false, "testFieldLabel2");
+        Field fld = new Field("testType", "testName", "10", true, false, "testFieldLabel", false);
+        Field fld2 = new Field("testType2", "testName2", "10", true, false, "testFieldLabel2", false);
         return Arrays.asList(fld, fld2);
     }
 }
