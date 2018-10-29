@@ -15,11 +15,6 @@
     <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-csv -->
     <dependencies>
         <dependency>
-            <groupId>com.github.spullara.mustache.java</groupId>
-            <artifactId>compiler</artifactId>
-            <version>0.8.18</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
             <version>1.5</version>
