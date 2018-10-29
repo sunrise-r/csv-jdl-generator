@@ -7,6 +7,7 @@ import com.sunrise.jdl.generator.actions.Action;
 import com.sunrise.jdl.generator.entities.Entity;
 import com.sunrise.jdl.generator.entities.Field;
 import com.sunrise.jdl.generator.entities.ResultWithWarnings;
+import com.sunrise.jdl.generator.service.iad.TemplateService;
 import com.sunrise.jdl.generator.ui.*;
 import com.sunrise.jdl.generator.service.iad.UIGeneratorService;
 import org.atteo.evo.inflector.English;
@@ -22,6 +23,8 @@ public class EntityTypeService {
     private static final String RESOURCE_URL_TEMPLATE = "%s/api/_search/%s";
 
     private CSVEntityTypeReader csvEntityTypeReader = new CSVEntityTypeReader();
+
+    private TemplateService templateService = TemplateService.getInstance();
 
     UIGeneratorService uiGeneratorService = new UIGeneratorService();
 
@@ -60,7 +63,7 @@ public class EntityTypeService {
      *
      * @param parentName       - имя родительской сущности
      * @param childrenEntities - список дочерних сущностей
-     * @return Map<String               Set               <       Field>> result - имя родителя и список его полей
+     * @return Map<String                                                               Set                                                               <                               Field>> result - имя родителя и список его полей
      */
     public Map<String, Set<Field>> prepareDataForParentEntity(String parentName, List<Entity> childrenEntities) {
         Map<Field, Byte> fieldsWithFrequency = new HashMap<>();
@@ -115,8 +118,9 @@ public class EntityTypeService {
      * @param generateParameters Параметры генерации
      * @throws FileNotFoundException
      */
-    public boolean generateEntitiesPresentations(InputStream actionsStream, String destinationFolder, Map<String, Set<Field>> entitiesInfo, Map<String, List<Entity>> entitiesHierarchy , UIGenerateParameters generateParameters) throws IOException {
+    public boolean generateEntitiesPresentations(InputStream actionsStream, String destinationFolder, Map<String, Set<Field>> entitiesInfo, Map<String, List<Entity>> entitiesHierarchy, UIGenerateParameters generateParameters, List<TemplateProjection> templateProjections) throws IOException {
         ActionService actionService = new ActionService();
+        Map<String,Object> data = new HashMap<>();
         Collection<Action> actions = actionService.readDataFromCSV(actionsStream);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -138,16 +142,27 @@ public class EntityTypeService {
                 projectionInfo = uiGeneratorService.toProjectionInfo(entityName, entitiesInfo.get(entityName), actions, registryItem.getCode(), projectionType, generateParameters);
                 projectionInfo.setSearchUrl(generateSearchUrl(entityName, generateParameters.getMicroservice(), generateParameters.isPluralSearchURL()));
                 mapper.writeValue(new File(baseDataPath + "/" + projectionInfo.getCode() + "ListProjection.json"), projectionInfo);
+                if(projectionInfo.getCode().equals("inner"))
+                    data.put("innerListProjectionFields",projectionInfo.getFields());
             }
             for (Entity entity : entitiesHierarchy.get(entityName)) {
-                FormProjection formProjection = new FormProjection(entity.getClassName(), generateParameters.getTranslationPath() + entity.getClassName() + ".detail.title" , registryItem.getCode(), entity.getFields());
+                FormProjection formProjection = new FormProjection(entity.getClassName(), generateParameters.getTranslationPath() + entity.getClassName() + ".detail.title", registryItem.getCode(), entity.getFields());
                 IntStream.range(0, formProjection.getFields().size()).forEach(i -> {
-                    if(!(formProjection.getFields().get(i).isJdlType() || formProjection.getFields().get(i).getFieldType().equals("List"))) {
+                    if (!(formProjection.getFields().get(i).isJdlType() || formProjection.getFields().get(i).getFieldType().equals("List"))) {
                         formProjection.getFields().set(i, formProjection.getFields().get(i).clone().fieldType("Entity"));
                     }
                 });
-                mapper.writeValue(new File(baseDataPath + "/" + entity.getClassName() + "FormProjection.json"),formProjection);
+                mapper.writeValue(new File(baseDataPath + "/" + entity.getClassName() + "FormProjection.json"), formProjection);
+
+
+                // TODO: 29.10.18 Переделать всё старое под шаблоны
+                data.put("ENTITY", entity.getClassName());
+                data.put("PARENT_CODE", registryItem.getCode());
+                for (TemplateProjection tp : templateProjections) {
+                    mapper.writeValue(new File(baseDataPath + "/" + tp.getCode() + ".json"),templateService.toProjections(tp,data));
+                }
             }
+
         }
         return true;
     }

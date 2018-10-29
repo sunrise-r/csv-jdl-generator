@@ -134,7 +134,6 @@ public class UIGeneratorService {
      * @return UIGenerationParameters
      */
     public UIGenerateParameters loadConfig(String configPath) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(new File(configPath), UIGenerateParameters.class);
+        return new ObjectMapper().readValue(new File(configPath), UIGenerateParameters.class);
     }
 }

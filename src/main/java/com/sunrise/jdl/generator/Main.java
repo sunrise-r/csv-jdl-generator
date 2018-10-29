@@ -2,7 +2,9 @@ package com.sunrise.jdl.generator;
 
 import com.sunrise.jdl.generator.entities.*;
 import com.sunrise.jdl.generator.service.*;
+import com.sunrise.jdl.generator.service.iad.TemplateService;
 import com.sunrise.jdl.generator.service.iad.UIGeneratorService;
+import com.sunrise.jdl.generator.ui.TemplateProjection;
 import com.sunrise.jdl.generator.ui.UIGenerateParameters;
 import org.apache.commons.cli.*;
 import org.apache.commons.io.FileUtils;
@@ -34,7 +36,9 @@ public class Main {
     private static final String GID_RELATIONS = "relations";
     private static final String GID_ACTIONS = "actions";
     private static final String GID_CONFIG_FILE = "gidConfigFile";
+    // TODO: 29.10.18 Сделать шаблоны для всех проекций и удалить всё, что больше не пригодится
     private static EntitiesService entitiesService = null;
+    private static final String PROJECTION_TEMPLATES_FOLDER = "templates";
     private static EntityTypeService entityTypeService = new EntityTypeService();
 
     public static void main(String[] args) throws IOException {
@@ -59,6 +63,7 @@ public class Main {
         options.addOption(GID_RELATIONS, true, "path to the 'relations' csv file");
         options.addOption(GID_ACTIONS, true, "path to the 'actions' csv file");
         options.addOption(GID_CONFIG_FILE, true, "gid config file path");
+        options.addOption(PROJECTION_TEMPLATES_FOLDER, true, "path to the folder of the templates");
 
 
         CommandLineParser parser = new DefaultParser();
@@ -100,11 +105,14 @@ public class Main {
     }
 
     private static void gidGenerator(CommandLine cmd) throws IOException {
-        if (!(cmd.hasOption(GID_ENTITIES) && cmd.hasOption(GID_RELATIONS)
-                && cmd.hasOption(GID_ACTIONS) && cmd.hasOption(TARGET_RESOURCE_FOLDER))) {
-            System.err.println("No args for the '" + GID_ENTITIES + "' or '" + GID_RELATIONS + "' or '"
-                    + GID_ACTIONS + "' or '" + TARGET_RESOURCE_FOLDER + "' param");
+        if (!cmd.hasOption(PROJECTION_TEMPLATES_FOLDER)) {
+            System.err.println("Не указана папка с шаблонами!");
+            return;
         }
+
+        // Получение шаблонов
+        File[] templateFiles = new File(cmd.getOptionValue(PROJECTION_TEMPLATES_FOLDER)).listFiles();
+        List<TemplateProjection> templates =  TemplateService.getInstance().loadTemplateProjections(templateFiles);
 
         UIGeneratorService generatorService = new UIGeneratorService();
 
@@ -134,7 +142,7 @@ public class Main {
         Map<String, Set<Field>> baseDataWithBaseFields = entityTypeService.prepareDataForParentEntity(entitiesHierarchy.result);
         File file = new File(cmd.getOptionValue(GID_ACTIONS));
         InputStream actionsStream = new FileInputStream(file);
-        entityTypeService.generateEntitiesPresentations(actionsStream, cmd.getOptionValue(TARGET_RESOURCE_FOLDER), baseDataWithBaseFields, entitiesHierarchy.result, parameters);
+        entityTypeService.generateEntitiesPresentations(actionsStream, cmd.getOptionValue(TARGET_RESOURCE_FOLDER), baseDataWithBaseFields, entitiesHierarchy.result, parameters, templates);
     }
 
     private static void jdlGenerator(CommandLine cmd) {
