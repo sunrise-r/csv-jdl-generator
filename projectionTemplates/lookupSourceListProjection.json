@@ -1,5 +1,5 @@
 {
-  "code": "lookupListProjection",
+  "code": "lookupSourceListProjection",
   "keys": [
     {
       "key": "label",

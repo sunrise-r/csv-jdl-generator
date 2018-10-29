@@ -1,11 +1,7 @@
 package com.sunrise.jdl.generator.service.iad;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
 import com.sunrise.jdl.generator.entities.TemplateKey;
-import com.sunrise.jdl.generator.entities.TemplateKeyTypes;
 import com.sunrise.jdl.generator.ui.TemplateProjection;
 
 import java.io.File;
