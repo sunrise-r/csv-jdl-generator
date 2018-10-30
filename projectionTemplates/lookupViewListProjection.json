@@ -4,7 +4,7 @@
     {
       "key": "label",
       "type": "String",
-      "value": "partnerGatewayApp.partnerDocuments.${ENTITY}.label"
+      "value": "partnerGatewayApp.partnerDocuments${ENTITY}.home.title"
     },
     {
       "key": "parentCode",
