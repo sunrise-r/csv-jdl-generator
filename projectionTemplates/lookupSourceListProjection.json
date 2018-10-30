@@ -17,9 +17,14 @@
       "value": "innerListProjectionFields"
     },
     {
-      "key": "Order",
+      "key": "order",
       "type": "Custom",
       "value": 4
+    },
+    {
+      "key": "searchUrl",
+      "type": "String",
+      "value": "partnerdocuments/api/_search/${ENTITY(plural,lowerHyphenCase)}"
     },
     {
       "key": "actions",
