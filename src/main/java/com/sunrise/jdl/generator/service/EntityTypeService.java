@@ -2,6 +2,7 @@ package com.sunrise.jdl.generator.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.google.common.base.CaseFormat;
 import com.sunrise.jdl.generator.FixMethods;
 import com.sunrise.jdl.generator.actions.Action;
 import com.sunrise.jdl.generator.entities.Entity;
@@ -146,20 +147,12 @@ public class EntityTypeService {
                     data.put("innerListProjectionFields",projectionInfo.getFields());
             }
             for (Entity entity : entitiesHierarchy.get(entityName)) {
-                FormProjection formProjection = new FormProjection(entity.getClassName(), generateParameters.getTranslationPath() + entity.getClassName() + ".detail.title", registryItem.getCode(), entity.getFields());
-                IntStream.range(0, formProjection.getFields().size()).forEach(i -> {
-                    if (!(formProjection.getFields().get(i).isJdlType() || formProjection.getFields().get(i).getFieldType().equals("List"))) {
-                        formProjection.getFields().set(i, formProjection.getFields().get(i).clone().fieldType("Entity"));
-                    }
-                });
-                mapper.writeValue(new File(baseDataPath + "/" + entity.getClassName() + "FormProjection.json"), formProjection);
-
-
                 // TODO: 29.10.18 Переделать всё старое под шаблоны
                 data.put("ENTITY", entity.getClassName());
+                data.put("entityFields", entity.getFields());
                 data.put("PARENT_CODE", registryItem.getCode());
                 for (TemplateProjection tp : templateProjections) {
-                    mapper.writeValue(new File(baseDataPath + "/" + tp.getCode() + ".json"),templateService.toProjections(tp,data));
+                    mapper.writeValue(new File(baseDataPath + "/" + templateService.fillTemplateWithData(tp.getCode(),data) + ".json"),templateService.toProjections(tp,data));
                 }
             }
 
