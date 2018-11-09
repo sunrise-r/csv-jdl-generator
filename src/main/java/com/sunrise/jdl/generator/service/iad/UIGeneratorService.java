@@ -64,7 +64,6 @@ public class UIGeneratorService {
         projectionInfo.setCode(getProjectionCode(name, projectionType.getName()));
         projectionInfo.setLabel(generateParameters.getTranslationPath() + ".tabs." + projectionType.getName().toLowerCase());
 
-
         FixMethods.fixListProjections(projectionInfo);
         return projectionInfo;
     }

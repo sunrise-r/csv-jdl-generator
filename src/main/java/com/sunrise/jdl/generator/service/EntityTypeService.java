@@ -146,7 +146,10 @@ public class EntityTypeService {
                 if(projectionInfo.getCode().equals("inner"))
                     data.put("innerListProjectionFields",projectionInfo.getFields());
             }
+
             for (Entity entity : entitiesHierarchy.get(entityName)) {
+                // TODO: 09.11.18 Добавить шаблоны полей и любых других сущностей, чтобы можно было добавлять не через код
+                FixMethods.fixFormProjectionFields(entity.getFields());
                 // TODO: 29.10.18 Переделать всё старое под шаблоны
                 data.put("ENTITY", entity.getClassName());
                 data.put("entityFields", entity.getFields());
