@@ -1,5 +1,6 @@
 package com.sunrise.jdl.generator;
 
+import com.sunrise.jdl.generator.actions.Action;
 import com.sunrise.jdl.generator.entities.Field;
 import com.sunrise.jdl.generator.entities.LinkedField;
 import com.sunrise.jdl.generator.ui.ProjectionInfo;
@@ -10,6 +11,14 @@ public class FixMethods {
 
     public static void fixListProjections(ProjectionInfo projectionInfo) {
         if (projectionInfo.getCode() == null) return;
+        if (projectionInfo.getCode().equals("newListProjection")) {
+            Action edit = new Action();
+            edit.setCode("edit");
+            edit.setDisplayType("tableMenu");
+            edit.setGroup("edit");
+            edit.setStyle("editBtn");
+            projectionInfo.getActions().set(1,edit);
+        }
         projectionInfo.setCode(projectionInfo.getCode().replaceAll("ListProjection", ""));
     }
 
@@ -21,7 +30,7 @@ public class FixMethods {
                 if (field.getFieldName().equalsIgnoreCase("additionalDocuments"))
                     fields.set(fields.indexOf(field), new LinkedField(field, "additionalDocumentsLookupViewProjection", "additionalDocumentsLookupSourceProjection"));
                 else
-                    fields.set(fields.indexOf(field), new LinkedField(field, "lookupSourceProjection", "lookupViewProjection"));
+                    fields.set(fields.indexOf(field), new LinkedField(field, "lookupViewListProjection", "lookupSourceListProjection"));
                 });
     }
 
