@@ -19,6 +19,14 @@ public class FixMethods {
             edit.setStyle("editBtn");
             projectionInfo.getActions().set(1,edit);
         }
+        if (projectionInfo.getCode().equals("archiveListProjection")) {
+            Action fromArchive = new Action();
+            fromArchive.setCode("fromArchive");
+            fromArchive.setDisplayType("tableMenu");
+            fromArchive.setGroup("connect");
+            fromArchive.setStyle("fromArchiveBtn");
+            projectionInfo.getActions().set(3,fromArchive);
+        }
         projectionInfo.setCode(projectionInfo.getCode().replaceAll("ListProjection", ""));
     }
 
