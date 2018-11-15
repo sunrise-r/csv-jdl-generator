@@ -36,6 +36,15 @@
       "jdlType": true,
       "required": false,
       "hidden": true
+    },
+    {
+      "fieldName": "operation",
+      "fieldType": "String",
+      "fieldLength": "15",
+      "fieldLabel": "Операция",
+      "jdlType": true,
+      "required": false,
+      "hidden": true
     }
   ],
 
