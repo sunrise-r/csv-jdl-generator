@@ -13,12 +13,17 @@ public class FixMethods {
         if (projectionInfo.getCode() == null) return;
         if (projectionInfo.getCode().equals("newListProjection")) {
             Action edit = new Action();
-            edit.setCode("update");
+            edit.setCode("edit");
             edit.setDisplayType("tableMenu");
             edit.setGroup("edit");
             edit.setStyle("editBtn");
             projectionInfo.getActions().set(1,edit);
+
+            projectionInfo.getActions().set(2, new Action());
             projectionInfo.getActions().get(2).setCode("delete");
+            projectionInfo.getActions().get(2).setStyle("discardBtn");
+            projectionInfo.getActions().get(2).setGroup("edit");
+            projectionInfo.getActions().get(2).setDisplayType("tableMenu");
         }
         if (projectionInfo.getCode().equals("archiveListProjection")) {
             Action fromArchive = new Action();
