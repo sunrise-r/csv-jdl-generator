@@ -17,13 +17,21 @@ public class FixMethods {
             edit.setDisplayType("tableMenu");
             edit.setGroup("edit");
             edit.setStyle("editBtn");
-            projectionInfo.getActions().set(1,edit);
 
-            projectionInfo.getActions().set(2, new Action());
-            projectionInfo.getActions().get(2).setCode("delete");
-            projectionInfo.getActions().get(2).setStyle("discardBtn");
-            projectionInfo.getActions().get(2).setGroup("edit");
-            projectionInfo.getActions().get(2).setDisplayType("tableMenu");
+            List<Action> actions = projectionInfo.getActions();
+
+            actions.set(1,edit);
+            
+            actions.set(2, new Action());
+            actions.get(2).setCode("delete");
+            actions.get(2).setStyle("discardBtn");
+            actions.get(2).setGroup("edit");
+            actions.get(2).setDisplayType("tableMenu");
+
+            actions.remove(6);
+            actions.remove(5);
+            actions.remove(4);
+            actions.remove(3);
         }
         if (projectionInfo.getCode().equals("archiveListProjection")) {
             Action fromArchive = new Action();
