@@ -45,6 +45,15 @@
       "jdlType": true,
       "required": false,
       "hidden": true
+    },
+    {
+      "fieldName": "DocumentClassLabel",
+      "fieldType": "String",
+      "fieldLength": "25",
+      "fieldLabel": "Вид",
+      "jdlType": true,
+      "required": false,
+      "hidden": true
     }
   ],
 
