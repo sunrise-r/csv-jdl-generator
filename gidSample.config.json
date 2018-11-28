@@ -47,7 +47,7 @@
       "hidden": true
     },
     {
-      "fieldName": "DocumentClassLabel",
+      "fieldName": "documentClassLabel",
       "fieldType": "String",
       "fieldLength": "25",
       "fieldLabel": "Вид",
