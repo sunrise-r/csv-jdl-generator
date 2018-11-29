@@ -7,7 +7,6 @@
   "pluralTranslations": false,
   "pluralPresentations": true,
   "pluralSearchURL": true,
-
   "additionalFieldsTranslationPath": "additionalFields",
   "additionalFields": [
     {
@@ -56,7 +55,6 @@
       "hidden": true
     }
   ],
-
   "projectionsInfoes": [
     {
       "name": "New",
@@ -101,6 +99,11 @@
           ]
         }
       ]
+    },
+    {
+      "name": "DocumentView",
+      "order": 4,
+      "filters": []
     }
   ]
 }
