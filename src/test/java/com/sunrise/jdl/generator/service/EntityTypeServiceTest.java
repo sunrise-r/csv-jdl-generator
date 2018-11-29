@@ -137,7 +137,7 @@ public class EntityTypeServiceTest {
         List<ProjectionParameter> projectionParameters = new ArrayList<>();
         projectionParameters.add(projectionParameter);
         parameters.setProjectionsInfoes(projectionParameters);
-        entityTypeService.generateEntitiesPresentations(this.getClass().getResourceAsStream("/action.csv"), FOLDER_FOR_TEST, crudeData, null, parameters, null);
+        entityTypeService.generateEntitiesPresentations(this.getClass().getResourceAsStream("/action.csv"), FOLDER_FOR_TEST, crudeData, null, parameters, null, null);
 
         File destinationFolder = new File(FOLDER_FOR_TEST);
         File[] files = destinationFolder.listFiles();

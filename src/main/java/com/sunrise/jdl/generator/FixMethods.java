@@ -22,13 +22,6 @@ public class FixMethods {
             actions.remove(3);
         }
 
-        if (projectionInfo.getCode().equals("documentViewListProjection")) {
-            projectionInfo.setActions(new ArrayList<>());
-            projectionInfo.getActions().add(new Action("tableMenu","other","pathBtn","path"));
-            projectionInfo.getActions().add(new Action("tableMenu","info","cardBtn","card"));
-            projectionInfo.getActions().add(new Action("tableMenu","info","printBtn","print"));
-        }
-
         if (projectionInfo.getCode().equals("archiveListProjection")) {
             projectionInfo.getActions().set(3,new Action("tableMenu","connect","fromArchiveBtn","fromArchive"));
         }

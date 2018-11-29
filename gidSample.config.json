@@ -99,11 +99,6 @@
           ]
         }
       ]
-    },
-    {
-      "name": "DocumentView",
-      "order": 4,
-      "filters": []
     }
   ]
 }

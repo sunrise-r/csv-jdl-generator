@@ -2,7 +2,6 @@ package com.sunrise.jdl.generator.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.google.common.base.CaseFormat;
 import com.sunrise.jdl.generator.FixMethods;
 import com.sunrise.jdl.generator.actions.Action;
 import com.sunrise.jdl.generator.entities.Entity;
@@ -17,7 +16,6 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class EntityTypeService {
 
@@ -117,9 +115,10 @@ public class EntityTypeService {
      * @param destinationFolder  - директория, в которой создадутся директории с файлами для объектов BaseData.
      * @param entitiesInfo       - исходные данные для генерации описания UI
      * @param generateParameters Параметры генерации
+     * @param entities
      * @throws FileNotFoundException
      */
-    public boolean generateEntitiesPresentations(InputStream actionsStream, String destinationFolder, Map<String, Set<Field>> entitiesInfo, Map<String, List<Entity>> entitiesHierarchy, UIGenerateParameters generateParameters, List<TemplateProjection> templateProjections) throws IOException {
+    public boolean generateEntitiesPresentations(InputStream actionsStream, String destinationFolder, Map<String, Set<Field>> entitiesInfo, Map<String, List<Entity>> entitiesHierarchy, UIGenerateParameters generateParameters, List<TemplateProjection> templateProjections, Collection<Entity> entities) throws IOException {
         ActionService actionService = new ActionService();
         Map<String,Object> data = new HashMap<>();
         Collection<Action> actions = actionService.readDataFromCSV(actionsStream);

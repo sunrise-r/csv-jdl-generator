@@ -32,7 +32,7 @@ public class TemplateService {
 
     public Map<String, Object> toProjections(TemplateProjection templateProjection, Map<String, Object> data) {
         Map<String, Object> projection = new HashMap<>();
-        projection.put("code", templateProjection.getCode());
+        projection.put("code", fillTemplateWithData(templateProjection.getCode(), data));
         for (TemplateKey key : templateProjection.getKeys()) {
             switch (key.getType()) {
                 case "String":
