@@ -1,5 +1,6 @@
 package com.sunrise.jdl.generator;
 
+import com.sunrise.jdl.generator.config.GeneratorConfig;
 import com.sunrise.jdl.generator.entities.*;
 import com.sunrise.jdl.generator.service.*;
 import com.sunrise.jdl.generator.service.iad.TemplateService;
@@ -8,12 +9,11 @@ import com.sunrise.jdl.generator.ui.TemplateProjection;
 import com.sunrise.jdl.generator.ui.UIGenerateParameters;
 import org.apache.commons.cli.*;
 import org.apache.commons.io.FileUtils;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.groupingBy;
 
 
 public class Main {
@@ -36,26 +36,29 @@ public class Main {
     private static final String GID_RELATIONS = "relations";
     private static final String GID_ACTIONS = "actions";
     private static final String GID_CONFIG_FILE = "gidConfigFile";
+    public static final String CONFIG_FILE = "configFile";
     // TODO: 29.10.18 Сделать шаблоны для всех проекций и удалить всё, что больше не пригодится
     private static EntitiesService entitiesService = null;
     private static final String PROJECTION_TEMPLATES_FOLDER = "templates";
     private static EntityTypeService entityTypeService = new EntityTypeService();
+    private static GeneratorConfig generatorConfig;
 
     public static void main(String[] args) throws IOException {
 
         Options options = new Options();
-        options.addOption(SOURCE_FOLDER, true, "set source folder with csv files");
+        options.addOption(CONFIG_FILE, true, "Generation config file.");
+        options.addOption(SOURCE_FOLDER, true, "set source folder with csv files"); //to config
         options.addOption(HELP, false, "show this help");
-        options.addOption(TARGET_FILE, true, "file with results");
-        options.addOption(IGNORE_ENTITIES, true, "set entities that will be ignored while generating");
-        options.addOption(IGNORE_FIELDS, true, "set entities that will be ignored while generating");
-        options.addOption(PAGINATE_TYPE, true, "set type of pagination for entities, default is pagination. Possible values are: pager, pagination, infinite-scroll");
-        options.addOption(MAPSTRUCT, false, "enables using dto's with mapstruct");
-        options.addOption(GENERATTE_SERVICE_FOR, true, "for what entities service generation needed. List of entities or 'all'");
-        options.addOption(EXECPT_SERVICE_GENERATION, true, "for what entities service generation is not needed. List of entities");
-        options.addOption(MICROSERVICE, true, "set name of microservice that will hold the entities");
-        options.addOption(TARGET_RESOURCE_FOLDER, true, "set path where resource files will be generated");
-        options.addOption(GATEWAY_NAME, true, "set name of gateway");
+        options.addOption(TARGET_FILE, true, "file with results"); //to config
+        options.addOption(IGNORE_ENTITIES, true, "set entities that will be ignored while generating"); //to config file
+        options.addOption(IGNORE_FIELDS, true, "set entities that will be ignored while generating"); //to config file
+        options.addOption(PAGINATE_TYPE, true, "set type of pagination for entities, default is pagination. Possible values are: pager, pagination, infinite-scroll"); //to config file
+        options.addOption(MAPSTRUCT, false, "enables using dto's with mapstruct"); //to config file
+        options.addOption(GENERATTE_SERVICE_FOR, true, "for what entities service generation needed. List of entities or 'all'"); //to config file
+        options.addOption(EXECPT_SERVICE_GENERATION, true, "for what entities service generation is not needed. List of entities"); //to Config file
+        options.addOption(MICROSERVICE, true, "set name of microservice that will hold the entities"); // to Config file
+        options.addOption(TARGET_RESOURCE_FOLDER, true, "set path where resource files will be generated"); //to Config file
+        options.addOption(GATEWAY_NAME, true, "set name of gateway"); // to Config file
 
         options.addOption(JDL_GENERATION, false, "set the \"JDL-Generation\" operation type");
         options.addOption(GID_GENERATION, false, "set the \"Generate Interface Description\" operation type");
@@ -78,6 +81,17 @@ public class Main {
 
         if (cmd == null) {
             System.err.println("Parsing failed.  Reason: cmd is null");
+        }
+
+        // Load config file
+        if (!cmd.hasOption(CONFIG_FILE)) {
+            System.err.println("No config file spcified for generation");
+        } else {
+            Yaml yaml = new Yaml();
+            InputStream inputStream = Yaml.class
+                    .getClassLoader()
+                    .getResourceAsStream(cmd.getOptionValue(CONFIG_FILE));
+            generatorConfig = yaml.load(inputStream);
         }
 
         if (cmd.hasOption(HELP)) {
@@ -112,7 +126,7 @@ public class Main {
 
         // Получение шаблонов
         File[] templateFiles = new File(cmd.getOptionValue(PROJECTION_TEMPLATES_FOLDER)).listFiles();
-        List<TemplateProjection> templates =  TemplateService.getInstance().loadTemplateProjections(templateFiles);
+        List<TemplateProjection> templates = TemplateService.getInstance().loadTemplateProjections(templateFiles);
 
         UIGeneratorService generatorService = new UIGeneratorService();
 

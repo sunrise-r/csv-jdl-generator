@@ -53,6 +53,13 @@
             <artifactId>guava</artifactId>
             <version>27.0-jre</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.23</version>
+        </dependency>
+
     </dependencies>
 
 </project>
