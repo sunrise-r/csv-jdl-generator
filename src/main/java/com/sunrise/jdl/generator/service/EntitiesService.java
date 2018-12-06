@@ -7,12 +7,8 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Считывает Entity, корректириреут их поля, создает их структуру,
@@ -20,15 +16,6 @@ import java.util.Set;
  */
 public class EntitiesService {
 
-    /**
-     * Константые поля содержат номера ячеек в электронной таблице,
-     * из которых берутся соотвествующие значения.
-     */
-    public static final int CLASSNAME = 1;
-    public static final int FIELDNAME = 2;
-    public static final int FIELDTYPE = 5;
-    public static final int FIELDSIZE = 6;
-    public static final String LIST_TYPE = "Список";
 
     /**
      * Шаблон вывода информации о пейджинации сущностей.
@@ -44,12 +31,12 @@ public class EntitiesService {
     /**
      * Шаблон настройки генерации сервисов и исключений генерации
      */
-    private static final String GENERATE_SERVICIES_WITH_EXCEPT_TEMPLATE = "service %s with serviceImpl except %s\n";
+    private static final String GENERATE_SERVICIES_WITH_EXCEPT_TEMPLATE = "service %s with serviceClass except %s\n";
 
     /**
      * Шаблон настройки генерации серисов
      */
-    private static final String GENERATE_SERVICIES_TEMPLATE = "service %s with serviceImpl\n";
+    private static final String GENERATE_SERVICIES_TEMPLATE = "service %s with serviceClass\n";
 
     /**
      * Шаблон настройки генерации микросервисов
@@ -60,6 +47,7 @@ public class EntitiesService {
     private final Set<String> entitiesToIngore = new HashSet<>();
     private final Set<String> fieldsToIngore = new HashSet<>();
     private final Settings settings;
+    private final CSVEntityReader entityReader;
 
     /**
      * Конструктор
@@ -68,20 +56,30 @@ public class EntitiesService {
      */
     public EntitiesService(Settings settings) {
         this.settings = settings;
-        convertableToJdlTypes.add("Строка");
-        convertableToJdlTypes.add("Число");
-        convertableToJdlTypes.add("Дата/время");
+        convertableToJdlTypes.add("строка");
+        convertableToJdlTypes.add("число");
+        convertableToJdlTypes.add("дата/время");
+        convertableToJdlTypes.add("дробное");
+        convertableToJdlTypes.add("булев");
+        convertableToJdlTypes.add("список");
         if (entitiesToIngore != null) {
             this.entitiesToIngore.addAll(settings.getEntitiesToIngore());
         }
         if (fieldsToIngore != null) {
             this.fieldsToIngore.addAll(settings.getFieldsToIngore());
         }
+        entityReader = new CSVEntityReader(fieldsToIngore, entitiesToIngore, convertableToJdlTypes);
     }
 
-    public List<Entity> readAll(List<InputStream> resources) {
-        ArrayList<Entity> entities = new ArrayList<Entity>();
+    public Set<Entity> readAll(List<InputStream> resources) {
+        Set<Entity> entities = new LinkedHashSet<>();
         for (InputStream st : resources) {
+            for (Entity en : readDataFromCSV(st)) {
+                if (entities.contains(en)) {
+                    throw new RuntimeException("Duplicated entity, exist=" + en.toString());
+                }
+                entities.add(en);
+            }
             entities.addAll(readDataFromCSV(st));
         }
         return entities;
@@ -93,62 +91,8 @@ public class EntitiesService {
      * @param stream Поток с данными о сущностях
      * @return entitiesToIngore Список сущностей сформированных на основе потока данных
      */
-    private java.util.Collection<Entity> readDataFromCSV(InputStream stream) {
-        Map<String, Entity> toReturn = new LinkedHashMap<String, Entity>();
-        try {
-            Reader in = new InputStreamReader(stream);
-            Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
-            String className = "";
-            for (CSVRecord record : records) {
-                String possibleClassName = record.get(CLASSNAME);
-                String fieldName = record.get(FIELDNAME);
-                String fieldType = record.get(FIELDTYPE);
-                String fieldLength = record.get(FIELDSIZE);
-
-                if (!possibleClassName.equals("") && !possibleClassName.contains("П") && !possibleClassName.isEmpty() && !entitiesToIngore.contains(possibleClassName)) {
-                    className = possibleClassName;
-                    Field field = new Field(convertFieldType(fieldType), fieldName, fieldLength, isFieldOfJdlType(fieldType));
-                    ArrayList<Field> arrayList = new ArrayList<Field>();
-                    if (!fieldsToIngore.contains(fieldName)) {
-                        arrayList.add(field);
-                    }
-                    Entity entity = new Entity(className, arrayList);
-                    toReturn.put(className, entity);
-                } else if (possibleClassName.equals("") && toReturn.size() > 0 && !fieldsToIngore.contains(fieldName)) {
-                    toReturn.get(className).getFields().add(new Field(convertFieldType(fieldType), fieldName, fieldLength, isFieldOfJdlType(fieldType)));
-                }
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("Can't find file");
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.out.println("IO exception");
-            e.printStackTrace();
-        }
-        return toReturn.values();
-    }
-
-    /**
-     * Конвертировать тип из формата описания в JDL
-     *
-     * @param source Исходные данные для конвертации
-     * @return В случае если нелзья сконвертировать, возвращает исходыне данные.
-     */
-    public String convertFieldType(String source) {
-        if (!isFieldOfJdlType(source)) {
-            return source;
-        }
-        if (source.contains("Строка")) {
-            return JDLFieldsType.String.toString();
-        }
-        if (source.contains("Дата")) {
-            return JDLFieldsType.Instant.toString();
-
-        }
-        if (source.contains("Число")) {
-            return JDLFieldsType.Long.toString();
-        }
-        throw new RuntimeException("Неудалось распарсить исходыне данные в JDL тип");
+    public java.util.Collection<Entity> readDataFromCSV(InputStream stream) {
+        return entityReader.readDataFromCSV(stream);
     }
 
     /**
@@ -157,7 +101,7 @@ public class EntitiesService {
      * @param entities
      * @return total number of created structure
      */
-    public int createStructures(List<Entity> entities) {
+    public int createStructures(Collection<Entity> entities) {
         int totalCreatedStructure = 0;
         for (Entity entity : entities) {
             totalCreatedStructure += this.createStructure(entity);
@@ -175,9 +119,9 @@ public class EntitiesService {
      */
     public int createStructure(Entity entity) {
         int count = 0;
-        ArrayList<Field> fields = entity.getFields();
+        List<Field> fields = entity.getFields();
         for (Field field : fields) {
-            if (!field.isJdlType() && field.getFieldType().contains(LIST_TYPE)) {
+            if (!field.isJdlType() && field.getFieldType().matches(".*[Сс]писок.*")) {
                 count++;
                 Relation relation = new Relation(entity, field, Relation.RelationType.OneToMany);
                 entity.getRelations().add(relation);
@@ -191,6 +135,27 @@ public class EntitiesService {
     }
 
     /**
+     * Анализирует список отношений в сущностях и находит те отношения для которых несуществует сущностей.
+     *
+     * @param entities Список дотупных сущностей
+     * @return
+     */
+    public Map<Entity, List<Relation>> checkRelations(Collection<Entity> entities) {
+        Map<Entity, List<Relation>> relationMap = new HashMap<>();
+        Set<String> availableEntities = entities.stream().map(x -> x.getClassName()).collect(Collectors.toSet());
+        entities.stream().filter(entity -> entity.getRelations() != null).forEach(entity -> {
+            for (Relation relation : entity.getRelations()) {
+                if (availableEntities.contains(relation.getEntityTo())) return;
+                if (!relationMap.containsKey(entity)) {
+                    relationMap.put(entity, new ArrayList<>());
+                }
+                relationMap.get(entity).add(relation);
+            }
+        });
+        return relationMap;
+    }
+
+    /**
      * Перегруженный вариант writeEntities(Entity entity, BufferedWriter writer).
      * Для каждой entity из enities вызывается метод writeEntities(Entity entity, BufferedWriter writer)
      *
@@ -198,7 +163,7 @@ public class EntitiesService {
      * @param writer
      * @return
      */
-    public void writeEntities(List<Entity> entities, Writer writer) throws IOException {
+    public void writeEntities(Collection<Entity> entities, Writer writer) throws IOException {
         for (Entity entity : entities) {
             writeEntity(entity, writer);
         }
@@ -229,72 +194,11 @@ public class EntitiesService {
      */
     private void writeEntity(Entity entity, Writer writer) throws IOException {
         writer.write(entity.toString() + "\n");
-        ArrayList<Relation> relations = entity.getRelations();
+        List<Relation> relations = entity.getRelations();
         if (relations.size() > 0) {
             for (Relation relation : relations) {
                 writer.write(relation.toString() + "\n");
             }
-        }
-    }
-
-    /**
-     * Возвращает истину если @fieldType может быть преобразован к типу jdl
-     *
-     * @param fieldType Тип который надо проверить
-     * @return Истина если можно привести к формату jdl иначе ложь
-     */
-    private boolean isFieldOfJdlType(String fieldType) {
-        return convertableToJdlTypes.contains(fieldType);
-    }
-
-
-    /**
-     * Перечисление содержит поддерживаемые в JDL типы полей.
-     */
-    public enum JDLFieldsType {
-
-        String("String"),
-
-        Integer("Integer"),
-
-        Long("Long"),
-
-        Float("Float"),
-
-        Double("Double"),
-
-        BigDecimal("BigDecimal"),
-
-        LocalDate("LocalDate"),
-
-        Instant("Instant"),
-
-        ZonedDateTime("ZonedDateTime"),
-
-        Boolean("Boolean"),
-
-        Enumeration("Enumeration"),
-
-        Blob("Blob");
-
-        /**
-         * Строковое представление типа в формате JDL
-         */
-        private String type;
-
-        /**
-         * Конструктор
-         *
-         * @param type
-         */
-        JDLFieldsType(java.lang.String type) {
-            this.type = type;
-        }
-
-
-        @Override
-        public java.lang.String toString() {
-            return type;
         }
     }
 }

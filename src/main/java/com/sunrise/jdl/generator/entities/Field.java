@@ -1,5 +1,7 @@
 package com.sunrise.jdl.generator.entities;
 
+import java.util.Objects;
+
 /**
  * Класс с описанием полей сущности.
  * Types of supported in JDL fields:
@@ -21,37 +23,56 @@ public class Field {
     /**
      * Тип поля
      */
-    private final String fieldType;
+    private String fieldType;
 
     /**
      * Название поля
      */
-    private final String fieldName;
+    private String fieldName;
 
     /**
-     * Длинна поля.
+     * Длина поля.
      */
-    private final String fieldLength;
+    private String fieldLength;
 
     /**
      * Если тип поля поддерживается в JDL - отмечаем его true.
      * При создании Field данное поле в конструкторе устанавливается false.
      */
-    private final boolean JdlType;
+    private boolean JdlType;
+
+    /**
+     * Является ли поле обязательным
+     */
+    private boolean required;
+
+    /**
+     * Метка поля. Название поля, которое должно отображаться пользователю
+     */
+    private String fieldLabel;
+
+    /**
+     * Спрятано ли поле в проекции формы
+     */
+    private boolean hidden;
 
     /**
      * Конструктор
-     *
-     * @param fieldType   тип поля
+     *  @param fieldType   тип поля
      * @param fieldName   название поля
-     * @param fieldLength длинна поля
+     * @param fieldLength длина поля
      * @param jdlType     является ли поле сопоставимым с типом JDL
+     * @param required    является ли поле обязательным
+     * @param fieldLabel метка поля
      */
-    public Field(String fieldType, String fieldName, String fieldLength, boolean jdlType) {
+    public Field(String fieldType, String fieldName, String fieldLength, boolean jdlType, boolean required, String fieldLabel, boolean hidden) {
         this.fieldType = fieldType;
         this.fieldName = fieldName;
         this.fieldLength = fieldLength;
         this.JdlType = jdlType;
+        this.required = required;
+        this.fieldLabel = fieldLabel;
+        this.hidden = hidden;
     }
 
     public String getFieldName() {
@@ -66,13 +87,94 @@ public class Field {
         return JdlType;
     }
 
+    public Field fieldType(String fieldType) {
+        this.fieldType = fieldType;
+        return this;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
+
+    public String getFieldLength() {
+        return fieldLength;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setFieldType(String fieldType) {
+        this.fieldType = fieldType;
+    }
+
+    public void setFieldName(String fieldName) {
+        this.fieldName = fieldName;
+    }
+
+    public void setFieldLength(String fieldLength) {
+        this.fieldLength = fieldLength;
+    }
+
+    public void setJdlType(boolean jdlType) {
+        JdlType = jdlType;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
+    public void setFieldLabel(String fieldLabel) {
+        this.fieldLabel = fieldLabel;
+    }
+
     /**
-     * Возвращает строковое представление в формте jdl.
+     * Возвращает строковое представление в формате jdl.
      *
-     * @return string in jdl-format
+     * @return string in the jdl-format
      */
     @Override
     public String toString() {
-        return fieldName + " " + fieldType;
+        StringBuilder sb = new StringBuilder();
+        sb.append(fieldName);
+        sb.append(" ");
+        sb.append(fieldType);
+        if (required) {
+            sb.append(" ");
+            sb.append("required");
+        }
+        if (fieldLength != null && fieldLength.length() > 0 && fieldType.equals("String")) {
+            sb.append(" ");
+            sb.append("maxlength(");
+            sb.append(fieldLength);
+            sb.append(")");
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Field field = (Field) o;
+        return Objects.equals(fieldType, field.fieldType) &&
+                Objects.equals(fieldName, field.fieldName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fieldType, fieldName);
+    }
+
+    public String getFieldLabel() {
+        return fieldLabel;
+    }
+
+    public Field clone() {
+        return new Field(fieldType, fieldName, fieldLength, JdlType, required, fieldLabel, hidden);
     }
 }

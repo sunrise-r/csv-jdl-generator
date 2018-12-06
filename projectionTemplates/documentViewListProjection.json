@@ -1,0 +1,49 @@
+{
+  "code": "${ENTITY}ViewListProjection",
+  "keys": [
+    {
+      "key": "label",
+      "type": "String",
+      "value": "partnerGatewayApp.partnerDocuments.tabs.documentView"
+    },
+    {
+      "key": "parentCode",
+      "type": "String",
+      "value": "${PARENT_CODE}"
+    },
+    {
+      "key": "fields",
+      "type": "Link",
+      "value": "innerListProjectionFields"
+    },
+    {
+      "key": "order",
+      "type": "Custom",
+      "value": 4
+    },
+    {
+      "key": "actions",
+      "type": "Custom",
+      "value": [
+        {
+          "displayType": "tableMenu",
+          "group": "other",
+          "style": "pathBtn",
+          "code": "path"
+        },
+        {
+          "displayType": "tableMenu",
+          "group": "info",
+          "style": "cardBtn",
+          "code": "card"
+        },
+        {
+          "displayType": "tableMenu",
+          "group": "info",
+          "style": "printBtn",
+          "code": "print"
+        }
+      ]
+    }
+  ]
+}

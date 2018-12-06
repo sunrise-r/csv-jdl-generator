@@ -1,66 +1,65 @@
 package com.sunrise.jdl.generator.entities;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Класс для хранения сущностей
- * TODO: не плохо бы добавить описания из документации, пускай и на английском
  */
-public class Entity {
-
+public class Entity extends BasicEntity {
 
     /**
-     * Название класса
+     * Отображаемое имя сущности.
      */
-    private String className;
+    private String label;
+
+    private String title;
 
     /**
      * Список полей класса
      */
-    private ArrayList<Field> fields;
+    private final List<Field> fields;
 
     /**
      * Список структур
      */
-    private ArrayList<Relation> relations;
-
+    private final List<Relation> relations;
 
     /**
      * Конструктор
-     *
-     * @param className Название класса
-     * @param fields    Поля класса
+     *  @param className   Название класса
+     * @param fields      Поля класса
+     * @param entityLabel Метка(Отображаемое название) сущности
+     * @param title Заголовк сущности.
      */
-    public Entity(String className, ArrayList<Field> fields) {
+    public Entity(String className, List<Field> fields, String entityLabel, String title) {
         this.className = className;
         this.fields = fields;
-        this.relations = new ArrayList<Relation>();
+        this.title = title;
+        this.relations = new ArrayList<>();
+        this.label = entityLabel;
     }
 
     public String getClassName() {
         return className;
     }
 
-    public void setClassName(String className) {
-        this.className = className;
-    }
 
-    public ArrayList<Field> getFields() {
+    public List<Field> getFields() {
         return fields;
     }
 
-    public void setFields(ArrayList<Field> fields) {
-        this.fields = fields;
-    }
-
-    public ArrayList<Relation> getRelations() {
+    public List<Relation> getRelations() {
         return relations;
     }
 
-    public void setRelations(ArrayList<Relation> relations) {
-        this.relations = relations;
+    public String getLabel() {
+        return label;
     }
 
+    public String getTitle() {
+        return title;
+    }
 
     /**
      * @return Возвращает строковое представление entity в формате jdl
@@ -75,8 +74,24 @@ public class Entity {
         }
         String s1 = s.toString();
         if (s1.endsWith(",\n")) {
-            s1 = s1.substring(0, s1.length()-2);
+            s1 = s1.substring(0, s1.length() - 2);
         }
         return s1 + "\n}";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Entity entity = (Entity) o;
+
+        return className.equals(entity.className);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return className.hashCode();
     }
 }
