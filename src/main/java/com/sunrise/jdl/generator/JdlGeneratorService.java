@@ -30,8 +30,8 @@ public class JdlGeneratorService {
         settings.getFieldsToIngore().addAll(jdlConfig.getIgnoreFields());
         settings.setPaginationType(PaginationType.fromString(jdlConfig.getPaginateType()));
         settings.setUseMapStruct(jdlConfig.isMapStruct());
-        settings.setGenerateServiciesFor(jdlConfig.getGenerateServiceFor());
-        settings.setExceptServiceGenerationFor(jdlConfig.getExceptServiceGeneration());
+        settings.setGenerateServiciesFor(jdlConfig.getGenerateServiceFor().stream().collect(Collectors.joining(",")));
+        settings.setExceptServiceGenerationFor(jdlConfig.getExceptServiceGeneration().stream().collect(Collectors.joining(",")));
         settings.setMicroserviceName(jdlConfig.getMicroservice());
         EntitiesService entitiesService;
         if (jdlConfig.getSourceFolder() != null) {
