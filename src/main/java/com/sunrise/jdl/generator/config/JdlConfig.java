@@ -32,14 +32,12 @@ public class JdlConfig {
     /**
      * For what entities service generation needed. List of entities or 'all'
      */
-    //TODO: change type to LIST.
-    private String generateServiceFor = "all";
+    private List<String> generateServiceFor = new ArrayList<>();
 
     /**
      * For what entities service generation is not needed. List of entities
      */
-    //TODO: change type to LIST
-    private String exceptServiceGeneration = null;
+    private List<String> exceptServiceGeneration = new ArrayList<>();
 
     /**
      * name of microservice that will hold the entities. Can be null for monolith application
@@ -90,22 +88,6 @@ public class JdlConfig {
         this.paginateType = paginateType;
     }
 
-    public String getGenerateServiceFor() {
-        return generateServiceFor;
-    }
-
-    public void setGenerateServiceFor(String generateServiceFor) {
-        this.generateServiceFor = generateServiceFor;
-    }
-
-    public String getExceptServiceGeneration() {
-        return exceptServiceGeneration;
-    }
-
-    public void setExceptServiceGeneration(String exceptServiceGeneration) {
-        this.exceptServiceGeneration = exceptServiceGeneration;
-    }
-
     public String getMicroservice() {
         return microservice;
     }
@@ -144,6 +126,22 @@ public class JdlConfig {
 
     public void setTargetResourceFolder(String targetResourceFolder) {
         this.targetResourceFolder = targetResourceFolder;
+    }
+
+    public List<String> getGenerateServiceFor() {
+        return generateServiceFor;
+    }
+
+    public void setGenerateServiceFor(List<String> generateServiceFor) {
+        this.generateServiceFor = generateServiceFor;
+    }
+
+    public List<String> getExceptServiceGeneration() {
+        return exceptServiceGeneration;
+    }
+
+    public void setExceptServiceGeneration(List<String> exceptServiceGeneration) {
+        this.exceptServiceGeneration = exceptServiceGeneration;
     }
 
     public List<String> getIgnoreFields() {

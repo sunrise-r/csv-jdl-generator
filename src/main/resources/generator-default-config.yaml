@@ -3,8 +3,9 @@
 jdlConfig:
   mapStruct: true
   paginateType: infinite-scroll
-  generateServiceFor: all
+  generateServiceFor:
+    - all
   sourceFolder: ./csv-source-folder
-  targetFile: result.jh
+  targetFile: entities.jh
   targetResourceFolder: ./i8n
 
