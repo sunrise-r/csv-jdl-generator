@@ -1,43 +1,55 @@
 package com.sunrise.jdl.generator.config;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+/**
+ * JDL Generation config file
+ */
 public class JdlConfig {
 
     /**
      * List entities that will be ignored while generating
      */
-    private List<String> ignoreEntities;
+    private List<String> ignoreEntities = new ArrayList<>();
+
+    /**
+     * Fields that will be ignored during generation
+     */
+    private List<String> ignoreFields = new ArrayList<>();
 
     /**
      * Generate use map struct option in jdl
      */
-    private boolean mapStruct;
+    private boolean mapStruct = true;
 
     /**
      * Paginate type for JDL File. Possible values are: pager, pagination, infinite-scroll"
      */
-    private String paginateType;
+    private String paginateType = "pagination";
 
     /**
      * For what entities service generation needed. List of entities or 'all'
      */
-    private String generateServiceFor;
+    //TODO: change type to LIST.
+    private String generateServiceFor = "all";
 
     /**
      * For what entities service generation is not needed. List of entities
      */
-    private String exceptServiceGeneration;
+    //TODO: change type to LIST
+    private String exceptServiceGeneration = null;
 
     /**
      * name of microservice that will hold the entities. Can be null for monolith application
      */
-    private String microservice;
+    private String microservice = null;
 
     /**
      * Name of gateway application
      */
-    private String gateway;
+    private String gateway = null;
 
     /**
      * source folder with csv files
@@ -47,10 +59,10 @@ public class JdlConfig {
     /**
      * Target jhFile
      */
-    private String targetFile;
+    private String targetFile = "entities.jh";
 
     /**
-     * Path where genereted resources will be saved
+     * Path where generated i18n resources will be saved
      */
     private String targetResourceFolder;
 
@@ -132,5 +144,54 @@ public class JdlConfig {
 
     public void setTargetResourceFolder(String targetResourceFolder) {
         this.targetResourceFolder = targetResourceFolder;
+    }
+
+    public List<String> getIgnoreFields() {
+        return ignoreFields;
+    }
+
+    public void setIgnoreFields(List<String> ignoreFields) {
+        this.ignoreFields = ignoreFields;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        JdlConfig jdlConfig = (JdlConfig) o;
+        return mapStruct == jdlConfig.mapStruct &&
+                Objects.equals(ignoreEntities, jdlConfig.ignoreEntities) &&
+                Objects.equals(ignoreFields, jdlConfig.ignoreFields) &&
+                Objects.equals(paginateType, jdlConfig.paginateType) &&
+                Objects.equals(generateServiceFor, jdlConfig.generateServiceFor) &&
+                Objects.equals(exceptServiceGeneration, jdlConfig.exceptServiceGeneration) &&
+                Objects.equals(microservice, jdlConfig.microservice) &&
+                Objects.equals(gateway, jdlConfig.gateway) &&
+                Objects.equals(sourceFolder, jdlConfig.sourceFolder) &&
+                Objects.equals(targetFile, jdlConfig.targetFile) &&
+                Objects.equals(targetResourceFolder, jdlConfig.targetResourceFolder);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(ignoreEntities, ignoreFields, mapStruct, paginateType, generateServiceFor, exceptServiceGeneration, microservice, gateway, sourceFolder, targetFile, targetResourceFolder);
+    }
+
+    @Override
+    public String toString() {
+        return "JdlConfig{" +
+                "ignoreEntities=" + ignoreEntities +
+                ", ignoreFields=" + ignoreFields +
+                ", mapStruct=" + mapStruct +
+                ", paginateType='" + paginateType + '\'' +
+                ", generateServiceFor='" + generateServiceFor + '\'' +
+                ", exceptServiceGeneration='" + exceptServiceGeneration + '\'' +
+                ", microservice='" + microservice + '\'' +
+                ", gateway='" + gateway + '\'' +
+                ", sourceFolder='" + sourceFolder + '\'' +
+                ", targetFile='" + targetFile + '\'' +
+                ", targetResourceFolder='" + targetResourceFolder + '\'' +
+                '}';
     }
 }

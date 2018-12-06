@@ -2,7 +2,6 @@ package com.sunrise.jdl.generator.service;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.experimental.theories.suppliers.TestedOn;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -16,15 +15,15 @@ public class OptionsTest {
 
     @Test
     public void paginationOptionsTest(){
-        Settings.PaginationType toUse = Settings.PaginationType.PAGINATION;
+        PaginationType toUse = PaginationType.PAGINATION;
         String result = getResultOutput(toUse);
         Assert.assertTrue(result.contains("paginate * with pagination"));
 
-        toUse = Settings.PaginationType.INFINITE_SCROLL;
+        toUse = PaginationType.INFINITE_SCROLL;
         result = getResultOutput(toUse);
         Assert.assertTrue(result.contains("paginate * with infinite-scroll"));
 
-        toUse = Settings.PaginationType.PAGER;
+        toUse = PaginationType.PAGER;
         result = getResultOutput(toUse);
         Assert.assertTrue(result.contains("paginate * with pager"));
     }
@@ -56,7 +55,7 @@ public class OptionsTest {
         Assert.assertTrue(getResultString(settings).contains("microservice * with me"));
     }
 
-    private String getResultOutput(Settings.PaginationType toUse){
+    private String getResultOutput(PaginationType toUse){
         Settings settings = new Settings();
         settings.setPaginationType(toUse);
         return getResultString(settings);

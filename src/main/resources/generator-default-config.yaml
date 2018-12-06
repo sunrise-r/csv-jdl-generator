@@ -1,0 +1,10 @@
+!!com.sunrise.jdl.generator.config.GeneratorConfig
+
+jdlConfig:
+  mapStruct: true
+  paginateType: infinite-scroll
+  generateServiceFor: all
+  sourceFolder: ./csv-source-folder
+  targetFile: result.jh
+  targetResourceFolder: ./i8n
+
