@@ -1,5 +1,6 @@
 package com.sunrise.jdl.generator.ui;
 
+import com.google.common.collect.Lists;
 import com.sunrise.jdl.generator.entities.Field;
 import com.sunrise.jdl.generator.entities.FieldBuilder;
 
@@ -14,7 +15,7 @@ public class UIGenerateParameters {
 
     private String registryCode;
 
-    private List<ProjectionParameter> projectionsInfoes;
+    private List<ProjectionParameter> projectionsInfoes = Lists.newArrayList();
 
     private boolean useEntityName;
 
@@ -26,7 +27,7 @@ public class UIGenerateParameters {
 
     private boolean pluralSearchURL;
 
-    private List<FieldBuilder> additionalFields;
+    private List<FieldBuilder> additionalFields = Lists.newArrayList();
 
     private String additionalFieldsTranslationPath;
 

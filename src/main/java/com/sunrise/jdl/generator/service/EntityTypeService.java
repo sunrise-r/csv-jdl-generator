@@ -7,12 +7,17 @@ import com.sunrise.jdl.generator.entities.Entity;
 import com.sunrise.jdl.generator.entities.Field;
 import com.sunrise.jdl.generator.entities.ResultWithWarnings;
 import com.sunrise.jdl.generator.service.iad.TemplateService;
-import com.sunrise.jdl.generator.ui.*;
 import com.sunrise.jdl.generator.service.iad.UIGeneratorService;
+import com.sunrise.jdl.generator.ui.*;
 import org.atteo.evo.inflector.English;
 
-import java.io.*;
-import java.nio.file.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -61,7 +66,7 @@ public class EntityTypeService {
      *
      * @param parentName       - имя родительской сущности
      * @param childrenEntities - список дочерних сущностей
-     * @return Map<String                                                               Set                                                               <                               Field>> result - имя родителя и список его полей
+     * @return Map<String                                                                                                                                                                                                                                                               Set                                                                                                                                                                                                                                                               <                                                                                                                               Field>> result - имя родителя и список его полей
      */
     public Map<String, Set<Field>> prepareDataForParentEntity(String parentName, List<Entity> childrenEntities) {
         Map<Field, Byte> fieldsWithFrequency = new HashMap<>();
@@ -119,7 +124,7 @@ public class EntityTypeService {
      */
     public boolean generateEntitiesPresentations(InputStream actionsStream, String destinationFolder, Map<String, Set<Field>> entitiesInfo, Map<String, List<Entity>> entitiesHierarchy, UIGenerateParameters generateParameters, List<TemplateProjection> templateProjections, Collection<Entity> entities) throws IOException {
         ActionService actionService = new ActionService();
-        Map<String,Object> data = new HashMap<>();
+        Map<String, Object> data = new HashMap<>();
         Collection<Action> actions = actionService.readDataFromCSV(actionsStream);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -140,17 +145,19 @@ public class EntityTypeService {
                 ProjectionInfo projectionInfo;
                 projectionInfo = uiGeneratorService.toProjectionInfo(entityName, entitiesInfo.get(entityName), actions, registryItem.getCode(), projectionType, generateParameters);
                 projectionInfo.setSearchUrl(generateSearchUrl(entityName, generateParameters.getMicroservice(), generateParameters.isPluralSearchURL()));
-                mapper.writeValue(new File(baseDataPath + "/" + projectionInfo.getCode() + "ListProjection.json"), projectionInfo);
-                if(projectionInfo.getCode().equals("inner"))
-                    data.put("innerListProjectionFields",projectionInfo.getFields());
+                mapper.writeValue(new File(baseDataPath + "/" + projectionInfo.getCode() + ".json"), projectionInfo);
+                if (projectionInfo.getCode().equals("inner"))
+                    data.put("innerListProjectionFields", projectionInfo.getFields());
             }
 
-            for (Entity entity : entitiesHierarchy.get(entityName)) {
-                data.put("ENTITY", entity.getClassName());
-                data.put("entityFields", entity.getFields());
-                data.put("PARENT_CODE", registryItem.getCode());
-                for (TemplateProjection tp : templateProjections) {
-                    mapper.writeValue(new File(baseDataPath + "/" + templateService.fillTemplateWithData(tp.getCode(),data) + ".json"),templateService.toProjections(tp,data));
+            if (entities != null) {
+                for (Entity entity : entitiesHierarchy.get(entityName)) {
+                    data.put("ENTITY", entity.getClassName());
+                    data.put("entityFields", entity.getFields());
+                    data.put("PARENT_CODE", registryItem.getCode());
+                    for (TemplateProjection tp : templateProjections) {
+                        mapper.writeValue(new File(baseDataPath + "/" + templateService.fillTemplateWithData(tp.getCode(), data) + ".json"), templateService.toProjections(tp, data));
+                    }
                 }
             }
 

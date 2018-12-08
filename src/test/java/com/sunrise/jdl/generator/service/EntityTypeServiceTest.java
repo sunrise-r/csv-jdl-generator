@@ -1,6 +1,8 @@
 package com.sunrise.jdl.generator.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.sunrise.jdl.generator.entities.Entity;
 import com.sunrise.jdl.generator.entities.Field;
 import com.sunrise.jdl.generator.entities.ResultWithWarnings;
@@ -126,7 +128,9 @@ public class EntityTypeServiceTest {
         parameters.setRegistryCode(registryCode);
         parameters.setUseEntityName(true);
         parameters.setMicroservice("testService");
-        ProjectionParameter projectionParameter= new ProjectionParameter();
+        parameters.setTitlePath("baseData1Presentation");
+
+        ProjectionParameter projectionParameter = new ProjectionParameter();
         String defaultType = "Default";
         projectionParameter.setName(defaultType);
         List<ProjectionFilter> filters = new ArrayList<>();
@@ -134,10 +138,18 @@ public class EntityTypeServiceTest {
         filter.setField("name");
         filters.add(filter);
         projectionParameter.setFilters(filters);
+
         List<ProjectionParameter> projectionParameters = new ArrayList<>();
         projectionParameters.add(projectionParameter);
         parameters.setProjectionsInfoes(projectionParameters);
-        entityTypeService.generateEntitiesPresentations(this.getClass().getResourceAsStream("/action.csv"), FOLDER_FOR_TEST, crudeData, null, parameters, null, null);
+
+
+        Map<String, List<Entity>> entitiesHierarchy = Maps.newHashMap();
+        Entity en1 = new Entity("1", Lists.newArrayList(), "label", "tatle");
+        entitiesHierarchy.put("key", Lists.newArrayList(en1));
+
+
+        entityTypeService.generateEntitiesPresentations(this.getClass().getResourceAsStream("/action.csv"), FOLDER_FOR_TEST, crudeData, entitiesHierarchy, parameters, null, null);
 
         File destinationFolder = new File(FOLDER_FOR_TEST);
         File[] files = destinationFolder.listFiles();
