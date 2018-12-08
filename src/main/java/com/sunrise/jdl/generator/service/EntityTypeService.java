@@ -2,7 +2,6 @@ package com.sunrise.jdl.generator.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.sunrise.jdl.generator.FixMethods;
 import com.sunrise.jdl.generator.actions.Action;
 import com.sunrise.jdl.generator.entities.Entity;
 import com.sunrise.jdl.generator.entities.Field;
@@ -147,9 +146,6 @@ public class EntityTypeService {
             }
 
             for (Entity entity : entitiesHierarchy.get(entityName)) {
-                // TODO: 09.11.18 Добавить шаблоны полей и любых других сущностей, чтобы можно было добавлять не через код
-                FixMethods.fixFormProjectionFields(entity.getFields());
-                // TODO: 29.10.18 Переделать всё старое под шаблоны
                 data.put("ENTITY", entity.getClassName());
                 data.put("entityFields", entity.getFields());
                 data.put("PARENT_CODE", registryItem.getCode());
