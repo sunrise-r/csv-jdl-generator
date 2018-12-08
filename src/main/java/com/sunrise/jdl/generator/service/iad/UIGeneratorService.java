@@ -85,7 +85,9 @@ public class UIGeneratorService {
         RegistryItem item = new RegistryItem();
         item.setParentCode(registryCode);
         item.setCode(getPresentationName(generateParameters.isPluralPresentations() ? English.plural(entityName) : entityName));
-        item.setLabel(generateParameters.getTitlePath().replaceAll("<ENTITY_NAME>", generateParameters.isPluralTranslations() ? English.plural(entityName) : entityName));
+        if (generateParameters.getTitlePath() != null) {
+            item.setLabel(generateParameters.getTitlePath().replaceAll("<ENTITY_NAME>", generateParameters.isPluralTranslations() ? English.plural(entityName) : entityName));
+        }
         return item;
     }
 

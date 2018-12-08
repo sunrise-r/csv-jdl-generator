@@ -29,13 +29,13 @@ public class EntitiesServiceTest {
         List<Field> contactsFields = contacts.getFields();
 
         Assert.assertNotNull(result);
-        Assert.assertEquals("Address", contactsFields.get(0).getFieldType());
-        Assert.assertEquals("Address", contactsFields.get(1).getFieldType());
-        Assert.assertEquals("Address", contactsFields.get(2).getFieldType());
-        Assert.assertEquals("PhoneNumber", contactsFields.get(3).getFieldType());
-        Assert.assertEquals("EmailAddress", contactsFields.get(4).getFieldType());
+        Assert.assertEquals("Entity", contactsFields.get(0).getFieldType());
+        Assert.assertEquals("Entity", contactsFields.get(1).getFieldType());
+        Assert.assertEquals("Entity", contactsFields.get(2).getFieldType());
+        Assert.assertEquals("Entity", contactsFields.get(3).getFieldType());
+        Assert.assertEquals("Entity", contactsFields.get(4).getFieldType());
         Assert.assertEquals("String", contactsFields.get(5).getFieldType());
-        Assert.assertEquals("SocialNetwork", contactsFields.get(6).getFieldType());
+        Assert.assertEquals("Entity", contactsFields.get(6).getFieldType());
         Assert.assertEquals("List", contactsFields.get(7).getFieldType());
 
         Entity license = result.stream().skip(1).findFirst().get();
@@ -49,8 +49,8 @@ public class EntitiesServiceTest {
         Assert.assertEquals("ZonedDateTime", licenseFields.get(5).getFieldType());
         Assert.assertEquals("ZonedDateTime", licenseFields.get(6).getFieldType());
         Assert.assertEquals("String", licenseFields.get(7).getFieldType());
-        Assert.assertEquals("Employee", licenseFields.get(8).getFieldType());
-        Assert.assertEquals("Group", licenseFields.get(9).getFieldType());
+        Assert.assertEquals("Entity", licenseFields.get(8).getFieldType());
+        Assert.assertEquals("Entity", licenseFields.get(9).getFieldType());
         Assert.assertEquals("List", licenseFields.get(10).getFieldType());
     }
 
@@ -63,13 +63,13 @@ public class EntitiesServiceTest {
         List<Field> contactsFields = contacts.getFields();
 
         Assert.assertNotNull(result);
-        Assert.assertEquals("Address", contactsFields.get(0).getFieldType());
-        Assert.assertEquals("Address", contactsFields.get(1).getFieldType());
-        Assert.assertEquals("Address", contactsFields.get(2).getFieldType());
-        Assert.assertEquals("PhoneNumber", contactsFields.get(3).getFieldType());
-        Assert.assertEquals("EmailAddress", contactsFields.get(4).getFieldType());
+        Assert.assertEquals("Entity", contactsFields.get(0).getFieldType());
+        Assert.assertEquals("Entity", contactsFields.get(1).getFieldType());
+        Assert.assertEquals("Entity", contactsFields.get(2).getFieldType());
+        Assert.assertEquals("Entity", contactsFields.get(3).getFieldType());
+        Assert.assertEquals("Entity", contactsFields.get(4).getFieldType());
         Assert.assertEquals("String", contactsFields.get(5).getFieldType());
-        Assert.assertEquals("SocialNetwork", contactsFields.get(6).getFieldType());
+        Assert.assertEquals("Entity", contactsFields.get(6).getFieldType());
         Assert.assertEquals("List", contactsFields.get(7).getFieldType());
 
         Entity license = result.stream().skip(1).findFirst().get();
@@ -83,8 +83,8 @@ public class EntitiesServiceTest {
         Assert.assertEquals("ZonedDateTime", licenseFields.get(5).getFieldType());
         Assert.assertEquals("ZonedDateTime", licenseFields.get(6).getFieldType());
         Assert.assertEquals("String", licenseFields.get(7).getFieldType());
-        Assert.assertEquals("Employee", licenseFields.get(8).getFieldType());
-        Assert.assertEquals("Group", licenseFields.get(9).getFieldType());
+        Assert.assertEquals("Entity", licenseFields.get(8).getFieldType());
+        Assert.assertEquals("Entity", licenseFields.get(9).getFieldType());
         Assert.assertEquals("List", licenseFields.get(10).getFieldType());
 
     }
