@@ -70,9 +70,10 @@ public class Main {
             System.err.println("No config file specified for generation");
         } else {
             Yaml yaml = new Yaml();
-            InputStream inputStream = Yaml.class
-                    .getClassLoader()
-                    .getResourceAsStream(cmd.getOptionValue(CONFIG_FILE));
+            File file = new File(cmd.getOptionValue(CONFIG_FILE));
+            String parent = file.getAbsoluteFile().getParent();
+            //System.setProperty("user.dir", parent);
+            FileInputStream inputStream = new FileInputStream(file);
             generatorConfig = yaml.load(inputStream);
         }
 

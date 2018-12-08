@@ -3,10 +3,10 @@ package com.sunrise.jdl.generator.service;
 import com.sunrise.jdl.generator.entities.Entity;
 import com.sunrise.jdl.generator.entities.Field;
 import com.sunrise.jdl.generator.entities.Relation;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVRecord;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Writer;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -76,7 +76,8 @@ public class EntitiesService {
         for (InputStream st : resources) {
             for (Entity en : readDataFromCSV(st)) {
                 if (entities.contains(en)) {
-                    throw new RuntimeException("Duplicated entity, exist=" + en.toString());
+                    System.out.println("Duplicated entity, exist=" + en.toString());
+                    continue;
                 }
                 entities.add(en);
             }
@@ -121,15 +122,14 @@ public class EntitiesService {
         int count = 0;
         List<Field> fields = entity.getFields();
         for (Field field : fields) {
-            if (!field.isJdlType() && field.getFieldType().matches(".*[Сс]писок.*")) {
-                count++;
+            if (!field.isJdlType() && (field.getFieldType().matches(".*[Сс]писок.*") || field.getFieldType().matches(".*[Ll]ist.*"))) {
                 Relation relation = new Relation(entity, field, Relation.RelationType.OneToMany);
                 entity.getRelations().add(relation);
             } else if (!field.isJdlType()) {
                 Relation relation = new Relation(entity, field, Relation.RelationType.OneToOne);
                 entity.getRelations().add(relation);
-                count++;
             }
+            count++;
         }
         return count;
     }
