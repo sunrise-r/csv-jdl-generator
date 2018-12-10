@@ -28,8 +28,7 @@ public class RawCsvDataReader {
     private static final int FIELD_COMMENT = 11;
     private static final int FIELD_VALIDATIOM = 12;
     private static final int FIELD_INPUT_TYPE = 13;
-
-
+    
     public List<RawData> getRawData(InputStream stream) throws IOException {
         List<RawData> rawDatas = Lists.newArrayList();
         for (CSVRecord record : CSVFormat.EXCEL.parse(new InputStreamReader(stream))) {
