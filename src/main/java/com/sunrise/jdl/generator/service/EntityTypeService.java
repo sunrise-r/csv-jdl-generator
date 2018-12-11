@@ -129,7 +129,7 @@ public class EntityTypeService {
         Path path = Paths.get(destinationFolder);
 
         if (Files.isDirectory(path))
-            for (File f : path.toFile().listFiles())
+            for (File f : Objects.requireNonNull(path.toFile().listFiles()))
                 if (f.isDirectory())
                     uiGeneratorService.removeDirectory(f.toPath());
 
