@@ -1,47 +1,40 @@
 package com.sunrise.jdl.generator.service.jdl;
 
-import com.google.common.collect.Maps;
+import com.sun.istack.internal.NotNull;
 import com.sunrise.jdl.generator.entities.RawData;
-import com.sunrise.jdl.generator.service.JDLFieldsType;
-
-import java.util.Map;
 
 public class JdlFieldBuilder {
 
-    Map<String, String> dictionary = Maps.newHashMap();
+    private final CsvJdlUtils csvJdlUtils;
 
-    public JdlFieldBuilder() {
-        dictionary.put("число", JDLFieldsType.Integer.toString());
-        dictionary.put("дата/время", JDLFieldsType.ZonedDateTime.toString());
-        dictionary.put("дробное", JDLFieldsType.BigDecimal.toString());
-        dictionary.put("булев", JDLFieldsType.Boolean.toString());
-        dictionary.put("булевое", JDLFieldsType.Boolean.toString());
-        dictionary.put("строка", JDLFieldsType.String.toString());
+    public JdlFieldBuilder(CsvJdlUtils csvJdlUtils) {
+        this.csvJdlUtils = csvJdlUtils;
     }
 
-    public boolean isJdlField(RawData field) {
-        return dictionary.containsKey(field.getFieldType().toLowerCase());
-    }
-
-    public String parseFieldLength(RawData field) {
+    public String parseFieldLength(@NotNull RawData field) {
         return field.getFieldLength();
     }
 
-    public String parseFieldName(RawData field) {
+    public String parseFieldName(@NotNull RawData field) {
         return field.getFieldName();
     }
 
-    public String parseFieldType(RawData field) {
-        return dictionary.get(field.getFieldType().toLowerCase());
+    public String parseFieldType(@NotNull RawData field) {
+        if (csvJdlUtils.isJdlField(field)) {
+            return csvJdlUtils.getFieldType(field.getFieldType().toLowerCase());
+        } else {
+            if (csvJdlUtils.isList(field.getFieldType())) {
+                return csvJdlUtils.getListType(field.getFieldType());
+            }
+            return field.getFieldType();
+        }
     }
 
-    public String parseFieldValidation(RawData field) {
+    public String parseFieldValidation(@NotNull RawData field) {
         String validation = null;
         if (field.getFieldRequired() != null && field.getFieldRequired().length() > 0) {
             validation = "required";
         }
         return validation;
     }
-
-
 }
