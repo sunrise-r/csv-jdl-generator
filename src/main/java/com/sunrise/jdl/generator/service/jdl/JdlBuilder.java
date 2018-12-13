@@ -31,9 +31,14 @@ public class JdlBuilder {
         this.csvJdlUtils = csvJdlUtils;
     }
 
-    public JdlData generateJdl(InputStream inputStream) throws IOException {
+    public JdlData generateJdl(InputStream inputStream) {
         List<JdlEntity> jdlEntities = Lists.newArrayList();
-        List<RawData> rawData = rawCsvDataReader.getRawData(inputStream);
+        List<RawData> rawData = null;
+        try {
+            rawData = rawCsvDataReader.getRawData(inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Map<String, List<RawData>> stringListMap = rawDataAnalyticsService.groupByEntities(rawData);
         Map<String, List<JdlRelation>> relations = Maps.newHashMap();
         for (String entityName : stringListMap.keySet()) {

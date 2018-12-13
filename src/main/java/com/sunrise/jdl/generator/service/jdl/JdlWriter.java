@@ -6,7 +6,10 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.Map;
 
 public class JdlWriter {
@@ -15,7 +18,7 @@ public class JdlWriter {
 
     public JdlWriter() throws IOException {
         fmkConfig = new Configuration(Configuration.VERSION_2_3_28);
-        fmkConfig.setDirectoryForTemplateLoading(new File("/templates"));
+        fmkConfig.setClassLoaderForTemplateLoading(this.getClass().getClassLoader(), "templates");
         fmkConfig.setDefaultEncoding("UTF-8");
         fmkConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         fmkConfig.setLogTemplateExceptions(false);

@@ -12,6 +12,7 @@ import com.sunrise.jdl.generator.service.iad.TemplateService;
 import com.sunrise.jdl.generator.service.iad.UIGeneratorService;
 import com.sunrise.jdl.generator.ui.TemplateProjection;
 import com.sunrise.jdl.generator.ui.UIGenerateParameters;
+import freemarker.template.TemplateException;
 import org.apache.commons.cli.*;
 import org.yaml.snakeyaml.Yaml;
 
@@ -37,7 +38,7 @@ public class Main {
     private static EntityTypeService entityTypeService = new EntityTypeService();
     private static GeneratorConfig generatorConfig;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, TemplateException {
 
         Options options = new Options();
         options.addOption(CONFIG_FILE, true, "Generation config file.");

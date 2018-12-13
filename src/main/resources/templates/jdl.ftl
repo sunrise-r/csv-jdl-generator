@@ -1,8 +1,7 @@
 <#list model.jdlEntities as entity>
-  entity ${entity.name} {
+  entity ${entity.entityName} {
   <#list entity.fields as field>
-    ${field.name} ${field.type} ${field.validation}
-    <field name> <type> [<validation>*]
+    ${field.fieldName} ${field.fieldType} ${field.validation!''}
   </#list>
   }
 </#list>
