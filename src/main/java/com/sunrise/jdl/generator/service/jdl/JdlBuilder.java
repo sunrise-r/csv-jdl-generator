@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 public class JdlBuilder {
 
-    private final RawDataAnaliseService rawDataAnaliseService;
+    private final RawDataAnalyticsService rawDataAnalyticsService;
 
     private final RawCsvDataReader rawCsvDataReader;
 
@@ -24,8 +24,8 @@ public class JdlBuilder {
 
     private final CsvJdlUtils csvJdlUtils;
 
-    public JdlBuilder(RawDataAnaliseService rawDataAnaliseService, RawCsvDataReader rawCsvDataReader, JdlFieldBuilder jdlFieldBuilder, CsvJdlUtils csvJdlUtils) {
-        this.rawDataAnaliseService = rawDataAnaliseService;
+    public JdlBuilder(RawDataAnalyticsService rawDataAnalyticsService, RawCsvDataReader rawCsvDataReader, JdlFieldBuilder jdlFieldBuilder, CsvJdlUtils csvJdlUtils) {
+        this.rawDataAnalyticsService = rawDataAnalyticsService;
         this.rawCsvDataReader = rawCsvDataReader;
         this.jdlFieldBuilder = jdlFieldBuilder;
         this.csvJdlUtils = csvJdlUtils;
@@ -34,7 +34,7 @@ public class JdlBuilder {
     public JdlData generateJdl(InputStream inputStream) throws IOException {
         List<JdlEntity> jdlEntities = Lists.newArrayList();
         List<RawData> rawData = rawCsvDataReader.getRawData(inputStream);
-        Map<String, List<RawData>> stringListMap = rawDataAnaliseService.groupByEntities(rawData);
+        Map<String, List<RawData>> stringListMap = rawDataAnalyticsService.groupByEntities(rawData);
         Map<String, List<JdlRelation>> relations = Maps.newHashMap();
         for (String entityName : stringListMap.keySet()) {
             JdlEntity jdlEntity = new JdlEntity();
@@ -42,7 +42,7 @@ public class JdlBuilder {
             final List<RawData> entityFieldsData = stringListMap.get(jdlEntity.getEntityName());
             jdlEntity.setFields(generateJdlFields(entityFieldsData));
             jdlEntities.add(jdlEntity);
-            relations.put(entityName, rawDataAnaliseService.findRelationFields(entityFieldsData)
+            relations.put(entityName, rawDataAnalyticsService.findRelationFields(entityFieldsData)
                     .map(d -> this.createRelation(entityName, d)).collect(Collectors.toList()));
         }
 
@@ -110,7 +110,7 @@ public class JdlBuilder {
 
     private List<JdlField> generateJdlFields(List<RawData> rawData) {
         List<JdlField> fields = Lists.newArrayList();
-        rawDataAnaliseService.findPrimitiveTypes(rawData).forEach(r -> {
+        rawDataAnalyticsService.findPrimitiveTypes(rawData).forEach(r -> {
             JdlField jdlField = new JdlField();
             jdlField.setFieldLength(jdlFieldBuilder.parseFieldLength(r));
             jdlField.setFieldName(jdlFieldBuilder.parseFieldName(r));

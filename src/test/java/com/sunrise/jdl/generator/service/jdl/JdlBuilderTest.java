@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 public class JdlBuilderTest {
 
     private JdlBuilder jdlBuilder;
-    private RawDataAnaliseService rawDataAnaliseService;
+    private RawDataAnalyticsService rawDataAnalyticsService;
     private RawCsvDataReader rawCsvDataReader;
     private JdlFieldBuilder jdlFieldBuilder;
     private CsvJdlUtils cvsJdlUtils;
@@ -21,8 +21,8 @@ public class JdlBuilderTest {
         cvsJdlUtils = new CsvJdlUtils();
         rawCsvDataReader = new RawCsvDataReader();
         jdlFieldBuilder = new JdlFieldBuilder(cvsJdlUtils);
-        rawDataAnaliseService = new RawDataAnaliseService(cvsJdlUtils);
-        jdlBuilder = new JdlBuilder(rawDataAnaliseService, rawCsvDataReader, jdlFieldBuilder, cvsJdlUtils);
+        rawDataAnalyticsService = new RawDataAnalyticsService(cvsJdlUtils);
+        jdlBuilder = new JdlBuilder(rawDataAnalyticsService, rawCsvDataReader, jdlFieldBuilder, cvsJdlUtils);
     }
 
     @Test

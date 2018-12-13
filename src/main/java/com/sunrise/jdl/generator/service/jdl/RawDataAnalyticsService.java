@@ -11,11 +11,11 @@ import java.util.stream.Stream;
 /**
  * Analize raw data and create models for generating entities
  */
-public class RawDataAnaliseService {
+public class RawDataAnalyticsService {
 
     private final CsvJdlUtils csvJdlUtils;
 
-    public RawDataAnaliseService(CsvJdlUtils csvJdlUtils) {
+    public RawDataAnalyticsService(CsvJdlUtils csvJdlUtils) {
         this.csvJdlUtils = csvJdlUtils;
     }
 
