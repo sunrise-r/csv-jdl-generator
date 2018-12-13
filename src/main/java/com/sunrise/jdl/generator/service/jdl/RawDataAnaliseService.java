@@ -1,5 +1,7 @@
 package com.sunrise.jdl.generator.service.jdl;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.sunrise.jdl.generator.entities.RawData;
 
 import java.util.List;
@@ -24,7 +26,20 @@ public class RawDataAnaliseService {
      * @return
      */
     public Map<String, List<RawData>> groupByEntities(List<RawData> rawDataList) {
-        return null;
+        Map<String, List<RawData>> result = Maps.newHashMap();
+        String currentEntity = null;
+        for (RawData rawData : rawDataList) {
+            if (rawData.getEntityName() != null && rawData.getEntityName().length() > 0) {
+                currentEntity = rawData.getEntityName();
+                if (currentEntity != null) {
+                    result.put(currentEntity, Lists.newArrayList());
+                }
+            }
+            if (result.containsKey(currentEntity)) {
+                result.get(currentEntity).add(rawData);
+            }
+        }
+        return result;
     }
 
     public Stream<RawData> findRelationFields(List<RawData> rawData) {
