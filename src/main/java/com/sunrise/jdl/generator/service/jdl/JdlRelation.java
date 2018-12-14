@@ -47,24 +47,6 @@ public class JdlRelation {
         return Objects.hashCode(source, target, relationType);
     }
 
-    public enum RelationType {
-        ONE_TO_ONE("OneToOne"),
-        ONE_TO_MANY("OneToMany"),
-        MANY_TO_ONE("ManyToOne"),
-        MANY_TO_MANY("ManyToMany");
-
-        private String typeName;
-
-        RelationType(String typeName) {
-            this.typeName = name();
-        }
-
-        @Override
-        public String toString() {
-            return this.typeName;
-        }
-    }
-
     public static class EntityRelationDescription {
 
         private String entity;
@@ -86,8 +68,23 @@ public class JdlRelation {
         public void setField(String field) {
             this.field = field;
         }
+
+        @Override
+        public String toString() {
+            return "EntityRelationDescription{" +
+                    "entity='" + entity + '\'' +
+                    ", field='" + field + '\'' +
+                    '}';
+        }
     }
 
-
+    @Override
+    public String toString() {
+        return "JdlRelation{" +
+                "source=" + source +
+                ", target=" + target +
+                ", relationType=" + relationType +
+                '}';
+    }
 }
 

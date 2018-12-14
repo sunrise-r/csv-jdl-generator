@@ -32,7 +32,7 @@ public class JdlBuilderTest {
         assertEquals(2, jdlData.getJdlEntities().size());
         assertEquals(1, jdlData.getJdlRelations().size());
         JdlRelation jdlRelation = jdlData.getJdlRelations().get(0);
-        assertEquals(JdlRelation.RelationType.MANY_TO_ONE, jdlRelation.getRelationType());
+        assertEquals(RelationType.MANY_TO_ONE, jdlRelation.getRelationType());
         assertEquals("Author", jdlRelation.getTarget().getEntity());
         assertEquals("books", jdlRelation.getTarget().getField());
         assertEquals("Book", jdlRelation.getSource().getEntity());

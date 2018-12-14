@@ -70,17 +70,17 @@ public class JdlBuilder {
                     Optional<JdlRelation> first = intersected.stream().findFirst();
                     if (first.isPresent()) {
                         JdlRelation jdlTargetRelation = first.get();
-                        if (jdlTargetRelation.getRelationType().equals(JdlRelation.RelationType.ONE_TO_MANY) && jdlRelation.getRelationType().equals(JdlRelation.RelationType.ONE_TO_MANY)) {
+                        if (jdlTargetRelation.getRelationType().equals(RelationType.ONE_TO_MANY) && jdlRelation.getRelationType().equals(RelationType.ONE_TO_MANY)) {
                             System.out.println(String.format("Bad relation. Entity source=%s, Target entity=%s", entityName, jdlRelation.getSource().getEntity(), jdlTargetRelation.getSource().getEntity()));
                             continue;
-                        } else if (jdlTargetRelation.getRelationType().equals(JdlRelation.RelationType.ONE_TO_ONE) && jdlRelation.getRelationType().equals(JdlRelation.RelationType.ONE_TO_MANY)) {
-                            jdlRelation.setRelationType(JdlRelation.RelationType.ONE_TO_MANY);
-                        } else if (jdlTargetRelation.getRelationType().equals(JdlRelation.RelationType.ONE_TO_MANY)
-                                && jdlRelation.getRelationType().equals(JdlRelation.RelationType.ONE_TO_ONE)) {
-                            jdlRelation.setRelationType(JdlRelation.RelationType.MANY_TO_ONE);
-                        } else if (jdlTargetRelation.getRelationType().equals(JdlRelation.RelationType.MANY_TO_ONE)
-                                && jdlRelation.getRelationType().equals(JdlRelation.RelationType.MANY_TO_ONE)) {
-                            jdlRelation.setRelationType(JdlRelation.RelationType.MANY_TO_MANY);
+                        } else if (jdlTargetRelation.getRelationType().equals(RelationType.ONE_TO_ONE) && jdlRelation.getRelationType().equals(RelationType.ONE_TO_MANY)) {
+                            jdlRelation.setRelationType(RelationType.ONE_TO_MANY);
+                        } else if (jdlTargetRelation.getRelationType().equals(RelationType.ONE_TO_MANY)
+                                && jdlRelation.getRelationType().equals(RelationType.ONE_TO_ONE)) {
+                            jdlRelation.setRelationType(RelationType.MANY_TO_ONE);
+                        } else if (jdlTargetRelation.getRelationType().equals(RelationType.MANY_TO_ONE)
+                                && jdlRelation.getRelationType().equals(RelationType.MANY_TO_ONE)) {
+                            jdlRelation.setRelationType(RelationType.MANY_TO_MANY);
                         }
                         jdlRelation.getTarget().setField(jdlTargetRelation.getSource().getField());
                     }
@@ -106,9 +106,9 @@ public class JdlBuilder {
         relation.setSource(source);
         relation.setTarget(target);
         if (csvJdlUtils.isList(rawData.getFieldType())) {
-            relation.setRelationType(JdlRelation.RelationType.ONE_TO_MANY);
+            relation.setRelationType(RelationType.ONE_TO_MANY);
         } else {
-            relation.setRelationType(JdlRelation.RelationType.ONE_TO_ONE);
+            relation.setRelationType(RelationType.ONE_TO_ONE);
         }
         return relation;
     }
