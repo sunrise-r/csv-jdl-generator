@@ -18,22 +18,7 @@ import java.util.Objects;
  * Enumeration: A Java Enumeration object. When this type is selected, the sub-generator will ask you what values you want in your enumeration, and it will create a specific enum class to store them.
  * Blob: A Blob object, used to store some binary data. When this type is selected, the sub-generator will ask you if you want to store generic binary data, an image object, or a CLOB (long text). Images will be handled specifically on the Angular side, so they can be displayed to the end-user.
  */
-public class Field {
-
-    /**
-     * Тип поля
-     */
-    private String fieldType;
-
-    /**
-     * Название поля
-     */
-    private String fieldName;
-
-    /**
-     * Длина поля.
-     */
-    private String fieldLength;
+public class Field extends JdlField {
 
     /**
      * Если тип поля поддерживается в JDL - отмечаем его true.
@@ -66,21 +51,11 @@ public class Field {
      * @param fieldLabel метка поля
      */
     public Field(String fieldType, String fieldName, String fieldLength, boolean jdlType, boolean required, String fieldLabel, boolean hidden) {
-        this.fieldType = fieldType;
-        this.fieldName = fieldName;
-        this.fieldLength = fieldLength;
+        super(fieldType, fieldLength, fieldName);
         this.JdlType = jdlType;
         this.required = required;
         this.fieldLabel = fieldLabel;
         this.hidden = hidden;
-    }
-
-    public String getFieldName() {
-        return fieldName;
-    }
-
-    public String getFieldType() {
-        return fieldType;
     }
 
     public boolean isJdlType() {
@@ -88,7 +63,7 @@ public class Field {
     }
 
     public Field fieldType(String fieldType) {
-        this.fieldType = fieldType;
+        this.setFieldType(fieldType);
         return this;
     }
 
@@ -100,24 +75,8 @@ public class Field {
         this.hidden = hidden;
     }
 
-    public String getFieldLength() {
-        return fieldLength;
-    }
-
     public boolean isRequired() {
         return required;
-    }
-
-    public void setFieldType(String fieldType) {
-        this.fieldType = fieldType;
-    }
-
-    public void setFieldName(String fieldName) {
-        this.fieldName = fieldName;
-    }
-
-    public void setFieldLength(String fieldLength) {
-        this.fieldLength = fieldLength;
     }
 
     public void setJdlType(boolean jdlType) {
@@ -140,34 +99,25 @@ public class Field {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(fieldName);
+        sb.append(getFieldName());
         sb.append(" ");
-        sb.append(fieldType);
+        sb.append(getFieldType());
         if (required) {
             sb.append(" ");
             sb.append("required");
         }
-        if (fieldLength != null && fieldLength.length() > 0 && fieldType.equals("String")) {
+        if (getFieldLength() != null && getFieldLength().length() > 0 && getFieldType().equals("String")) {
             sb.append(" ");
             sb.append("maxlength(");
-            sb.append(fieldLength);
+            sb.append(getFieldLength());
             sb.append(")");
         }
         return sb.toString();
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Field field = (Field) o;
-        return Objects.equals(fieldType, field.fieldType) &&
-                Objects.equals(fieldName, field.fieldName);
-    }
-
-    @Override
     public int hashCode() {
-        return Objects.hash(fieldType, fieldName);
+        return Objects.hash(getFieldType(), getFieldName());
     }
 
     public String getFieldLabel() {
@@ -175,6 +125,6 @@ public class Field {
     }
 
     public Field clone() {
-        return new Field(fieldType, fieldName, fieldLength, JdlType, required, fieldLabel, hidden);
+        return new Field(getFieldType(), getFieldName(), getFieldLength(), JdlType, required, fieldLabel, hidden);
     }
 }

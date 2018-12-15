@@ -119,7 +119,7 @@ public class CSVEntityReader {
         }
 
         if (!isFieldOfJdlType(check)) {
-            return "Entity";
+            return source;
         }
 
         if ("строка".equals(check)) {
@@ -135,7 +135,7 @@ public class CSVEntityReader {
         if ("дробное".equals(check)) {
             return JDLFieldsType.BigDecimal.toString();
         }
-        if ("булев".equals(check)) {
+        if ("булев".equals(check) || "булевое".equals(check)) {
             return JDLFieldsType.Boolean.toString();
         }
 

@@ -1,17 +1,10 @@
 package com.sunrise.jdl.generator;
 
 import com.sunrise.jdl.generator.config.JdlConfig;
-import com.sunrise.jdl.generator.entities.Entity;
-import com.sunrise.jdl.generator.entities.Relation;
-import com.sunrise.jdl.generator.service.*;
-import org.apache.commons.io.FileUtils;
+import com.sunrise.jdl.generator.service.jdl.JdlGenerator;
+import freemarker.template.TemplateException;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.io.IOException;
 
 /**
  * Generate JDL and resources
@@ -19,13 +12,20 @@ import java.util.stream.Collectors;
 public class JdlGeneratorService {
 
     private final JdlConfig jdlConfig;
+    private final JdlGenerator jdlGenerator;
 
-    public JdlGeneratorService(JdlConfig jdlConfig) {
+    public JdlGeneratorService(JdlConfig jdlConfig) throws IOException {
+
         this.jdlConfig = jdlConfig;
+        jdlGenerator = new JdlGenerator();
     }
 
-    public void generate() {
-        final Settings settings = new Settings();
+    public void generate() throws IOException, TemplateException {
+
+        jdlGenerator.generateJdl(jdlConfig);
+
+
+       /* final Settings settings = new Settings();
         settings.getEntitiesToIngore().addAll(jdlConfig.getIgnoreEntities());
         settings.getFieldsToIngore().addAll(jdlConfig.getIgnoreFields());
         settings.setPaginationType(PaginationType.fromString(jdlConfig.getPaginateType()));
@@ -79,16 +79,15 @@ public class JdlGeneratorService {
             DescriptionServiceSettings descriptionSettings = new DescriptionServiceSettings(jdlConfig.getGateway(), jdlConfig.getMicroservice());
             DescriptionService descriptionService = new DescriptionService(descriptionSettings);
             descriptionService.getEntitiesDescription(entities).entrySet().stream().forEach(key -> saveFile(path, key.getKey(), key.getValue()));
-        }
-
+        }*/
     }
 
 
     private static void saveFile(String path, String fileName, String content) {
-        try {
+        /*try {
             FileUtils.writeStringToFile(new File(path, fileName), content);
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
+        }*/
     }
 }
