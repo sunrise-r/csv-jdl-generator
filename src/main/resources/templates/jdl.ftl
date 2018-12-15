@@ -6,8 +6,10 @@ entity ${entity.entityName} {
 }
 </#list>
 
-<#list model.jdlRelations as relation>
-relationship ${relation.relationType.toString()} {
-  ${relation.source.entity}<#if relation.source.field??>{${relation.source.field!''}}</#if> to ${relation.target.entity}<#if relation.target.field??>{${relation.target.field!''}}</#if>
+<#list model.groupedRelations as relationType, relations>
+relationship ${relationType.toString()} {
+    <#list relations as relation>
+    ${relation.source.entity}<#if relation.source.field??>{${relation.source.field!''}}</#if> to ${relation.target.entity}<#if relation.target.field??>{${relation.target.field!''}}</#if>
+    </#list>
 }
 </#list>

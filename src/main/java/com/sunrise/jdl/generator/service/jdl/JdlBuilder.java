@@ -71,8 +71,7 @@ public class JdlBuilder {
                     if (first.isPresent()) {
                         JdlRelation jdlTargetRelation = first.get();
                         if (jdlTargetRelation.getRelationType().equals(RelationType.ONE_TO_MANY) && jdlRelation.getRelationType().equals(RelationType.ONE_TO_MANY)) {
-                            System.out.println(String.format("Bad relation. Entity source=%s, Target entity=%s", entityName, jdlRelation.getSource().getEntity(), jdlTargetRelation.getSource().getEntity()));
-                            continue;
+                            jdlRelation.setRelationType(RelationType.MANY_TO_MANY);
                         } else if (jdlTargetRelation.getRelationType().equals(RelationType.ONE_TO_ONE) && jdlRelation.getRelationType().equals(RelationType.ONE_TO_MANY)) {
                             jdlRelation.setRelationType(RelationType.ONE_TO_MANY);
                         } else if (jdlTargetRelation.getRelationType().equals(RelationType.ONE_TO_MANY)
@@ -80,7 +79,9 @@ public class JdlBuilder {
                             jdlRelation.setRelationType(RelationType.MANY_TO_ONE);
                         } else if (jdlTargetRelation.getRelationType().equals(RelationType.MANY_TO_ONE)
                                 && jdlRelation.getRelationType().equals(RelationType.MANY_TO_ONE)) {
-                            jdlRelation.setRelationType(RelationType.MANY_TO_MANY);
+                            System.out.println(String.format("Bad relation. Entity source=%s, Target entity=%s", entityName, jdlRelation.getSource().getEntity(), jdlTargetRelation.getSource().getEntity()));
+                            continue;
+
                         }
                         jdlRelation.getTarget().setField(jdlTargetRelation.getSource().getField());
                     }
@@ -94,6 +95,7 @@ public class JdlBuilder {
         jdlData.setJdlRelations(finalRelations.stream().collect(Collectors.toList()));
         return jdlData;
     }
+
 
     private JdlRelation createRelation(String entityName, RawData rawData) {
         JdlRelation relation = new JdlRelation();

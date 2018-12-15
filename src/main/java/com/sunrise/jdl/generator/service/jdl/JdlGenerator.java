@@ -6,6 +6,7 @@ import freemarker.template.TemplateException;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class JdlGenerator {
@@ -44,6 +45,12 @@ public class JdlGenerator {
         JdlData data = new JdlData();
         data.setJdlRelations(allRelations);
         data.setJdlEntities(allEntities);
+        data.setGroupedRelations(groupRelations(data.getJdlRelations()));
         jdlWriter.renderJdl(data, new FileOutputStream(targetFile));
     }
+
+    private Map<RelationType, List<JdlRelation>> groupRelations(List<JdlRelation> jdlRelations) {
+        return jdlRelations.stream().collect(Collectors.groupingBy(x -> x.getRelationType()));
+    }
+
 }

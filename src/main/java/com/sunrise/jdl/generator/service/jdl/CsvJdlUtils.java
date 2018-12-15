@@ -33,6 +33,8 @@ public class CsvJdlUtils {
     }
 
     public String getListType(@NotNull String csvType) {
-        return csvType.toLowerCase().replace("список<", "").replace(">", "");
+        return csvType.replace("Список<", "")
+                .replace("список<", "")
+                .replace(">", "");
     }
 }
