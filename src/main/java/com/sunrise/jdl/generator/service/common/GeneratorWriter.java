@@ -1,22 +1,21 @@
-package com.sunrise.jdl.generator.service.jdl;
+package com.sunrise.jdl.generator.service.common;
 
 import com.google.common.collect.Maps;
+import com.sunrise.jdl.generator.service.i18n.I18nModel;
+import com.sunrise.jdl.generator.service.jdl.JdlData;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.*;
 import java.util.Map;
 
-public class JdlWriter {
+public class GeneratorWriter {
 
     private final Configuration fmkConfig;
 
-    public JdlWriter() throws IOException {
+    public GeneratorWriter() throws IOException {
         fmkConfig = new Configuration(Configuration.VERSION_2_3_28);
         fmkConfig.setClassLoaderForTemplateLoading(this.getClass().getClassLoader(), "templates");
         fmkConfig.setDefaultEncoding("UTF-8");
@@ -30,6 +29,14 @@ public class JdlWriter {
         model.put("model", jdlData);
         Template template = fmkConfig.getTemplate("jdl.ftl");
         Writer out = new OutputStreamWriter(stream);
+        template.process(model, out);
+    }
+
+    public void renderI18N(I18nModel i18nModel, FileOutputStream fileOutputStream) throws IOException, TemplateException {
+        Map<String, Object> model = Maps.newHashMap();
+        model.put("model", i18nModel);
+        Template template = fmkConfig.getTemplate("i18n.ftl");
+        Writer out = new OutputStreamWriter(fileOutputStream);
         template.process(model, out);
     }
 }

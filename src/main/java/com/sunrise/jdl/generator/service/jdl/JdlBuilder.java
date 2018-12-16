@@ -93,6 +93,8 @@ public class JdlBuilder {
         JdlData jdlData = new JdlData();
         jdlData.setJdlEntities(jdlEntities);
         jdlData.setJdlRelations(finalRelations.stream().collect(Collectors.toList()));
+        jdlData.setRawDataList(rawData);
+        jdlData.setGroupedByEntityName(stringListMap);
         return jdlData;
     }
 
