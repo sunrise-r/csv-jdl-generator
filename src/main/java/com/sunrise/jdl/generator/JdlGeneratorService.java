@@ -28,7 +28,7 @@ public class JdlGeneratorService {
     public void generate() throws IOException, TemplateException {
 
         JdlData jdlData = jdlGenerator.generateJdl(jdlConfig);
-        i18NGenerator.generate(jdlConfig, jdlData.getGroupedByEntityName(), jdlData.getJdlEntities());
+        i18NGenerator.generate(jdlConfig, jdlData.getGroupedByEntityName(), jdlData.getJdlEntities(), jdlData.getJdlRelations());
 
 
        /* final Settings settings = new Settings();

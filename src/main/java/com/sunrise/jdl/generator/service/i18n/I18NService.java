@@ -4,6 +4,7 @@ import com.google.common.base.CaseFormat;
 import com.sunrise.jdl.generator.entities.RawData;
 import com.sunrise.jdl.generator.service.common.GeneratorWriter;
 import com.sunrise.jdl.generator.service.jdl.JdlEntity;
+import com.sunrise.jdl.generator.service.jdl.JdlRelation;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,8 +21,22 @@ public class I18NService {
         this.writer = writer;
     }
 
-    public List<I18nModel> generateModel(String appName, Map<String, List<RawData>> rawData, List<JdlEntity> entities) {
-        return entities.stream().map(entity -> getI18nModel(appName, rawData.get(entity.getEntityName()), entity)).collect(Collectors.toList());
+    public List<I18nModel> generateModel(String appName, Map<String, List<RawData>> rawData, List<JdlEntity> entities, List<JdlRelation> relations) {
+        List<I18nModel> collect = entities.stream().map(entity -> getI18nModel(appName, rawData.get(entity.getEntityName()), entity))
+                .collect(Collectors.toList());
+        entities.forEach(entity -> {
+            relations.forEach(relation -> {
+                if (relation.getSource().getEntity().equalsIgnoreCase(entity.getEntityName()) && relation.getTarget().getField() != null) {
+                    collect.add(getI18nModel(appName,
+                            rawData.get(entity.getEntityName()).stream().filter(d -> d.getFieldName().equalsIgnoreCase(relation.getSource().getField())).collect(Collectors.toList()), entity));
+                }
+                if (relation.getTarget().getEntity().equalsIgnoreCase(entity.getEntityName()) && relation.getTarget().getField() != null) {
+                    collect.add(getI18nModel(appName,
+                            rawData.get(entity.getEntityName()).stream().filter(d -> d.getFieldName().equalsIgnoreCase(relation.getTarget().getField())).collect(Collectors.toList()), entity));
+                }
+            });
+        });
+        return collect;
     }
 
     public void saveModel(File resourceFolder, I18nModel i18nModel) {
@@ -37,7 +52,10 @@ public class I18NService {
 
 
     private I18nModel getI18nModel(String appName, List<RawData> rawData, JdlEntity entity) {
-        RawData entityData = rawData.stream().filter(r -> r.getEntityName() != null).findFirst().get();
+        RawData entityData = rawData.stream().filter(r -> r.getEntityName() != null).findFirst().orElse(null);
+        if (entityData == null) {
+            System.out.println("Failed to find raw data for entity " + entity.getEntityName());
+        }
         I18nModel model = getI18nModel(appName, entityData);
         model.setHome(generateHome(entityData));
         model.setDetail(generateDetail(entityData));
