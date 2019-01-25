@@ -53,7 +53,7 @@ public class JdlGenerator {
         data.setJdlEntities(allEntities);
         data.setGroupedRelations(groupRelations(data.getJdlRelations()));
         data.setGroupedByEntityName(allGroupedRawData);
-        generatorWriter.renderJdl(data, new FileOutputStream(targetFile));
+        generatorWriter.renderJdl(jdlConfig, data, new FileOutputStream(targetFile));
         return data;
     }
 

@@ -35,13 +35,6 @@ public class CSVEntityReader {
     private final Set<String> entitiesToIngore;
     private final Set<String> convertableToJdlTypes;
 
-
-    public CSVEntityReader(){
-        fieldsToIngore = null;
-        convertableToJdlTypes = null;
-        entitiesToIngore = null;
-    }
-
     public CSVEntityReader(Set<String> fieldsToIngore, Set<String> entitiesToIngore, Set<String> convertableToJdlTypes) {
         this.fieldsToIngore = fieldsToIngore;
         this.entitiesToIngore = entitiesToIngore;

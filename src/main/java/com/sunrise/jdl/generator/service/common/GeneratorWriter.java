@@ -1,6 +1,7 @@
 package com.sunrise.jdl.generator.service.common;
 
 import com.google.common.collect.Maps;
+import com.sunrise.jdl.generator.config.JdlConfig;
 import com.sunrise.jdl.generator.service.i18n.I18nModel;
 import com.sunrise.jdl.generator.service.jdl.JdlData;
 import freemarker.template.Configuration;
@@ -24,9 +25,10 @@ public class GeneratorWriter {
         fmkConfig.setWrapUncheckedExceptions(true);
     }
 
-    public void renderJdl(JdlData jdlData, OutputStream stream) throws IOException, TemplateException {
+    public void renderJdl(JdlConfig jdlConfig, JdlData jdlData, OutputStream stream) throws IOException, TemplateException {
         Map<String, Object> model = Maps.newHashMap();
         model.put("model", jdlData);
+        model.put("jdlConfig", jdlConfig);
         Template template = fmkConfig.getTemplate("jdl.ftl");
         Writer out = new OutputStreamWriter(stream);
         template.process(model, out);

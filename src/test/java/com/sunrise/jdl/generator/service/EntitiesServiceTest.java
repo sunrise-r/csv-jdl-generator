@@ -13,13 +13,14 @@ import java.util.List;
 import static junit.framework.TestCase.assertTrue;
 
 
+@Deprecated
 public class EntitiesServiceTest {
 
-    private EntitiesService entitiesService = new EntitiesService(new Settings());
+  /*  private EntitiesService entitiesService = new EntitiesService(new Settings());
 
-    /**
+    *//**
      * На примере чтения сущности ContactDataCorrection и DriverLicense
-     */
+     *//*
     @Test
     public void validationOfFieldsTypeReading() {
         ArrayList<InputStream> streams = new ArrayList<>(1);
@@ -89,9 +90,9 @@ public class EntitiesServiceTest {
 
     }
 
-    /**
+    *//**
      * Проверка корректности записи сущности, ее полей и структуры в файл
-     */
+     *//*
     @Test
     public void testWriteToFile() {
         ArrayList<InputStream> streams = new ArrayList<>(2);
@@ -99,5 +100,5 @@ public class EntitiesServiceTest {
         Collection<Entity> result = entitiesService.readAll(streams);
         int numberOfStructure = entitiesService.createStructures(result);
         Assert.assertEquals(10, numberOfStructure);
-    }
+    }*/
 }
