@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
  * Считывает Entity, корректириреут их поля, создает их структуру,
  * записывает Entity и их структуру в файл
  */
+@Deprecated
 public class EntitiesService {
 
 
