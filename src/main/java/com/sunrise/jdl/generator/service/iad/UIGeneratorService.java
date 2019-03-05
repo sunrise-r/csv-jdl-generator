@@ -123,15 +123,4 @@ public class UIGeneratorService {
     private String toLowcase(String toLower) {
         return Character.toLowerCase(toLower.charAt(0)) + toLower.substring(1);
     }
-
-
-    /**
-     * Load gid generation config file
-     *
-     * @param configPath path to config file
-     * @return UIGenerationParameters
-     */
-    public UIGenerateParameters loadConfig(String configPath) throws IOException {
-        return new ObjectMapper().readValue(new File(configPath), UIGenerateParameters.class);
-    }
 }

@@ -11,6 +11,14 @@ import java.util.List;
  */
 public class UIGenerateParameters {
 
+    private String entitiesPath;
+
+    private String relationsPath;
+
+    private String actionsPath;
+
+    private String templatesDir;
+
     private String translationPath;
 
     private String registryCode;
@@ -32,6 +40,38 @@ public class UIGenerateParameters {
     private String additionalFieldsTranslationPath;
 
     private String titlePath;
+
+    public String getEntitiesPath() {
+        return entitiesPath;
+    }
+
+    public void setEntitiesPath(String entitiesPath) {
+        this.entitiesPath = entitiesPath;
+    }
+
+    public String getRelationsPath() {
+        return relationsPath;
+    }
+
+    public void setRelationsPath(String relationsPath) {
+        this.relationsPath = relationsPath;
+    }
+
+    public String getActionsPath() {
+        return actionsPath;
+    }
+
+    public void setActionsPath(String actionsPath) {
+        this.actionsPath = actionsPath;
+    }
+
+    public String getTemplatesDir() {
+        return templatesDir;
+    }
+
+    public void setTemplatesDir(String templatesDir) {
+        this.templatesDir = templatesDir;
+    }
 
     public String getTitlePath() {
         return titlePath;

@@ -9,7 +9,6 @@ import com.sunrise.jdl.generator.service.EntitiesService;
 import com.sunrise.jdl.generator.service.EntityTypeService;
 import com.sunrise.jdl.generator.service.Settings;
 import com.sunrise.jdl.generator.service.iad.TemplateService;
-import com.sunrise.jdl.generator.service.iad.UIGeneratorService;
 import com.sunrise.jdl.generator.ui.TemplateProjection;
 import com.sunrise.jdl.generator.ui.UIGenerateParameters;
 import freemarker.template.TemplateException;
@@ -25,14 +24,9 @@ import java.util.Set;
 
 public class Main {
     private static final String HELP = "help";
-    private static final String TARGET_RESOURCE_FOLDER = "targetResourceFolder";
-    private static final String GID_ENTITIES = "entities";
-    private static final String GID_RELATIONS = "relations";
-    private static final String GID_ACTIONS = "actions";
     private static final String JDL_CONFIG_FILE = "jdlConfigFile";
     private static final String GID_CONFIG_FILE = "gidConfigFile";
     // TODO: 29.10.18 Сделать шаблоны для всех проекций и удалить всё, что больше не пригодится
-    private static final String PROJECTION_TEMPLATES_FOLDER = "templates";
     private static EntityTypeService entityTypeService = new EntityTypeService();
 
     public static void main(String[] args) throws IOException, TemplateException {
@@ -40,12 +34,6 @@ public class Main {
         options.addOption(JDL_CONFIG_FILE, true, "JDL generation config file.");
         options.addOption(GID_CONFIG_FILE, true, "UI generation config file.");
         options.addOption(HELP, false, "show this help");
-
-        options.addOption(GID_ENTITIES, true, "path to the 'entities' csv file");
-        options.addOption(GID_RELATIONS, true, "path to the 'relations' csv file");
-        options.addOption(GID_ACTIONS, true, "path to the 'actions' csv file");
-        options.addOption(PROJECTION_TEMPLATES_FOLDER, true, "path to the folder of the templates");
-
 
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd;
@@ -90,25 +78,24 @@ public class Main {
             jdlGeneratorService.generate();
         }
         if (cmd.hasOption(GID_CONFIG_FILE)) {
-            gidGenerator(cmd);
+            UIGenerateParameters generateParameters = yaml.load(inputStream);
+            gidGenerator(generateParameters);
         }
     }
 
-    private static void gidGenerator(CommandLine cmd) throws IOException {
-        if (!cmd.hasOption(PROJECTION_TEMPLATES_FOLDER)) {
-            System.err.println("Не указана папка с шаблонами!");
+    private static void gidGenerator(UIGenerateParameters generateParameters) throws IOException {
+        if (generateParameters.getTemplatesDir() == null) {
+            System.err.println("Не указана папка с шаблонами в конфигурационном файле!");
             return;
         }
 
         // Получение шаблонов
-        File[] templateFiles = new File(cmd.getOptionValue(PROJECTION_TEMPLATES_FOLDER)).listFiles();
+        File[] templateFiles = new File(generateParameters.getTemplatesDir()).listFiles();
         List<TemplateProjection> templates = TemplateService.getInstance().loadTemplateProjections(templateFiles);
 
-        UIGeneratorService generatorService = new UIGeneratorService();
-
-        File entitiesFile = new File(cmd.getOptionValue(GID_ENTITIES));
-        File relationsFile = new File(cmd.getOptionValue(GID_RELATIONS));
-        File actionsFile = new File(cmd.getOptionValue(GID_ACTIONS));
+        File entitiesFile = new File(generateParameters.getEntitiesPath());
+        File relationsFile = new File(generateParameters.getRelationsPath());
+        File actionsFile = new File(generateParameters.getActionsPath());
 
         if (!entitiesFile.isFile()) {
             throw new FileNotFoundException(entitiesFile.getAbsolutePath());
@@ -116,23 +103,20 @@ public class Main {
         if (!relationsFile.isFile()) {
             throw new FileNotFoundException(relationsFile.getAbsolutePath());
         }
-
         if (!actionsFile.isFile()) {
             throw new FileNotFoundException(actionsFile.getAbsolutePath());
         }
 
-        UIGenerateParameters parameters = generatorService.loadConfig(cmd.getOptionValue(GID_CONFIG_FILE));
         EntitiesService entitiesService = new EntitiesService(new Settings());
         Collection<Entity> entities = entitiesService.readDataFromCSV(new FileInputStream(entitiesFile));
-        for (FieldBuilder fb : parameters.getAdditionalFields())
+        for (FieldBuilder fb : generateParameters.getAdditionalFields())
             entities.forEach((x) -> x.getFields().add(fb.build()));
         Map<String, List<String>> relations = entityTypeService.readCsv(new FileInputStream(relationsFile));
         ResultWithWarnings<Map<String, List<Entity>>> entitiesHierarchy = entityTypeService.mergeTypesWithThemSubtypes(entities, relations);
         entitiesHierarchy.warnings.forEach(x -> System.out.println("WARNING: " + x));
         Map<String, Set<Field>> baseDataWithBaseFields = entityTypeService.prepareDataForParentEntity(entitiesHierarchy.result);
-        File file = new File(cmd.getOptionValue(GID_ACTIONS));
-        InputStream actionsStream = new FileInputStream(file);
-        entityTypeService.generateEntitiesPresentations(actionsStream, cmd.getOptionValue(TARGET_RESOURCE_FOLDER), baseDataWithBaseFields, entitiesHierarchy.result, parameters, templates, entities);
+        InputStream actionsStream = new FileInputStream(actionsFile);
+        entityTypeService.generateEntitiesPresentations(actionsStream, generateParameters.getTemplatesDir(), baseDataWithBaseFields, entitiesHierarchy.result, generateParameters, templates, entities);
     }
 
 }
