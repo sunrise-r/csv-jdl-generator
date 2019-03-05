@@ -8,4 +8,3 @@ jdlConfig:
   sourceFolder: ./csv-source-folder
   targetFile: entities.jh
   targetResourceFolder: ./i8n
-

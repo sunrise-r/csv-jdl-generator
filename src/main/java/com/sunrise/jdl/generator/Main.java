@@ -24,31 +24,26 @@ import java.util.Set;
 
 
 public class Main {
-    public static final String HELP = "help";
+    private static final String HELP = "help";
     private static final String TARGET_RESOURCE_FOLDER = "targetResourceFolder";
-    private static final String JDL_GENERATION = "jdlGeneration";
-    private static final String GID_GENERATION = "jsonGeneration";
     private static final String GID_ENTITIES = "entities";
     private static final String GID_RELATIONS = "relations";
     private static final String GID_ACTIONS = "actions";
+    private static final String JDL_CONFIG_FILE = "jdlConfigFile";
     private static final String GID_CONFIG_FILE = "gidConfigFile";
-    public static final String CONFIG_FILE = "configFile";
     // TODO: 29.10.18 Сделать шаблоны для всех проекций и удалить всё, что больше не пригодится
     private static final String PROJECTION_TEMPLATES_FOLDER = "templates";
     private static EntityTypeService entityTypeService = new EntityTypeService();
-    private static GeneratorConfig generatorConfig;
 
     public static void main(String[] args) throws IOException, TemplateException {
-
         Options options = new Options();
-        options.addOption(CONFIG_FILE, true, "Generation config file.");
+        options.addOption(JDL_CONFIG_FILE, true, "JDL generation config file.");
+        options.addOption(GID_CONFIG_FILE, true, "UI generation config file.");
         options.addOption(HELP, false, "show this help");
-        options.addOption(JDL_GENERATION, false, "set the \"JDL-Generation\" operation type");
-        options.addOption(GID_GENERATION, false, "set the \"Generate Interface Description\" operation type");
+
         options.addOption(GID_ENTITIES, true, "path to the 'entities' csv file");
         options.addOption(GID_RELATIONS, true, "path to the 'relations' csv file");
         options.addOption(GID_ACTIONS, true, "path to the 'actions' csv file");
-        options.addOption(GID_CONFIG_FILE, true, "gid config file path");
         options.addOption(PROJECTION_TEMPLATES_FOLDER, true, "path to the folder of the templates");
 
 
@@ -64,35 +59,39 @@ public class Main {
 
         if (cmd == null) {
             System.err.println("Parsing failed.  Reason: cmd is null");
-        }
-
-        // Load config file
-        if (!cmd.hasOption(CONFIG_FILE)) {
-            System.err.println("No config file specified for generation");
-        } else {
-            Yaml yaml = new Yaml();
-            File file = new File(cmd.getOptionValue(CONFIG_FILE));
-            String parent = file.getAbsoluteFile().getParent();
-            //System.setProperty("user.dir", parent);
-            FileInputStream inputStream = new FileInputStream(file);
-            generatorConfig = yaml.load(inputStream);
+            return;
         }
 
         if (cmd.hasOption(HELP)) {
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("jdlGenerator", options);
+            return;
         }
 
-        if (cmd.hasOption(GID_GENERATION)) {
-            gidGenerator(cmd);
+        File configFile = null;
+        // Load config file
+        if (cmd.hasOption(JDL_CONFIG_FILE)) {
+            configFile = new File(cmd.getOptionValue(JDL_CONFIG_FILE));
+        }
+        if (cmd.hasOption(GID_CONFIG_FILE)) {
+            configFile = new File(cmd.getOptionValue(GID_CONFIG_FILE));
+        }
+        if (configFile == null) {
+            System.err.println("No config file specified for generation");
+            return;
+        }
 
-        } else if (cmd.hasOption(JDL_GENERATION)) {
+        Yaml yaml = new Yaml();
+        FileInputStream inputStream = new FileInputStream(configFile);
+
+        if (cmd.hasOption(JDL_CONFIG_FILE)) {
+            GeneratorConfig generatorConfig = yaml.load(inputStream);
             JdlGeneratorService jdlGeneratorService = new JdlGeneratorService(generatorConfig.getJdlConfig());
             jdlGeneratorService.generate();
-        } else {
-            System.err.println("No operation selected!");
         }
-
+        if (cmd.hasOption(GID_CONFIG_FILE)) {
+            gidGenerator(cmd);
+        }
     }
 
     private static void gidGenerator(CommandLine cmd) throws IOException {
