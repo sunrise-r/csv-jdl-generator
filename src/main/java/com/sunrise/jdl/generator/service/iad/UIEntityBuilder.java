@@ -31,7 +31,7 @@ public class UIEntityBuilder {
                 field.setLabel(rawData.getFieldLabel());
                 String fieldType = rawData.getFieldType();
                 if (csvJdlUtils.isList(fieldType)) {
-                    field.setType(csvJdlUtils.getListType(fieldType));
+                    field.setType(csvJdlUtils.getListWithEntityType(fieldType));
                 } else {
                     field.setType(csvJdlUtils.isJdlField(rawData) ? csvJdlUtils.getFieldType(fieldType) : fieldType);
                 }

@@ -4,11 +4,11 @@ import java.util.List;
 
 public class UIEntity {
 
-    String name;
+    private String name;
 
-    String label;
+    private String label;
 
-    List<UIField> fields;
+    private List<UIField> fields;
 
     public String getName() {
         return name;

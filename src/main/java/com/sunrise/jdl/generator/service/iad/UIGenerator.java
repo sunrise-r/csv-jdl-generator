@@ -21,7 +21,7 @@ public class UIGenerator {
 
     private static final String PRESENTATION_CODE_TEMPLATE = "%sPresentation";
 
-    private static final String LIST_PROJECTION_CODE_TEMPLATE = "%s%sListProjection";
+    private static final String PROJECTION_CODE_TEMPLATE = "%s%s%sProjection";
 
     public UIData generateEntitiesPresentations(UIGenerateParameters generateParameters) throws IOException {
         File actionsFile = new File(generateParameters.getActionsPath());
@@ -37,10 +37,10 @@ public class UIGenerator {
         for (UIEntity entity : entities) {
             RegistryItem registryItem = createPresentationFor(entity.getName(), generateParameters.getRegistryCode(), generateParameters);
             registryItems.add(registryItem);
-            for (ProjectionParameter projectionType : generateParameters.getProjectionsInfoes()) {
-                ProjectionInfo projectionInfo;
-                projectionInfo = toProjectionInfo(entity.getName(), entity.getFields(), actions, registryItem.getCode(), projectionType, generateParameters);
-                projectionInfos.add(projectionInfo);
+            for (ProjectionParameter projectionParameter : generateParameters.getProjectionsInfoes()) {
+                for (String projectionType : Arrays.asList("List", "Form", "LookupView", "LookupSource")) {
+                    projectionInfos.add(toProjectionInfo(entity.getName(), entity.getFields(), actions, registryItem.getCode(), projectionParameter, projectionType, generateParameters));
+                }
             }
         }
         UIData uiData = new UIData();
@@ -94,24 +94,30 @@ public class UIGenerator {
      * @param fields           поля сущности
      * @param actions          доступные действия для проекции
      * @param presentationCode Код представления
-     * @param projectionType
+     * @param projectionParameter
      * @return Информация о проекции
      */
-    public ProjectionInfo toProjectionInfo(String entityName, List<UIField> fields, Collection<Action> actions, String presentationCode, ProjectionParameter projectionType, UIGenerateParameters generateParameters) {
-
+    public ProjectionInfo toProjectionInfo(String entityName, List<UIField> fields, Collection<Action> actions, String presentationCode, ProjectionParameter projectionParameter, String projectionType, UIGenerateParameters generateParameters) {
         ProjectionInfo projectionInfo = new ProjectionInfo();
-        projectionInfo.setFilters(projectionType.getFilters());
+        projectionInfo.setFilters(projectionParameter.getFilters());
         projectionInfo.setParentCode(presentationCode);
 
         // Добавляю все поля, кроме списков
         projectionInfo.setFields(new ArrayList<>());
+
         for (UIField f : fields) {
-            if (!f.getType().equals(JDLFieldsType.List.toString())) {
-                projectionInfo.getFields().add(new BaseField().code(f.getName()).name(f.getName()).displayFormat(parse(f.getType())));
+            if (isJdlType(f.getType())) {
+                projectionInfo.getFields().add(new BaseField().code(f.getName()).name(f.getName()).displayFormat(f.getType()));
+            } else {
+                if (projectionType.equals("Form")) {
+                    String fieldType = f.getType().startsWith("List<") ? "List" : f.getType();
+                    projectionInfo.getFields().add(new LookupField().lookup(extractEntityName(f.getType())).code(f.getName()).name(f.getName()).displayFormat(fieldType));
+                }
             }
         }
+
         projectionInfo.setActions(new ArrayList<>(actions));
-        projectionInfo.setOrder(projectionType.getOrder());
+        projectionInfo.setOrder(projectionParameter.getOrder());
 
         // Генерирую код перевода
         String translationEntityName = generateParameters.isPluralTranslations() ? English.plural(entityName) : entityName;
@@ -125,8 +131,8 @@ public class UIGenerator {
         }
 
         String name = generateParameters.isUseEntityName() ? entityName : "";
-        projectionInfo.setCode(getListProjectionCode(name, projectionType.getName()));
-        projectionInfo.setLabel(generateParameters.getTranslationPath() + ".tabs." + projectionType.getName().toLowerCase());
+        projectionInfo.setCode(getProjectionCode(name, projectionParameter.getName(), projectionType));
+        projectionInfo.setLabel(generateParameters.getTranslationPath() + ".tabs." + projectionParameter.getName().toLowerCase());
         return projectionInfo;
     }
 
@@ -150,20 +156,32 @@ public class UIGenerator {
         }
     }
 
-    private String parse(String fieldType) {
+    private String extractEntityName(String fieldType) {
+        if (fieldType.startsWith("List<")) {
+            return fieldType.replace("List<", "").replace(">", "");
+        } else {
+            return fieldType;
+        }
+    }
+
+    private boolean isJdlType(String fieldType) {
         try {
             JDLFieldsType.valueOf(fieldType);
-            return fieldType;
+            return true;
         } catch (Exception ex) {
-            return null;
+            return false;
         }
     }
 
     private String getPresentationName(String entityName) {
-        return String.format(PRESENTATION_CODE_TEMPLATE, entityName);
+        return lowerFirstChar(String.format(PRESENTATION_CODE_TEMPLATE, entityName));
     }
 
-    private String getListProjectionCode(String entityName, String type) {
-        return String.format(LIST_PROJECTION_CODE_TEMPLATE, entityName, type);
+    private String getProjectionCode(String entityName, String projectionParameterName, String projectionType) {
+        return lowerFirstChar(String.format(PROJECTION_CODE_TEMPLATE, entityName, projectionParameterName, projectionType));
     }
-}
+
+    private String lowerFirstChar(String string) {
+        return string.substring(0, 1).toLowerCase() + string.substring(1);
+    }
+ }

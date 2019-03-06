@@ -37,4 +37,8 @@ public class CsvJdlUtils {
                 .replace("список<", "")
                 .replace(">", "");
     }
+
+    public String getListWithEntityType(@NotNull String csvType) {
+        return String.format("List<%s>", getListType(csvType));
+    }
 }

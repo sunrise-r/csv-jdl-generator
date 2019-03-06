@@ -1,5 +1,6 @@
 package com.sunrise.jdl.generator.ui;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sunrise.jdl.generator.actions.Action;
 
 import java.util.List;
@@ -13,6 +14,9 @@ public class ProjectionInfo extends RegistryItem {
      * Список полей
      */
     private List<BaseField> fields;
+
+    @JsonIgnore
+    private String projectionType;
 
     /**
      * Порядок для сортировки
@@ -73,5 +77,13 @@ public class ProjectionInfo extends RegistryItem {
 
     public String getSearchUrl() {
         return searchUrl;
+    }
+
+    public String getProjectionType() {
+        return projectionType;
+    }
+
+    public void setProjectionType(String projectionType) {
+        this.projectionType = projectionType;
     }
 }
