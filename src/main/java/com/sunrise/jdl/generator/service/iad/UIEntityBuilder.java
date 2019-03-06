@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 public class UIEntityBuilder {
+    private final CsvJdlUtils csvJdlUtils = new CsvJdlUtils();
+
     public List<UIEntity> createEntities(String entitiesFile) throws IOException {
         List<UIEntity> entities = new ArrayList<>();
         List<RawData> rawDataList = new RawCsvDataReader().getRawData(new FileInputStream(entitiesFile));
@@ -27,7 +29,12 @@ public class UIEntityBuilder {
                 UIField field = new UIField();
                 field.setName(rawData.getFieldName());
                 field.setLabel(rawData.getFieldLabel());
-                field.setType(rawData.getFieldType());
+                String fieldType = rawData.getFieldType();
+                if (csvJdlUtils.isList(fieldType)) {
+                    field.setType(csvJdlUtils.getListType(fieldType));
+                } else {
+                    field.setType(csvJdlUtils.isJdlField(rawData) ? csvJdlUtils.getFieldType(fieldType) : fieldType);
+                }
                 field.setLength(rawData.getFieldLength());
                 field.setRequired(rawData.getFieldRequired() != null && !rawData.getFieldRequired().isEmpty());
                 fields.add(field);
