@@ -25,7 +25,7 @@ public class CsvJdlUtils {
     }
 
     public String getFieldType(@NotNull String csvFieldType) {
-        return jdlTypeDictionary.get(csvFieldType);
+        return jdlTypeDictionary.get(csvFieldType.toLowerCase());
     }
 
     public boolean isList(@NotNull String csvType) {

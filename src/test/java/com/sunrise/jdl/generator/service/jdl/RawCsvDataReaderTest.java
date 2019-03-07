@@ -16,7 +16,7 @@ public class RawCsvDataReaderTest {
     public void getRawData() throws IOException {
         InputStream stream = this.getClass().getClassLoader().getResourceAsStream("twoEntities.csv");
         List<RawData> result = rawCsvDataReader.getRawData(stream);
-        Assert.assertEquals(19, result.size());
+        Assert.assertEquals(20, result.size());
         RawData data = result.get(0);
         //,ContactDataCorrection,Корректировка Договор, Корректировки Договора,legalAddress,Юридический адрес,Юридический адрес,Address,1,2,3,4,5,6
         Assert.assertEquals("ContactDataCorrection", data.getEntityName());
