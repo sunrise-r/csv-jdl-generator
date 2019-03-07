@@ -35,12 +35,12 @@ public class UIGenerator {
         List<RegistryItem> registryItems = new ArrayList<>();
         List<ProjectionInfo> projectionInfos = new ArrayList<>();
         for (UIEntity entity : entities) {
-            RegistryItem registryItem = createPresentationFor(entity.getName(), generateParameters.getRegistryCode(), generateParameters);
-            registryItems.add(registryItem);
+            RegistryItem registryItem = createPresentationFor(entity.getName(), generateParameters.getRegistryCode(), generateParameters.isPluralPresentations());
+            registryItems.add(generatePresentationTranslation(registryItem, generateParameters));
             for (ProjectionParameter projectionParameter : generateParameters.getProjectionsInfoes()) {
                 for (ProjectionType projectionType : ProjectionType.values()) {
                     ProjectionInfo projectionInfo = toProjectionInfo(entity, actions, registryItem.getCode(), projectionParameter, projectionType);
-                    projectionInfos.add(generateTranslation(projectionInfo, entity.getName(), generateParameters, projectionParameter.getName()));
+                    projectionInfos.add(generateProjectionTranslation(projectionInfo, entity.getName(), generateParameters, projectionParameter.getName()));
                 }
             }
         }
@@ -80,13 +80,10 @@ public class UIGenerator {
      * @param registryCode код  реестра интерфейсов
      * @return Базовая инфомрация о представлении созданная на основе @entityName and @registryCode
      */
-    public RegistryItem createPresentationFor(String entityName, String registryCode, UIGenerateParameters generateParameters) {
+    public RegistryItem createPresentationFor(String entityName, String registryCode, boolean pluralizeEntityName) {
         RegistryItem item = new RegistryItem();
         item.setParentCode(registryCode);
-        item.setCode(getPresentationName(generateParameters.isPluralPresentations() ? English.plural(entityName) : entityName));
-        if (generateParameters.getTitlePath() != null) {
-            item.setLabel(generateParameters.getTitlePath().replaceAll("<ENTITY_NAME>", generateParameters.isPluralTranslations() ? English.plural(entityName) : entityName));
-        }
+        item.setCode(getPresentationName(pluralizeEntityName ? English.plural(entityName) : entityName));
         return item;
     }
     /**
@@ -138,16 +135,23 @@ public class UIGenerator {
         return projectionInfo;
     }
 
+    private RegistryItem generatePresentationTranslation(RegistryItem registryItem, UIGenerateParameters uiGenerateParameters) {
+        if (uiGenerateParameters.getTitlePath() != null) {
+            registryItem.setLabel(uiGenerateParameters.getTitlePath().replaceAll("<ENTITY_NAME>", registryItem.getCode()));
+        }
+        return registryItem;
+    }
+
     /**
-     * Генерирует переводы для дополнительных полей и проекции.
+     * Генерирует коды переводов для полей проекции.
      * @param projectionInfo информация о проекции для обновления
      * @param entityName имя сущности, для которой сгенерирована проекция
      * @param uiGenerateParameters объект, содержащий информацию для генерации переводов
      * @param projectionParameterName имя генерируемой проекции
      * @return информацию о проекции с установленными путями переводов
      */
-    private ProjectionInfo generateTranslation(ProjectionInfo projectionInfo, String entityName, UIGenerateParameters uiGenerateParameters,
-                                              String projectionParameterName) {
+    private ProjectionInfo generateProjectionTranslation(ProjectionInfo projectionInfo, String entityName, UIGenerateParameters uiGenerateParameters,
+                                                         String projectionParameterName) {
         String translationEntityName = uiGenerateParameters.isPluralTranslations() ? English.plural(entityName) : entityName;
         List<String> names = new ArrayList<>();
         uiGenerateParameters.getAdditionalFields().forEach(x -> names.add(x.getFieldName()));
