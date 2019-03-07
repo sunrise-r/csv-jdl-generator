@@ -39,7 +39,8 @@ public class UIGenerator {
             registryItems.add(registryItem);
             for (ProjectionParameter projectionParameter : generateParameters.getProjectionsInfoes()) {
                 for (ProjectionType projectionType : ProjectionType.values()) {
-                    projectionInfos.add(toProjectionInfo(entity.getName(), entity.getFields(), actions, registryItem.getCode(), projectionParameter, projectionType, generateParameters));
+                    ProjectionInfo projectionInfo = toProjectionInfo(entity, actions, registryItem.getCode(), projectionParameter, projectionType);
+                    projectionInfos.add(generateTranslation(projectionInfo, entity.getName(), generateParameters, projectionParameter.getName()));
                 }
             }
         }
@@ -91,14 +92,14 @@ public class UIGenerator {
     /**
      * Преобразовать данные о сщуности в информацию о проекции
      *
-     * @param entityName       Название сущности
-     * @param fields           поля сущности
-     * @param actions          доступные действия для проекции
-     * @param presentationCode Код представления
-     * @param projectionParameter
+     * @param entity Сущность
+     * @param actions доступные действия для проекции
+     * @param presentationCode код представления
+     * @param projectionParameter параметр представления
+     * @param projectionType тип представления
      * @return Информация о проекции
      */
-    public ProjectionInfo toProjectionInfo(String entityName, List<UIField> fields, Collection<Action> actions, String presentationCode, ProjectionParameter projectionParameter, ProjectionType projectionType, UIGenerateParameters generateParameters) {
+    public ProjectionInfo toProjectionInfo(UIEntity entity, Collection<Action> actions, String presentationCode, ProjectionParameter projectionParameter, ProjectionType projectionType) {
         ProjectionInfo projectionInfo = new ProjectionInfo();
         projectionInfo.setFilters(projectionParameter.getFilters());
         projectionInfo.setParentCode(presentationCode);
@@ -106,7 +107,7 @@ public class UIGenerator {
         // Добавляю все поля, кроме списков
         projectionInfo.setFields(new ArrayList<>());
 
-        for (UIField f : fields) {
+        for (UIField f : entity.getFields()) {
             BaseField projectionInfoField = null;
             if (projectionType == ProjectionType.Form) {
                 FormField formField = new FormField().jdlType(isJdlType(f.getType())).required(f.isRequired()).length(f.getLength());
@@ -133,22 +134,33 @@ public class UIGenerator {
         projectionInfo.setActions(new ArrayList<>(actions));
         projectionInfo.setOrder(projectionParameter.getOrder());
         projectionInfo.setProjectionType(projectionType);
+        projectionInfo.setCode(getProjectionCode(entity.getName(), projectionParameter.getName(), projectionType.toString()));
+        return projectionInfo;
+    }
 
-        // Генерирую код перевода
-        String translationEntityName = generateParameters.isPluralTranslations() ? English.plural(entityName) : entityName;
+    /**
+     * Генерирует переводы для дополнительных полей и проекции.
+     * @param projectionInfo информация о проекции для обновления
+     * @param entityName имя сущности, для которой сгенерирована проекция
+     * @param uiGenerateParameters объект, содержащий информацию для генерации переводов
+     * @param projectionParameterName имя генерируемой проекции
+     * @return информацию о проекции с установленными путями переводов
+     */
+    private ProjectionInfo generateTranslation(ProjectionInfo projectionInfo, String entityName, UIGenerateParameters uiGenerateParameters,
+                                              String projectionParameterName) {
+        String translationEntityName = uiGenerateParameters.isPluralTranslations() ? English.plural(entityName) : entityName;
         List<String> names = new ArrayList<>();
-        generateParameters.getAdditionalFields().forEach(x -> names.add(x.getFieldName()));
+        uiGenerateParameters.getAdditionalFields().forEach(x -> names.add(x.getFieldName()));
         for (BaseField f : projectionInfo.getFields()) {
             if (names.contains(f.getCode()))
-                f.setTranslationCode(generateParameters.getAdditionalFieldsTranslationPath() + '.' + f.getCode());
+                f.setTranslationCode(uiGenerateParameters.getAdditionalFieldsTranslationPath() + '.' + f.getCode());
             else
-                f.setTranslationCode(generateParameters.getTranslationPath() + translationEntityName.substring(0, 1).toUpperCase() + translationEntityName.substring(1) + '.' + f.getCode());
+                f.setTranslationCode(uiGenerateParameters.getTranslationPath() + translationEntityName.substring(0, 1).toUpperCase() + translationEntityName.substring(1) + '.' + f.getCode());
         }
-
-        String name = generateParameters.isUseEntityName() ? entityName : "";
-        projectionInfo.setCode(getProjectionCode(name, projectionParameter.getName(), projectionType.toString()));
-        projectionInfo.setLabel(generateParameters.getTranslationPath() + ".tabs." + projectionParameter.getName().toLowerCase());
+        projectionInfo.setLabel(uiGenerateParameters.getTranslationPath() + ".projection" +
+                (projectionParameterName.isEmpty() ? "" : "." + lowerFirstChar(projectionParameterName)));
         return projectionInfo;
+
     }
 
     /**
