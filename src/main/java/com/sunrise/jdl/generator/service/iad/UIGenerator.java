@@ -155,7 +155,7 @@ public class UIGenerator {
             if (names.contains(f.getCode()))
                 f.setTranslationCode(uiGenerateParameters.getAdditionalFieldsTranslationPath() + '.' + f.getCode());
             else
-                f.setTranslationCode(uiGenerateParameters.getTranslationPath() + translationEntityName.substring(0, 1).toUpperCase() + translationEntityName.substring(1) + '.' + f.getCode());
+                f.setTranslationCode(uiGenerateParameters.getTranslationPath() + "." + translationEntityName + '.' + f.getCode());
         }
         projectionInfo.setLabel(uiGenerateParameters.getTranslationPath() + ".projection" +
                 (projectionParameterName.isEmpty() ? "" : "." + lowerFirstChar(projectionParameterName)));
