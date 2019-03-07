@@ -64,7 +64,8 @@ public class UIGenerator {
             mapper.writeValue(new File(baseDataPath + "/" + registryItem.getCode() + ".json"), registryItem);
         }
         for (ProjectionInfo projectionInfo : uiData.getProjectionInfos()) {
-            Path baseDataPath = Files.createDirectories(Paths.get(destinationPath + "/" + projectionInfo.getParentCode()));
+            String subdir = projectionInfo.getProjectionType().startsWith("Lookup") ? "Lookup" : projectionInfo.getProjectionType();
+            Path baseDataPath = Files.createDirectories(Paths.get(destinationPath + "/" + projectionInfo.getParentCode() + "/" + subdir));
             mapper.writeValue(new File(baseDataPath + "/" + projectionInfo.getCode() + ".json"), projectionInfo);
         }
     }
@@ -118,6 +119,7 @@ public class UIGenerator {
 
         projectionInfo.setActions(new ArrayList<>(actions));
         projectionInfo.setOrder(projectionParameter.getOrder());
+        projectionInfo.setProjectionType(projectionType);
 
         // Генерирую код перевода
         String translationEntityName = generateParameters.isPluralTranslations() ? English.plural(entityName) : entityName;
