@@ -16,6 +16,6 @@ public class UIGeneratorService {
 
     public void generate() throws IOException {
         UIData uiData = uiGenerator.generateEntitiesPresentations(uiGenerateParameters);
-        uiGenerator.writeUIData(uiData, uiGenerateParameters.getTemplatesDir());
+        uiGenerator.writeUIData(uiData, uiGenerateParameters.getTargetPath());
     }
 }

@@ -1,7 +1,6 @@
 package com.sunrise.jdl.generator.ui;
 
 import com.google.common.collect.Lists;
-import com.sunrise.jdl.generator.entities.Field;
 import com.sunrise.jdl.generator.entities.FieldBuilder;
 
 import java.util.List;
@@ -13,11 +12,9 @@ public class UIGenerateParameters {
 
     private String entitiesPath;
 
-    private String relationsPath;
-
     private String actionsPath;
 
-    private String templatesDir;
+    private String targetPath;
 
     private String translationPath;
 
@@ -49,14 +46,6 @@ public class UIGenerateParameters {
         this.entitiesPath = entitiesPath;
     }
 
-    public String getRelationsPath() {
-        return relationsPath;
-    }
-
-    public void setRelationsPath(String relationsPath) {
-        this.relationsPath = relationsPath;
-    }
-
     public String getActionsPath() {
         return actionsPath;
     }
@@ -65,12 +54,12 @@ public class UIGenerateParameters {
         this.actionsPath = actionsPath;
     }
 
-    public String getTemplatesDir() {
-        return templatesDir;
+    public String getTargetPath() {
+        return targetPath;
     }
 
-    public void setTemplatesDir(String templatesDir) {
-        this.templatesDir = templatesDir;
+    public void setTargetPath(String targetPath) {
+        this.targetPath = targetPath;
     }
 
     public String getTitlePath() {

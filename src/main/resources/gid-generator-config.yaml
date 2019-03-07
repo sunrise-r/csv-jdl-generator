@@ -1,9 +1,8 @@
 !!com.sunrise.jdl.generator.ui.UIGenerateParameters
 
 entitiesPath: ./csv-resource-folder
-relationsPath: ./csv-resource-folder
 actionsPath: ./csv-resource-folder
-templatesDir: ./templates-folder
+targetPath: ./templates-folder
 translationPath: partnerGatewayApp.partnerDocuments
 titlePath: partnerGatewayApp.partnerDocuments<ENTITY_NAME>.home.title
 registryCode: userRegistry
