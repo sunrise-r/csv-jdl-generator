@@ -20,7 +20,7 @@ public class UIEntityBuilderTest {
         Assert.assertEquals(4, entity.getFields().size());
 
         Assert.assertEquals("firstName", fields.get(0).getName());
-        Assert.assertEquals("LastName", fields.get(1).getName());
+        Assert.assertEquals("lastName", fields.get(1).getName());
         Assert.assertEquals("messages", fields.get(2).getName());
         Assert.assertEquals("profile", fields.get(3).getName());
 
