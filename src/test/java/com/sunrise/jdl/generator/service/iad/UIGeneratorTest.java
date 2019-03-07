@@ -35,6 +35,13 @@ public class UIGeneratorTest {
     }
 
     @Test
+    public void generatesPresentation() {
+        RegistryItem registryItem = uiGenerator.createPresentationFor("entityName", "registryCode", false);
+        Assert.assertEquals("entityNamePresentation", registryItem.getCode());
+        Assert.assertEquals("registryCode", registryItem.getParentCode());
+    }
+
+    @Test
     public void generatesListProjection() {
         UIEntity entity = entities.get(1);
         ProjectionInfo projectionInfo = uiGenerator.toProjectionInfo(entity, actions, "customRegistry", projectionParameter, ProjectionType.List);
