@@ -2,6 +2,7 @@ package com.sunrise.jdl.generator.ui;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sunrise.jdl.generator.actions.Action;
+import com.sunrise.jdl.generator.service.iad.ProjectionType;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class ProjectionInfo extends RegistryItem {
     private List<BaseField> fields;
 
     @JsonIgnore
-    private String projectionType;
+    private ProjectionType projectionType;
 
     /**
      * Порядок для сортировки
@@ -79,11 +80,11 @@ public class ProjectionInfo extends RegistryItem {
         return searchUrl;
     }
 
-    public String getProjectionType() {
+    public ProjectionType getProjectionType() {
         return projectionType;
     }
 
-    public void setProjectionType(String projectionType) {
+    public void setProjectionType(ProjectionType projectionType) {
         this.projectionType = projectionType;
     }
 }

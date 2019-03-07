@@ -38,7 +38,7 @@ public class UIGenerator {
             RegistryItem registryItem = createPresentationFor(entity.getName(), generateParameters.getRegistryCode(), generateParameters);
             registryItems.add(registryItem);
             for (ProjectionParameter projectionParameter : generateParameters.getProjectionsInfoes()) {
-                for (String projectionType : Arrays.asList("List", "Form", "LookupView", "LookupSource")) {
+                for (ProjectionType projectionType : ProjectionType.values()) {
                     projectionInfos.add(toProjectionInfo(entity.getName(), entity.getFields(), actions, registryItem.getCode(), projectionParameter, projectionType, generateParameters));
                 }
             }
@@ -64,7 +64,7 @@ public class UIGenerator {
             mapper.writeValue(new File(baseDataPath + "/" + registryItem.getCode() + ".json"), registryItem);
         }
         for (ProjectionInfo projectionInfo : uiData.getProjectionInfos()) {
-            String subdir = projectionInfo.getProjectionType().startsWith("Lookup") ? "Lookup" : projectionInfo.getProjectionType();
+            String subdir = projectionInfo.getProjectionType().toString().startsWith("Lookup") ? "Lookup" : projectionInfo.getProjectionType().toString();
             Path baseDataPath = Files.createDirectories(Paths.get(destinationPath + "/" + projectionInfo.getParentCode() + "/" + subdir));
             mapper.writeValue(new File(baseDataPath + "/" + projectionInfo.getCode() + ".json"), projectionInfo);
         }
@@ -98,7 +98,7 @@ public class UIGenerator {
      * @param projectionParameter
      * @return Информация о проекции
      */
-    public ProjectionInfo toProjectionInfo(String entityName, List<UIField> fields, Collection<Action> actions, String presentationCode, ProjectionParameter projectionParameter, String projectionType, UIGenerateParameters generateParameters) {
+    public ProjectionInfo toProjectionInfo(String entityName, List<UIField> fields, Collection<Action> actions, String presentationCode, ProjectionParameter projectionParameter, ProjectionType projectionType, UIGenerateParameters generateParameters) {
         ProjectionInfo projectionInfo = new ProjectionInfo();
         projectionInfo.setFilters(projectionParameter.getFilters());
         projectionInfo.setParentCode(presentationCode);
@@ -110,7 +110,7 @@ public class UIGenerator {
             if (isJdlType(f.getType())) {
                 projectionInfo.getFields().add(new BaseField().code(f.getName()).name(f.getName()).displayFormat(f.getType()));
             } else {
-                if (projectionType.equals("Form")) {
+                if (projectionType == ProjectionType.Form) {
                     String fieldType = f.getType().startsWith("List<") ? "List" : f.getType();
                     projectionInfo.getFields().add(new LookupField().lookup(extractEntityName(f.getType())).code(f.getName()).name(f.getName()).displayFormat(fieldType));
                 }
@@ -133,7 +133,7 @@ public class UIGenerator {
         }
 
         String name = generateParameters.isUseEntityName() ? entityName : "";
-        projectionInfo.setCode(getProjectionCode(name, projectionParameter.getName(), projectionType));
+        projectionInfo.setCode(getProjectionCode(name, projectionParameter.getName(), projectionType.toString()));
         projectionInfo.setLabel(generateParameters.getTranslationPath() + ".tabs." + projectionParameter.getName().toLowerCase());
         return projectionInfo;
     }
