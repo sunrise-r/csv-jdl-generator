@@ -1,6 +1,7 @@
 package com.sunrise.jdl.generator.ui;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sunrise.jdl.generator.actions.Action;
 import com.sunrise.jdl.generator.service.iad.ProjectionType;
 
@@ -9,6 +10,7 @@ import java.util.List;
 /**
  * Класс используется для записи данных в json-фррмате в файл
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProjectionInfo extends RegistryItem {
 
     /**

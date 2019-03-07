@@ -107,13 +107,26 @@ public class UIGenerator {
         projectionInfo.setFields(new ArrayList<>());
 
         for (UIField f : fields) {
-            if (isJdlType(f.getType())) {
-                projectionInfo.getFields().add(new BaseField().code(f.getName()).name(f.getName()).displayFormat(f.getType()));
-            } else {
-                if (projectionType == ProjectionType.Form) {
-                    String fieldType = f.getType().startsWith("List<") ? "List" : f.getType();
-                    projectionInfo.getFields().add(new LookupField().lookup(extractEntityName(f.getType())).code(f.getName()).name(f.getName()).displayFormat(fieldType));
+            BaseField projectionInfoField = null;
+            if (projectionType == ProjectionType.Form) {
+                FormField formField = new FormField().jdlType(isJdlType(f.getType())).required(f.isRequired()).length(f.getLength());
+                if (isJdlType(f.getType())) {
+                    formField.fieldType(f.getType());
+                } else {
+                    String fieldEntityName = extractEntityName(f.getType());
+                    if (f.getType().startsWith("List<")) {
+                        formField.presentationCode(fieldEntityName).fieldType("List");
+                    } else {
+                        formField.fieldType("Entity");
+                    }
+                    formField.lookup(extractEntityName(f.getType())).code(f.getName()).name(f.getName());
                 }
+                projectionInfoField = formField;
+            } else {
+                if (isJdlType(f.getType())) projectionInfoField = new BaseField().displayFormat(f.getType());
+            }
+            if (projectionInfoField != null) {
+                projectionInfo.getFields().add(projectionInfoField.code(f.getName()).name(f.getLabel()));
             }
         }
 

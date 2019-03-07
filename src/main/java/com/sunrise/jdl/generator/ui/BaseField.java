@@ -1,8 +1,11 @@
 package com.sunrise.jdl.generator.ui;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  * Класс используется для корректной записи полей в json-файл объектов BaseData
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BaseField {
 
     /**
