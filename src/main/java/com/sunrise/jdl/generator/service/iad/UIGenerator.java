@@ -34,6 +34,9 @@ public class UIGenerator {
 
         List<RegistryItem> registryItems = new ArrayList<>();
         List<ProjectionInfo> projectionInfos = new ArrayList<>();
+        RegistryItem rootRegistryItem = new RegistryItem();
+        rootRegistryItem.setCode(generateParameters.getRegistryCode());
+        generatePresentationTranslation(rootRegistryItem, generateParameters);
         for (UIEntity entity : entities) {
             RegistryItem registryItem = createPresentationFor(entity.getName(), generateParameters.getRegistryCode(), generateParameters.isPluralPresentations());
             registryItems.add(generatePresentationTranslation(registryItem, generateParameters));
@@ -44,7 +47,9 @@ public class UIGenerator {
                 }
             }
         }
+
         UIData uiData = new UIData();
+        uiData.setRootRegistryItem(rootRegistryItem);
         uiData.setRegistryItems(registryItems);
         uiData.setProjectionInfos(projectionInfos);
         return uiData;
@@ -60,13 +65,15 @@ public class UIGenerator {
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
+        Path baseDataPath = Files.createDirectories(Paths.get(destinationDir));
+        mapper.writeValue(new File(baseDataPath + "/" + uiData.getRootRegistryItem().getCode() + ".json"), uiData.getRootRegistryItem());
         for (RegistryItem registryItem : uiData.getRegistryItems()) {
-            Path baseDataPath = Files.createDirectories(Paths.get(destinationDir + "/" + registryItem.getCode()));
+            baseDataPath = Files.createDirectories(Paths.get(destinationDir + "/" + registryItem.getCode()));
             mapper.writeValue(new File(baseDataPath + "/" + registryItem.getCode() + ".json"), registryItem);
         }
         for (ProjectionInfo projectionInfo : uiData.getProjectionInfos()) {
             String subdir = projectionInfo.getProjectionType().toString().startsWith("Lookup") ? "Lookup" : projectionInfo.getProjectionType().toString();
-            Path baseDataPath = Files.createDirectories(Paths.get(destinationPath + "/" + projectionInfo.getParentCode() + "/" + subdir));
+            baseDataPath = Files.createDirectories(Paths.get(destinationPath + "/" + projectionInfo.getParentCode() + "/" + subdir));
             mapper.writeValue(new File(baseDataPath + "/" + projectionInfo.getCode() + ".json"), projectionInfo);
         }
     }

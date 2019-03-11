@@ -6,8 +6,17 @@ import com.sunrise.jdl.generator.ui.RegistryItem;
 import java.util.List;
 
 class UIData {
+    private RegistryItem rootRegistryItem;
     private List<RegistryItem> registryItems;
     private List<ProjectionInfo> projectionInfos;
+
+    public RegistryItem getRootRegistryItem() {
+        return rootRegistryItem;
+    }
+
+    public void setRootRegistryItem(RegistryItem rootRegistryItem) {
+        this.rootRegistryItem = rootRegistryItem;
+    }
 
     public List<RegistryItem> getRegistryItems() {
         return registryItems;

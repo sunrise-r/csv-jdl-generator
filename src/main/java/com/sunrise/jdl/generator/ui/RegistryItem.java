@@ -1,5 +1,8 @@
 package com.sunrise.jdl.generator.ui;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RegistryItem {
 
     /**
