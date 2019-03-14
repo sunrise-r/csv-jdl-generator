@@ -118,13 +118,14 @@ public class UIGenerator {
                 if (isJdlType(f.getType())) {
                     formField.fieldType(f.getType());
                 } else {
-                    String fieldEntityName = extractEntityName(f.getType());
+                    formField.presentationCode(extractEntityName(f.getType()));
                     if (f.getType().startsWith("List<")) {
-                        formField.presentationCode(fieldEntityName).fieldType("List");
+                        formField.fieldType("List");
+                        formField.lookup(extractEntityName(f.getType())).code(f.getName()).name(f.getName());
                     } else {
-                        formField.fieldType("Entity");
+                        formField.fieldType("ProjectionReference");
+                        formField.referenceProjectionCode(getProjectionCode(f.getType(), "", "Form"));
                     }
-                    formField.lookup(extractEntityName(f.getType())).code(f.getName()).name(f.getName());
                 }
                 projectionInfoField = formField;
             } else {

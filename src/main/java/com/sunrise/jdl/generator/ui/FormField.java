@@ -6,6 +6,8 @@ public class FormField extends BaseField {
 
     private String lookupView;
 
+    private String referenceProjectionCode;
+
     private String presentationCode;
 
     private String fieldLength;
@@ -19,6 +21,11 @@ public class FormField extends BaseField {
     public FormField lookup(String entityName) {
         this.lookupSource = String.format("lookup%sSourceListProjection", entityName);
         this.lookupView = String.format("lookup%sViewListProjection", entityName);
+        return this;
+    }
+
+    public FormField referenceProjectionCode(String referenceProjectionCode) {
+        this.referenceProjectionCode = referenceProjectionCode;
         return this;
     }
 
@@ -101,5 +108,13 @@ public class FormField extends BaseField {
 
     public void setJdlType(boolean jdlType) {
         this.jdlType = jdlType;
+    }
+
+    public String getReferenceProjectionCode() {
+        return referenceProjectionCode;
+    }
+
+    public void setReferenceProjectionCode(String referenceProjectionCode) {
+        this.referenceProjectionCode = referenceProjectionCode;
     }
 }
