@@ -44,10 +44,11 @@ public class UIGeneratorTest {
     @Test
     public void generatesListProjection() {
         UIEntity entity = entities.get(1);
-        ProjectionInfo projectionInfo = uiGenerator.toProjectionInfo(entity, actions, "customRegistry", projectionParameter, ProjectionType.List);
+        ProjectionInfo projectionInfo = uiGenerator.toProjectionInfo(entity, actions, "customRegistry", projectionParameter, ProjectionType.List, "");
         Assert.assertEquals(3, projectionInfo.getFields().size());
         Assert.assertEquals(12, projectionInfo.getActions().size());
         Assert.assertEquals("messageListProjection", projectionInfo.getCode());
+        Assert.assertEquals("message", projectionInfo.getSearchUrl());
 
         BaseField baseField = projectionInfo.getFields().get(0);
         Assert.assertEquals("text", baseField.getCode());
@@ -68,7 +69,7 @@ public class UIGeneratorTest {
     @Test
     public void generatesFormProjection() {
         UIEntity entity = entities.get(0);
-        ProjectionInfo projectionInfo = uiGenerator.toProjectionInfo(entity, actions, "customRegistry", projectionParameter, ProjectionType.Form);
+        ProjectionInfo projectionInfo = uiGenerator.toProjectionInfo(entity, actions, "customRegistry", projectionParameter, ProjectionType.Form, "");
 
         Assert.assertEquals(4, projectionInfo.getFields().size());
         Assert.assertEquals(12, projectionInfo.getActions().size());
@@ -107,16 +108,15 @@ public class UIGeneratorTest {
         Assert.assertEquals("", formField.getFieldLength());
         Assert.assertFalse(formField.isJdlType());
         Assert.assertFalse(formField.isRequired());
-        Assert.assertEquals("lookupProfileSourceListProjection", formField.getLookupSource());
-        Assert.assertEquals("lookupProfileViewListProjection", formField.getLookupView());
-        Assert.assertEquals("Entity", formField.getFieldType());
-        Assert.assertNull(formField.getPresentationCode());
+        Assert.assertEquals("profileFormProjection", formField.getReferenceProjectionCode());
+        Assert.assertEquals("ProjectionReference", formField.getFieldType());
+        Assert.assertEquals("Profile", formField.getPresentationCode());
     }
 
     @Test
     public void generatesLookupProjections() {
         UIEntity entity = entities.get(2);
-        ProjectionInfo projectionInfo = uiGenerator.toProjectionInfo(entity, actions, "customRegistry", projectionParameter, ProjectionType.LookupSource);
+        ProjectionInfo projectionInfo = uiGenerator.toProjectionInfo(entity, actions, "customRegistry", projectionParameter, ProjectionType.LookupSource, "");
 
         Assert.assertEquals(2, projectionInfo.getFields().size());
         Assert.assertEquals(12, projectionInfo.getActions().size());

@@ -18,6 +18,7 @@ public class CsvJdlUtils {
         jdlTypeDictionary.put("булев", JDLFieldsType.Boolean.toString());
         jdlTypeDictionary.put("булевое", JDLFieldsType.Boolean.toString());
         jdlTypeDictionary.put("строка", JDLFieldsType.String.toString());
+        jdlTypeDictionary.put("файл", JDLFieldsType.Blob.toString());
     }
 
     public boolean isJdlField(@NotNull RawData field) {

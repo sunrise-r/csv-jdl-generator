@@ -32,6 +32,8 @@ public class UIGenerateParameters {
 
     private boolean pluralSearchURL;
 
+    private String searchUrlPrefix;
+
     private List<FieldBuilder> additionalFields = Lists.newArrayList();
 
     private String additionalFieldsTranslationPath;
@@ -92,6 +94,14 @@ public class UIGenerateParameters {
 
     public void setPluralSearchURL(boolean pluralSearchURL) {
         this.pluralSearchURL = pluralSearchURL;
+    }
+
+    public String getSearchUrlPrefix() {
+        return searchUrlPrefix;
+    }
+
+    public void setSearchUrlPrefix(String searchUrlPrefix) {
+        this.searchUrlPrefix = searchUrlPrefix;
     }
 
     public boolean isPluralTranslations() {

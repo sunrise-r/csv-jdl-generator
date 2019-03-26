@@ -42,7 +42,7 @@ public class UIGenerator {
             registryItems.add(generatePresentationTranslation(registryItem, generateParameters));
             for (ProjectionParameter projectionParameter : generateParameters.getProjectionsInfoes()) {
                 for (ProjectionType projectionType : ProjectionType.values()) {
-                    ProjectionInfo projectionInfo = toProjectionInfo(entity, actions, registryItem.getCode(), projectionParameter, projectionType);
+                    ProjectionInfo projectionInfo = toProjectionInfo(entity, actions, registryItem.getCode(), projectionParameter, projectionType, generateParameters.getSearchUrlPrefix());
                     projectionInfos.add(generateProjectionTranslation(projectionInfo, entity.getName(), generateParameters, projectionParameter.getName()));
                 }
             }
@@ -103,7 +103,7 @@ public class UIGenerator {
      * @param projectionType тип представления
      * @return Информация о проекции
      */
-    public ProjectionInfo toProjectionInfo(UIEntity entity, Collection<Action> actions, String presentationCode, ProjectionParameter projectionParameter, ProjectionType projectionType) {
+    public ProjectionInfo toProjectionInfo(UIEntity entity, Collection<Action> actions, String presentationCode, ProjectionParameter projectionParameter, ProjectionType projectionType, String searchUrlPrefix) {
         ProjectionInfo projectionInfo = new ProjectionInfo();
         projectionInfo.setFilters(projectionParameter.getFilters());
         projectionInfo.setParentCode(presentationCode);
@@ -136,6 +136,9 @@ public class UIGenerator {
             }
         }
 
+        if (projectionType == ProjectionType.List) {
+            projectionInfo.setSearchUrl(searchUrlPrefix + lowerFirstChar(entity.getName()));
+        }
         projectionInfo.setActions(new ArrayList<>(actions));
         projectionInfo.setOrder(projectionParameter.getOrder());
         projectionInfo.setProjectionType(projectionType);
