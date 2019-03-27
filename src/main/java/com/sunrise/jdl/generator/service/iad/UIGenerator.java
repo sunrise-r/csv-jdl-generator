@@ -170,7 +170,7 @@ public class UIGenerator {
             if (names.contains(f.getCode()))
                 f.setTranslationCode(uiGenerateParameters.getAdditionalFieldsTranslationPath() + '.' + f.getCode());
             else
-                f.setTranslationCode(uiGenerateParameters.getTranslationPath() + "." + translationEntityName + '.' + f.getCode());
+                f.setTranslationCode(uiGenerateParameters.getTranslationPath() + "." + lowerFirstChar(translationEntityName) + '.' + f.getCode());
         }
         projectionInfo.setLabel(uiGenerateParameters.getTranslationPath() + ".projection" +
                 (projectionParameterName.isEmpty() ? "" : "." + lowerFirstChar(projectionParameterName)));
